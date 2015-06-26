@@ -1,0 +1,202 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="report">
+<select id="query" resultClass="java.lang.String">
+	Select 用户名 From zluserparas Where 参数id = 2 And 用户名 = 'ZLHIS'
+</select>
+<!-- 总收入 -->
+<select id="queryTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 病人费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0
+	]]>
+</select>
+<!-- 总收入 门诊 -->
+<select id="queryOpTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 门诊费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0
+	]]>
+</select>
+<!-- 总收入 入院 -->
+<select id="queryIpTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 住院费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0
+	]]>
+</select>
+<!-- 门诊药品收入 -->
+<select id="queryOpDrugsTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 门诊费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 收费类别 In ('5','6','7')
+	]]>
+</select>
+<!-- 入院药品收入 -->
+<select id="queryIpDrugsTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 住院费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 收费类别 In ('5','6','7')
+	]]>
+</select>
+<!-- 门诊保险收入 -->
+<select id="queryOpBaoXianTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 门诊费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 保险项目否 = 1
+	]]>
+</select>
+<!-- 入院保险收入 -->
+<select id="queryIpBaoXianTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 住院费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 保险项目否 = 1
+	]]>
+</select>
+<!-- 门诊医保 统筹收入 -->
+<select id="queryOpTongChouTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(统筹金额) From 门诊费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 保险项目否 = 1
+	]]>
+</select>
+<!-- 入院医保 统筹收入 -->
+<select id="queryIpTongChouTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(统筹金额) From 住院费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 保险项目否 = 1
+	]]>
+</select>
+<!-- 门急诊人次 -->
+<select id="queryMenJiZhenRenCiTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(已挂数) From 病人挂号汇总
+	<![CDATA[
+	Where 日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+	]]>
+</select>
+<!-- 急诊人次 -->
+<select id="queryJiZhenRenCiTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(已挂数) From 病人挂号汇总 a
+	Left Join 部门表 b On b.Id = a.科室id
+	<![CDATA[
+	Where b.名称 Like '%急诊%' And a.日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+	]]>
+</select>
+<!-- 门诊医保人次 -->
+<select id="queryMenZhenYiBaoTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病人挂号记录 b 
+	Left Join 病人信息 x On b.门诊号 = x.门诊号
+	<![CDATA[
+	Where b.登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And (x.医疗付款方式 <> '自费医疗' Or x.医疗付款方式 Is Null)
+	]]>
+</select>
+<!-- 门诊出诊医生 -->
+<select id="queryChuZhenYiShengTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From (
+	Select distinct(执行人) From 病人挂号记录
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+	)
+	]]>
+</select>
+<!-- 门诊处方数 -->
+<select id="queryChuFangTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病人费用记录
+	<![CDATA[
+	Where 门诊标志 = 1 And 记录性质 = 1 And 记录状态 = 1 and 
+	登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+	And 收费类别 In ('5', '6', '7')
+	]]>
+</select>
+<!-- 门诊退费金额 -->
+<select id="queryMenZhenTuiFeiTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额)
+	From 门诊费用记录
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 = 3
+	]]>
+</select>
+<!-- 门诊使用抗生素数 -->
+<select id="queryMenZhenKangShengSuTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病人医嘱记录 y
+	Left Join 门诊费用记录 m On y.病人id = m.病人id
+	Left Join 药品特性 z On y.诊疗项目id = z.药名id
+	<![CDATA[
+	Where m.登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And z.抗生素 = 1
+	]]>
+</select>
+<!-- 入院人数 -->
+<select id="queryRuYuanTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m
+	Where m.Id = b.当前病区id And b.入院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 入院人数 医保人数 -->
+<select id="queryRuYuanAndYiBaoTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m, 医保病人关联表 y
+	Where m.Id = b.当前病区id And y.病人id = b.病人id And b.入院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 在院人数 -->
+<select id="queryZaiYuanTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m
+	<![CDATA[
+	Where m.Id = b.当前病区id and b.入院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') And 
+	       (b.出院日期 > TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') Or b.出院日期 Is Null)
+	]]>
+</select>
+<!-- 在院人数 医保人数 -->
+<select id="queryZaiYuanAndYiBaoTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m, 医保病人关联表 y
+	<![CDATA[
+	Where m.Id = b.当前病区id And y.病人id = b.病人id and m.id <> 135 And b.入院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') And 
+       (b.出院日期 > TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') Or b.出院日期 Is Null)
+	]]>
+</select>
+<!-- 在院人数 血透人数 -->
+<select id="queryZaiYuanAndXueTouTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m
+	<![CDATA[
+	Where m.Id = b.当前病区id And m.Id = 135 And b.入院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') And 
+       (b.出院日期 > TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') Or b.出院日期 Is Null)
+    ]]>
+</select>
+<!-- 出院人数 -->
+<select id="queryChuYuanTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m
+	Where m.Id = b.当前病区id And b.出院日期 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And
+				TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 出院人数 医保人数 -->
+<select id="queryChuYuanAndYiBaoTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m, 医保病人关联表 y
+	Where m.Id = b.当前病区id And y.病人id = b.病人id And b.出院日期 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And
+				TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 血透收入 -->
+<select id="queryXueTouShouRu" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(y.实收金额) From 病案主页 b, 病人费用记录 y, 部门表 m
+	<![CDATA[
+	Where b.病人id = y.病人id And  b.当前病区id = m.Id And m.Id = 135
+      And y.登记时间 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+      And y.记录状态 <> 0
+    ]]>
+</select>
+</sqlMap>
+
+
+
