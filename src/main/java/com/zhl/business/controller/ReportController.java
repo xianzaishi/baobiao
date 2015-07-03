@@ -134,8 +134,12 @@ public class ReportController {
 	public String searching(@PathVariable String dateStart, @PathVariable String dateEnd, @PathVariable int parm, ModelMap model) {
 		String url = "";
 		switch (parm) {
-		case 1:
+		case 1: // 院长日报
 			url = "/report/daily/dean/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 3: // 工作负荷
+			url = "/report/workload/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		}
@@ -150,6 +154,43 @@ public class ReportController {
 	@RequestMapping(value = Url.REPORT_RESOURCES)
 	public String reportResources() {
 		return View.ReportResourcesView;
+	}
+
+	/**
+	 * 工作负荷
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = Url.REPORT_WORKLOAD)
+	public String reportWorkload(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		String StartTime = dateStart + " 00:00:00";
+		String EndTime = dateEnd + " 23:59:59";
+		dateMap.put("StartTime", StartTime);
+		dateMap.put("EndTime", EndTime);
+
+		double jiZhenRenCiTotal = reportService.queryJiZhenRenCiTotal(dateMap); // 急诊人次
+		double menJiZhenRenCiTotal = reportService.queryMenJiZhenRenCiTotal(dateMap); // 门急诊人次
+		double menZhenRenCiTotal = menJiZhenRenCiTotal - jiZhenRenCiTotal; // 门诊人次
+		int tiJianRenCi = reportService.queryTiJianRenShu(dateMap); // 体检人次
+		RuChuYuanShuDto ruChuYuanShu = reportService.queryRuChuYuanShu(dateMap); // 入出院人数
+		int chuYuanZongChuangRi = reportService.queryChuYuanZongChuangRi(dateMap); // 出院患者实际占用总床日
+		int zhuYuanShouShuLiShu = reportService.queryZhuYuanShouShuLiShu(dateMap); // 住院手术例数
+		int menZhenShouShuLiShu = reportService.queryMenZhenShouShuLiShu(dateMap); // 门诊手术例数
+		int liuGuanRenCi = reportService.queryLiuGuanRenCi(dateMap); // 留观人次
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("jiZhenRenCiTotal", jiZhenRenCiTotal); // 急诊人次
+		model.addAttribute("menZhenRenCiTotal", menZhenRenCiTotal); // 门诊人次
+		model.addAttribute("tiJianRenCi", tiJianRenCi); // 体检人次
+		model.addAttribute("ruYuanRenShu", ruChuYuanShu.getRuYuanShu()); // 入院人数
+		model.addAttribute("chuYuanRenShu", ruChuYuanShu.getChuYuanShu()); // 出院人数
+		model.addAttribute("chuYuanZongChuangRi", chuYuanZongChuangRi); // 出院患者实际占用总床日
+		model.addAttribute("zhuYuanShouShuLiShu", zhuYuanShouShuLiShu); // 住院手术例数
+		model.addAttribute("menZhenShouShuLiShu", menZhenShouShuLiShu); // 门诊手术例数
+		model.addAttribute("liuGuanRenCi", liuGuanRenCi); // 留观人次
+		return View.ReportWorkloadView;
 	}
 }
 

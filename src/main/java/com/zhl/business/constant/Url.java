@@ -37,5 +37,10 @@ public class Url {
 	 * 资源配置
 	 */
 	public static final String REPORT_RESOURCES = "/report/resources";
+
+	/**
+	 * 工作负荷
+	 */
+	public static final String REPORT_WORKLOAD = "/report/workload/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

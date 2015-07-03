@@ -163,6 +163,7 @@ $(function(){
 		}
 	});
 	
+	//打印
 	$("input#biuuu_button").click(function(){
 		$("#myPrintArea").printArea(); 
 	}); 

@@ -28,5 +28,10 @@ public class View {
 	 * 资源配置
 	 */
 	public static final String ReportResourcesView = "reportResourcesView";
+
+	/**
+	 * 工作负荷
+	 */
+	public static final String ReportWorkloadView = "reportWorkloadView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

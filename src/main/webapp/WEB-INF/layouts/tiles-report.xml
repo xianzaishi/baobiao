@@ -24,4 +24,8 @@
     <definition name="reportResourcesView" template="/WEB-INF/pages/report/reportResources.jsp">
     </definition>
     
+    <!-- 工作负荷页面 -->
+    <definition name="reportWorkloadView" template="/WEB-INF/pages/report/reportWorkload.jsp">
+    </definition>
+    
 </tiles-definitions>

@@ -281,6 +281,7 @@
 		 ) a
 		 ]]>
 </select>
+<!-- 门诊收入 （包含：药品收入、诊疗收入） -->
 <select id="queryMenZhenShouRu" resultClass="com.zhl.business.dto.MenZhenShouRuDto" parameterClass="java.util.Map">
 <![CDATA[
 select sum(药品收入) as yaoPinShouRu, sum(医疗收入) as zhenLiaoShouRu
@@ -298,6 +299,49 @@ group by d.id
 )
 )
 ]]>
+</select>
+<!-- 健康体检人次 -->
+<select id="queryTiJianRenShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+<![CDATA[
+Select Sum(人数)            
+FROM 
+(
+Select nvl(A.男性人数,0)+nvl(A.女性人数,0) AS 人数
+FROM 
+(
+select Nvl(A.体检团体id,0) As 体检团体id,
+       SUM(DECODE(sign(instr(B.性别,'女')-0),1,0,1)) AS 男性人数,
+       SUM(DECODE(sign(instr(B.性别,'女')-0),1,1,0)) AS 女性人数
+from 体检任务记录 A,
+     体检任务人员 B     
+WHERE A.ID=B.任务ID AND A.开始时间 BETWEEN TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')+1-1/24/60/60
+GROUP BY Nvl(A.体检团体id,0)
+) A,
+体检团体目录 B
+WHERE A.体检团体id=B.ID(+)
+)
+]]>
+</select>
+<!-- 出院患者实际占用总床日 -->
+<select id="queryChuYuanZongChuangRi" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Sum(住院天数) From 病案主页
+Where 出院日期 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 住院手术例数 -->
+<select id="queryZhuYuanShouShuLiShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select count(病人id) from 病人手麻记录
+where 记录日期 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+	And 记录来源 = 4
+</select>
+<!-- 门诊手术例数 -->
+<select id="queryMenZhenShouShuLiShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Count(病人id) From 病人医嘱记录 Where 执行科室id = 124 And 病人来源 = 1
+And 开始执行时间 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 留观人次 -->
+<select id="queryLiuGuanRenCi" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select count(distinct(病人id)) From 病人医嘱记录 Where 医嘱内容 = '门诊留观床位费'
+	And 开始执行时间 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
 </select>
 </sqlMap>
 

@@ -188,4 +188,44 @@ public interface ReportService {
 	 * @return
 	 */
 	public MenZhenShouRuDto queryMenZhenShouRu(Map<String, String> dateMap);
+
+	/**
+	 * 体检人次
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryTiJianRenShu(Map<String, String> dateMap);
+
+	/**
+	 * 出院患者实际占用总床日
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryChuYuanZongChuangRi(Map<String, String> dateMap);
+
+	/**
+	 * 住院手术例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryZhuYuanShouShuLiShu(Map<String, String> dateMap);
+
+	/**
+	 * 门诊手术例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryMenZhenShouShuLiShu(Map<String, String> dateMap);
+	
+	/**
+	 * 留观人次
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryLiuGuanRenCi(Map<String, String> dateMap);
 }
