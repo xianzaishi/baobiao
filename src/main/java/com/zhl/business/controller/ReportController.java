@@ -142,6 +142,10 @@ public class ReportController {
 			url = "/report/workload/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
+		case 4: // 治疗质量
+			url = "/report/workQuality/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
 		}
 		return View.ReportSearchingView;
 	}
@@ -191,6 +195,46 @@ public class ReportController {
 		model.addAttribute("menZhenShouShuLiShu", menZhenShouShuLiShu); // 门诊手术例数
 		model.addAttribute("liuGuanRenCi", liuGuanRenCi); // 留观人次
 		return View.ReportWorkloadView;
+	}
+
+	/**
+	 * 治疗质量
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.REPORT_WORK_QUALITY)
+	public String workQuality(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		String StartTime = dateStart + " 00:00:00";
+		String EndTime = dateEnd + " 23:59:59";
+		dateMap.put("StartTime", StartTime);
+		dateMap.put("EndTime", EndTime);
+
+		int zhuYuanShouShuLiShu = reportService.queryZhuYuanShouShuLiShu(dateMap); // 住院手术例数
+		int zhuYuanSiWangShu = reportService.queryZhuYuanSiWangShu(dateMap); // 住院患者死亡例数
+		int zhuYuanShouShuSiWangShu = reportService.queryZhuYuanShouShuSiWangShu(dateMap); // 住院手术死亡例数
+		int xinShengErChuYuanShu = reportService.queryXinShengErChuYuanShu(dateMap); // 新生儿患者出院人数
+		int xinShengErSiWangShu = reportService.queryXinShengErSiWangShu(dateMap); // 新生儿患者出院死亡人数
+		int zhuYuanWeiZhongQiangQiu = reportService.queryZhuYuanWeiZhongQiangQiu(dateMap); // 住院危重抢救例数
+		int zhuYuanWeiZhongQiangQiuSiWang = reportService.queryZhuYuanWeiZhongQiangQiuSiWang(dateMap); // 住院危重抢救死亡例数
+		int jiZhenWeiZhongQiangJiu = reportService.queryJiZhenWeiZhongQiangJiu(dateMap); // 急诊科危重抢救例数
+		int jiZhenWeiZhongQiangJiuSiWang = reportService.queryJiZhenWeiZhongQiangJiuSiWang(dateMap); // 急诊科危重抢救死亡例数
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("zhuYuanShouShuLiShu", zhuYuanShouShuLiShu); // 住院手术例数
+		model.addAttribute("zhuYuanSiWangShu", zhuYuanSiWangShu); // 住院患者死亡例数
+		model.addAttribute("zhuYuanShouShuSiWangShu", zhuYuanShouShuSiWangShu); // 住院手术死亡例数
+		model.addAttribute("xinShengErChuYuanShu", xinShengErChuYuanShu); // 新生儿患者出院人数
+		model.addAttribute("xinShengErSiWangShu", xinShengErSiWangShu); // 新生儿患者出院死亡人数
+		model.addAttribute("zhuYuanWeiZhongQiangQiu", zhuYuanWeiZhongQiangQiu); // 住院危重抢救例数
+		model.addAttribute("zhuYuanWeiZhongQiangQiuSiWang", zhuYuanWeiZhongQiangQiuSiWang); // 住院危重抢救死亡例数
+		model.addAttribute("jiZhenWeiZhongQiangJiu", jiZhenWeiZhongQiangJiu); // 急诊科危重抢救例数
+		model.addAttribute("jiZhenWeiZhongQiangJiuSiWang", jiZhenWeiZhongQiangJiuSiWang); // 急诊科危重抢救死亡例数
+		return View.ReportWorkQualityView;
 	}
 }
 

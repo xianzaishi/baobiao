@@ -28,4 +28,8 @@
     <definition name="reportWorkloadView" template="/WEB-INF/pages/report/reportWorkload.jsp">
     </definition>
     
+    <!-- 治疗质量页面 -->
+    <definition name="reportWorkQualityView" template="/WEB-INF/pages/report/reportWorkQuality.jsp">
+    </definition>
+    
 </tiles-definitions>

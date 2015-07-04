@@ -42,5 +42,10 @@ public class Url {
 	 * 工作负荷
 	 */
 	public static final String REPORT_WORKLOAD = "/report/workload/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 治疗质量
+	 */
+	public static final String REPORT_WORK_QUALITY = "/report/workQuality/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

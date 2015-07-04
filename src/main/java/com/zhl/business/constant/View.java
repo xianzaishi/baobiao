@@ -33,5 +33,10 @@ public class View {
 	 * 工作负荷
 	 */
 	public static final String ReportWorkloadView = "reportWorkloadView";
+
+	/**
+	 * 工作质量
+	 */
+	public static final String ReportWorkQualityView = "reportWorkQualityView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

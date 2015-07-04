@@ -228,4 +228,68 @@ public interface ReportService {
 	 * @return
 	 */
 	public int queryLiuGuanRenCi(Map<String, String> dateMap);
+
+	/**
+	 * 住院患者死亡例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryZhuYuanSiWangShu(Map<String, String> dateMap);
+
+	/**
+	 * 住院手术死亡例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryZhuYuanShouShuSiWangShu(Map<String, String> dateMap);
+
+	/**
+	 * 新生儿患者出院人数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryXinShengErChuYuanShu(Map<String, String> dateMap);
+
+	/**
+	 * 新生儿患者出院死亡人数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryXinShengErSiWangShu(Map<String, String> dateMap);
+
+	/**
+	 * 住院危重抢救例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryZhuYuanWeiZhongQiangQiu(Map<String, String> dateMap);
+
+	/**
+	 * 住院危重抢救死亡例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryZhuYuanWeiZhongQiangQiuSiWang(Map<String, String> dateMap);
+
+	/**
+	 * 急诊科危重抢救例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryJiZhenWeiZhongQiangJiu(Map<String, String> dateMap);
+
+	/**
+	 * 急诊科危重抢救死亡例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryJiZhenWeiZhongQiangJiuSiWang(Map<String, String> dateMap);
 }
