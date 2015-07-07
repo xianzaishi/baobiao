@@ -292,4 +292,20 @@ public interface ReportService {
 	 * @return
 	 */
 	public int queryJiZhenWeiZhongQiangJiuSiWang(Map<String, String> dateMap);
+	
+	/**
+	 * 住院患者自动出院例数(无费出院)
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryZiDongLiYuan(Map<String, String> dateMap);
+
+	/**
+	 * 恶性肿瘤手术前诊断与术后病理诊断符合例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryShuQianZhenDuanFuHe(Map<String, String> dateMap);
 }

@@ -41,15 +41,15 @@ table
 		  </tr>
 		  <tr>
 		    <td colspan="2">恶性肿瘤手术前诊断与术后病理诊断符合例数</td>
-		    <td>&nbsp;</td>
+		    <td>&nbsp;<fmt:formatNumber type="number" value="${shuQianZhenDuanFuHe }" maxFractionDigits="0"/></td>
 		  </tr>
 		  <tr>
 		    <td colspan="2">住院患者死亡例数</td>
 		    <td>&nbsp;<fmt:formatNumber type="number" value="${zhuYuanSiWangShu }" maxFractionDigits="0"/></td>
 		  </tr>
 		  <tr>
-		    <td colspan="2">住院患者自动出院例数</td>
-		    <td>&nbsp;</td>
+		    <td colspan="2">住院患者自动出院例数(无费出院)</td>
+		    <td>&nbsp;<fmt:formatNumber type="number" value="${ziDongLiYuan }" maxFractionDigits="0"/></td>
 		  </tr>
 		  <tr>
 		    <td width="162" rowspan="2">住院手术</td>
@@ -89,7 +89,7 @@ table
 		  </tr>
 		  <tr>
 		    <td>死亡率</td>
-		    <td>&nbsp;<fmt:formatNumber type="number" value="${xinShengErSiWangShu/xinShengErChuYuanShu * 100 }" maxFractionDigits="0"/>%</td>
+		    <td>&nbsp;<fmt:formatNumber type="number" value="${xinShengErSiWangShu/xinShengErChuYuanShu * 100 }" maxFractionDigits="4"/>%</td>
 		  </tr>
 		</table>
 		<br/>

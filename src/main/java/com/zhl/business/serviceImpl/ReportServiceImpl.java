@@ -1,5 +1,7 @@
 package com.zhl.business.serviceImpl;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -357,5 +359,38 @@ public class ReportServiceImpl implements ReportService {
 	 */
 	public int queryJiZhenWeiZhongQiangJiuSiWang(Map<String, String> dateMap) {
 		return reportDao.queryJiZhenWeiZhongQiangJiuSiWang(dateMap);
+	}
+
+	/**
+	 * 住院患者自动出院例数(无费出院)
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryZiDongLiYuan(Map<String, String> dateMap) {
+		List<Integer> wuFeiList = new LinkedList<Integer>();
+		List<Integer> duanList = new LinkedList<Integer>();
+		wuFeiList = reportDao.queryJieZhangWuFei(dateMap);
+		duanList = reportDao.queryZhuYuanDuan(dateMap);
+		int wuFeiLength = wuFeiList.size();
+		int duanLength = duanList.size();
+		int count = 0;
+
+		for (int i = 0; i < duanLength; i++) {
+			if (wuFeiList.indexOf(duanList.get(i)) > 0) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * 恶性肿瘤手术前诊断与术后病理诊断符合例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryShuQianZhenDuanFuHe(Map<String, String> dateMap) {
+		return reportDao.queryShuQianZhenDuanFuHe(dateMap);
 	}
 }

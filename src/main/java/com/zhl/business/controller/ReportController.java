@@ -222,6 +222,8 @@ public class ReportController {
 		int zhuYuanWeiZhongQiangQiuSiWang = reportService.queryZhuYuanWeiZhongQiangQiuSiWang(dateMap); // 住院危重抢救死亡例数
 		int jiZhenWeiZhongQiangJiu = reportService.queryJiZhenWeiZhongQiangJiu(dateMap); // 急诊科危重抢救例数
 		int jiZhenWeiZhongQiangJiuSiWang = reportService.queryJiZhenWeiZhongQiangJiuSiWang(dateMap); // 急诊科危重抢救死亡例数
+		int ziDongLiYuan = reportService.queryZiDongLiYuan(dateMap); // 住院患者自动出院例数(无费出院)
+		int shuQianZhenDuanFuHe = reportService.queryShuQianZhenDuanFuHe(dateMap); // 恶性肿瘤手术前诊断与术后病理诊断符合例数
 
 		model.addAttribute("dateStart", dateStart);
 		model.addAttribute("dateEnd", dateEnd);
@@ -234,6 +236,8 @@ public class ReportController {
 		model.addAttribute("zhuYuanWeiZhongQiangQiuSiWang", zhuYuanWeiZhongQiangQiuSiWang); // 住院危重抢救死亡例数
 		model.addAttribute("jiZhenWeiZhongQiangJiu", jiZhenWeiZhongQiangJiu); // 急诊科危重抢救例数
 		model.addAttribute("jiZhenWeiZhongQiangJiuSiWang", jiZhenWeiZhongQiangJiuSiWang); // 急诊科危重抢救死亡例数
+		model.addAttribute("ziDongLiYuan", ziDongLiYuan); // 住院患者自动出院例数(无费出院)
+		model.addAttribute("shuQianZhenDuanFuHe", shuQianZhenDuanFuHe); // 恶性肿瘤手术前诊断与术后病理诊断符合例数
 		return View.ReportWorkQualityView;
 	}
 }

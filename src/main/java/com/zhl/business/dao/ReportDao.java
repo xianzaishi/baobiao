@@ -1,5 +1,6 @@
 package com.zhl.business.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -356,5 +357,47 @@ public class ReportDao extends BaseDao {
 	 */
 	public int queryJiZhenWeiZhongQiangJiuSiWang(Map<String, String> dateMap) {
 		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryJiZhenWeiZhongQiangJiuSiWang", dateMap);
+	}
+
+	/**
+	 * 住院患者自动出院例数(无费出院)
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryZiDongLiYuan(Map<String, String> dateMap) {
+		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryZiDongLiYuan", dateMap);
+	}
+
+	/**
+	 * 查询无费用出院患者
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Integer> queryJieZhangWuFei(Map<String, String> dateMap) {
+		return (List<Integer>) getSqlMapClientTemplate().queryForList("report.queryJieZhangWuFei", dateMap);
+	}
+
+	/**
+	 * 查询住院时间小于2天的患者
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Integer> queryZhuYuanDuan(Map<String, String> dateMap) {
+		return (List<Integer>) getSqlMapClientTemplate().queryForList("report.queryZhuYuanDuan", dateMap);
+	}
+
+	/**
+	 * 恶性肿瘤手术前诊断与术后病理诊断符合例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryShuQianZhenDuanFuHe(Map<String, String> dateMap) {
+		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryShuQianZhenDuanFuHe", dateMap);
 	}
 }
