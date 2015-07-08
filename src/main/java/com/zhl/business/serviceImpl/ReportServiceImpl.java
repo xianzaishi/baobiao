@@ -393,4 +393,14 @@ public class ReportServiceImpl implements ReportService {
 	public int queryShuQianZhenDuanFuHe(Map<String, String> dateMap) {
 		return reportDao.queryShuQianZhenDuanFuHe(dateMap);
 	}
+
+	/**
+	 * 换床总次数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryHuanChuangShu(Map<String, String> dateMap) {
+		return reportDao.queryHuanChuangShu(dateMap);
+	}
 }

@@ -146,6 +146,10 @@ public class ReportController {
 			url = "/report/workQuality/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
+		case 5: // 工作效率
+			url = "/report/workEfficiency/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
 		}
 		return View.ReportSearchingView;
 	}
@@ -239,6 +243,37 @@ public class ReportController {
 		model.addAttribute("ziDongLiYuan", ziDongLiYuan); // 住院患者自动出院例数(无费出院)
 		model.addAttribute("shuQianZhenDuanFuHe", shuQianZhenDuanFuHe); // 恶性肿瘤手术前诊断与术后病理诊断符合例数
 		return View.ReportWorkQualityView;
+	}
+
+	/**
+	 * 工作效率
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.REPORT_WORK_EFFICIENCY)
+	public String workEfficiency(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		String StartTime = dateStart + " 00:00:00";
+		String EndTime = dateEnd + " 23:59:59";
+		dateMap.put("StartTime", StartTime);
+		dateMap.put("EndTime", EndTime);
+		
+		double zaiYuanTotal = reportService.queryZaiYuanTotal(dateMap);	//使用床位数 等于 在院人数
+		int chuYuanZongChuangRi = reportService.queryChuYuanZongChuangRi(dateMap); // 出院患者实际占用总床日
+		RuChuYuanShuDto ruChuYuanShu = reportService.queryRuChuYuanShu(dateMap); // 入出院人数
+		double chuYuanPingJunZhuYuanRi = chuYuanZongChuangRi / ruChuYuanShu.getChuYuanShu(); // 出院患者平均住院日
+		int huanChuangShu = reportService.queryHuanChuangShu(dateMap); // 换床总次数
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("shiYongChuangWeiTotal", zaiYuanTotal); // 使用床位数 等于 在院人数
+		model.addAttribute("chuYuanPingJunZhuYuanRi", chuYuanPingJunZhuYuanRi); // 出院患者平均住院日
+		model.addAttribute("chuYuanZongChuangRi", chuYuanZongChuangRi); // 出院患者实际占用总床日
+		model.addAttribute("chuangWeiZhouZhuanCiShu", huanChuangShu); // 换床总次数
+		return View.ReportWorkEfficiencyView;
 	}
 }
 

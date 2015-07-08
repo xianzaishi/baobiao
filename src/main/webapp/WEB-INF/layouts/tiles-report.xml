@@ -32,4 +32,8 @@
     <definition name="reportWorkQualityView" template="/WEB-INF/pages/report/reportWorkQuality.jsp">
     </definition>
     
+    <!-- 工作效率页面 -->
+    <definition name="reportWorkEfficiencyView" template="/WEB-INF/pages/report/reportWorkEfficiency.jsp">
+    </definition>
+    
 </tiles-definitions>

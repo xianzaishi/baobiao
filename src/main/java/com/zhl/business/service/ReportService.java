@@ -308,4 +308,12 @@ public interface ReportService {
 	 * @return
 	 */
 	public int queryShuQianZhenDuanFuHe(Map<String, String> dateMap);
+
+	/**
+	 * 换床总次数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryHuanChuangShu(Map<String, String> dateMap);
 }

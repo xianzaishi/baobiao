@@ -47,5 +47,10 @@ public class Url {
 	 * 治疗质量
 	 */
 	public static final String REPORT_WORK_QUALITY = "/report/workQuality/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 工作效率
+	 */
+	public static final String REPORT_WORK_EFFICIENCY = "/report/workEfficiency/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

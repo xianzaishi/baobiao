@@ -545,6 +545,12 @@ Where a.病人id In (Select 病人id From  诊断符合情况 Where 符合类型
       And b.记录日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
       And a.病人id = b.病人id
 </select>
+<!-- 换床总次数 -->
+<select id="queryHuanChuangShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Count(*) From 病人变动记录
+	Where 开始原因 = 4 
+	And 开始时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+</select>
 </sqlMap>
 
 
