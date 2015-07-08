@@ -86,17 +86,17 @@ public class ReportController {
 		model.addAttribute("dateStart", dateStart);
 		model.addAttribute("dateEnd", dateEnd);
 		model.addAttribute("opTotal", menZhenShouRu.getYaoPinShouRu() + menZhenShouRu.getZhenLiaoShouRu()); // 门诊收入
-		model.addAttribute("ipTotal", ipTotal); // 入院收入
+		model.addAttribute("ipTotal", ipTotal); // 在院收入
 		model.addAttribute("opDrugsTotal", menZhenShouRu.getYaoPinShouRu()); // 门诊药品收入
 		model.addAttribute("opTreatmentTotal", menZhenShouRu.getZhenLiaoShouRu()); // 门诊诊疗收入
-		model.addAttribute("ipDrugsTotal", ipDrugsTotal); // 入院药品收入
-		model.addAttribute("ipTreatmentTotal", ipTotal - ipDrugsTotal); // 入院诊疗收入
+		model.addAttribute("ipDrugsTotal", ipDrugsTotal); // 在院药品收入
+		model.addAttribute("ipTreatmentTotal", ipTotal - ipDrugsTotal); // 在院诊疗收入
 		model.addAttribute("opBaoXianTotal", opBaoXianTotal); // 门诊保险收入
-		model.addAttribute("ipBaoXianTotal", ipBaoXianTotal); // 入院保险收入
+		model.addAttribute("ipBaoXianTotal", ipBaoXianTotal); // 在院保险收入
 		model.addAttribute("opTongChouTotal", opTongChouTotal); // 门诊医保 统筹收入
-		model.addAttribute("ipTongChouTotal", ipTongChouTotal); // 入院医保 统筹收入
+		model.addAttribute("ipTongChouTotal", ipTongChouTotal); // 在院医保 统筹收入
 		model.addAttribute("opBaoXianXianJinTotal", opBaoXianTotal - opTongChouTotal); // 门诊医保 现金收入
-		model.addAttribute("ipBaoXianXianJinTotal", ipBaoXianTotal - ipTongChouTotal); // 入院医保 现金收入
+		model.addAttribute("ipBaoXianXianJinTotal", ipBaoXianTotal - ipTongChouTotal); // 在院医保 现金收入
 
 		model.addAttribute("menJiZhenRenCiTotal", menJiZhenRenCiTotal); // 门急诊人次
 		model.addAttribute("jiZhenRenCiTotal", jiZhenRenCiTotal); // 急诊人次
@@ -109,7 +109,7 @@ public class ReportController {
 		model.addAttribute("menZhenKangShengSuTotal", menZhenKangShengSuTotal); //门诊使用抗生素数
 		model.addAttribute("ruYuanTotal", ruChuYuanShu.getRuYuanShu()); //入院人数
 		model.addAttribute("ruYuanAndYiBaoTotal", ruYuanAndYiBaoTotal); //入院人数 医保人数
-		model.addAttribute("ruYuanAndZiFeiTotal", ruChuYuanShu.getRuYuanShu() - ruYuanAndYiBaoTotal); //入院人数 自费人数
+		model.addAttribute("ruYuanAndZiFeiTotal", ruChuYuanShu.getRuYuanShu() - ruYuanAndYiBaoTotal); //在院人数 自费人数
 		model.addAttribute("zaiYuanTotal", zaiYuanTotal); //在院人数
 		model.addAttribute("zaiYuanAndYiBaoTotal", zaiYuanAndYiBaoTotal); //在院人数 医保人数
 		model.addAttribute("zaiYuanAndXueTouTotal", zaiYuanAndXueTouTotal); //在院人数 血透人数
@@ -148,6 +148,10 @@ public class ReportController {
 			break;
 		case 5: // 工作效率
 			url = "/report/workEfficiency/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 6: // 患者负担
+			url = "/report/patientCost/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		}
@@ -274,6 +278,38 @@ public class ReportController {
 		model.addAttribute("chuYuanZongChuangRi", chuYuanZongChuangRi); // 出院患者实际占用总床日
 		model.addAttribute("chuangWeiZhouZhuanCiShu", huanChuangShu); // 换床总次数
 		return View.ReportWorkEfficiencyView;
+	}
+
+	/**
+	 * 患者负担
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.REPORT_PATIENT_COST)
+	public String patientCost(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		String StartTime = dateStart + " 00:00:00";
+		String EndTime = dateEnd + " 23:59:59";
+		dateMap.put("StartTime", StartTime);
+		dateMap.put("EndTime", EndTime);
+		MenZhenShouRuDto menZhenShouRu = reportService.queryMenZhenShouRu(dateMap); // 门诊收入
+		double menJiZhenRenCiTotal = reportService.queryMenJiZhenRenCiTotal(dateMap); // 门急诊人次
+		double ipTotal = reportService.queryIpTotal(dateMap); // 在院收入
+		double zaiYuanTotal = reportService.queryZaiYuanTotal(dateMap); // 在院人数
+		double ipDrugsTotal = reportService.queryIpDrugsTotal(dateMap); // 在院药品收入
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("opTotal", menZhenShouRu.getYaoPinShouRu() + menZhenShouRu.getZhenLiaoShouRu()); // 门诊收入
+		model.addAttribute("menJiZhenRenCiTotal", menJiZhenRenCiTotal); // 门急诊人次
+		model.addAttribute("opDrugsTotal", menZhenShouRu.getYaoPinShouRu()); // 门诊药品收入
+		model.addAttribute("ipTotal", ipTotal); // 在院收入
+		model.addAttribute("zaiYuanTotal", zaiYuanTotal); // 在院人数
+		model.addAttribute("ipDrugsTotal", ipDrugsTotal); // 在院药品收入
+		return View.ReportPatientCostView;
 	}
 }
 

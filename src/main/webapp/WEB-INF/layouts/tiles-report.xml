@@ -36,4 +36,8 @@
     <definition name="reportWorkEfficiencyView" template="/WEB-INF/pages/report/reportWorkEfficiency.jsp">
     </definition>
     
+    <!-- 患者负担页面 -->
+    <definition name="reportPatientCostView" template="/WEB-INF/pages/report/reportPatientCost.jsp">
+    </definition>
+    
 </tiles-definitions>

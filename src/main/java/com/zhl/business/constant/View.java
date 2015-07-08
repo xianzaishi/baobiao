@@ -43,5 +43,10 @@ public class View {
 	 * 工作效率
 	 */
 	public static final String ReportWorkEfficiencyView = "reportWorkEfficiencyView";
+
+	/**
+	 * 患者负担
+	 */
+	public static final String ReportPatientCostView = "reportPatientCostView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }
