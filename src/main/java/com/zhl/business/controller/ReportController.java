@@ -154,6 +154,10 @@ public class ReportController {
 			url = "/report/patientCost/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
+		case 7: // 资产运营
+			url = "/report/assetsOperation/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
 		}
 		return View.ReportSearchingView;
 	}
@@ -310,6 +314,35 @@ public class ReportController {
 		model.addAttribute("zaiYuanTotal", zaiYuanTotal); // 在院人数
 		model.addAttribute("ipDrugsTotal", ipDrugsTotal); // 在院药品收入
 		return View.ReportPatientCostView;
+	}
+
+	/**
+	 * 资产运营
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.REPORT_ASSETS_OPERATION)
+	public String assetsOperation(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		String StartTime = dateStart + " 00:00:00";
+		String EndTime = dateEnd + " 23:59:59";
+		dateMap.put("StartTime", StartTime);
+		dateMap.put("EndTime", EndTime);
+
+		double ipTotal = reportService.queryIpTotal(dateMap); // 在院收入
+		MenZhenShouRuDto menZhenShouRu = reportService.queryMenZhenShouRu(dateMap); // 门诊收入
+		double ipDrugsTotal = reportService.queryIpDrugsTotal(dateMap); // 在院药品收入
+		double yiLiaoCaiLiaoShouRu = reportService.queryYiliaoCaiLiaoShouRu(dateMap); // 医疗材料收入
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("ipDrugsTotal", ipDrugsTotal); // 在院药品收入
+		model.addAttribute("opDrugsTotal", menZhenShouRu.getYaoPinShouRu()); // 门诊药品收入
+		model.addAttribute("yiLiaoCaiLiaoShouRu", yiLiaoCaiLiaoShouRu); // 医疗材料收入
+		return View.AssetsOperationView;
 	}
 }
 

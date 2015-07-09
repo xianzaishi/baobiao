@@ -40,4 +40,8 @@
     <definition name="reportPatientCostView" template="/WEB-INF/pages/report/reportPatientCost.jsp">
     </definition>
     
+    <!-- 资产运营页面 -->
+    <definition name="assetsOperationView" template="/WEB-INF/pages/report/reportAssetsOperation.jsp">
+    </definition>
+    
 </tiles-definitions>

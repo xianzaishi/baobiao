@@ -316,4 +316,12 @@ public interface ReportService {
 	 * @return
 	 */
 	public int queryHuanChuangShu(Map<String, String> dateMap);
+
+	/**
+	 * 医疗材料收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryYiliaoCaiLiaoShouRu(Map<String, String> dateMap);
 }

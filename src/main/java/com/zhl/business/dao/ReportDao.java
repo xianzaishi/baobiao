@@ -410,4 +410,14 @@ public class ReportDao extends BaseDao {
 	public int queryHuanChuangShu(Map<String, String> dateMap) {
 		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryHuanChuangShu", dateMap);
 	}
+
+	/**
+	 * 医疗材料收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryYiliaoCaiLiaoShouRu(Map<String, String> dateMap) {
+		return (Double) getSqlMapClientTemplate().queryForObject("report.queryYiliaoCaiLiaoShouRu", dateMap);
+	}
 }

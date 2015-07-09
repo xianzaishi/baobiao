@@ -57,5 +57,10 @@ public class Url {
 	 * 患者负担
 	 */
 	public static final String REPORT_PATIENT_COST = "/report/patientCost/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 资产运营
+	 */
+	public static final String REPORT_ASSETS_OPERATION = "/report/assetsOperation/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }
