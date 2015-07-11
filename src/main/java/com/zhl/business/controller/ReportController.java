@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zhl.business.constant.Url;
 import com.zhl.business.constant.View;
-import com.zhl.business.dto.MenZhenShouRuDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
+import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.service.ReportService;
 
 @Controller
@@ -56,41 +56,46 @@ public class ReportController {
 		dateMap.put("StartTime", StartTime);
 		dateMap.put("EndTime", EndTime);
 
-		double ipTotal = reportService.queryIpTotal(dateMap);
-		double ipDrugsTotal = reportService.queryIpDrugsTotal(dateMap);
-		double opBaoXianTotal = reportService.queryOpBaoXianTotal(dateMap);
-		double ipBaoXianTotal = reportService.queryIpBaoXianTotal(dateMap);
-		double opTongChouTotal = reportService.queryOpTongChouTotal(dateMap);
-		double ipTongChouTotal = reportService.queryIpTongChouTotal(dateMap);
+		// 门诊收入 = 挂号收入 + 门诊收费收入 + 体检收入
+		double guaHaoShouRu = reportService.queryGuaHaoShouRu(dateMap); // 门诊挂号收入
+		double menZhenShouFeiShouRu = reportService.queryMenZhenShouFeiShouRu(dateMap); // 门诊收费收入
+		double tiJianShouRu = reportService.queryTiJianShouRu(dateMap); // 体检收入
+		double menZhenShouRu = guaHaoShouRu + menZhenShouFeiShouRu + tiJianShouRu; // 门诊收入
 
-		double menJiZhenRenCiTotal = reportService.queryMenJiZhenRenCiTotal(dateMap);
-		double jiZhenRenCiTotal = reportService.queryJiZhenRenCiTotal(dateMap);
-		double menZhenYiBaoTotal = reportService.queryMenZhenYiBaoTotal(dateMap);
-		double chuZhenYiShengTotal = reportService.queryChuZhenYiShengTotal(dateMap);
-		double chuFangTotal = reportService.queryChuFangTotal(dateMap);
-		double menZhenTuiFeiTotal = reportService.queryMenZhenTuiFeiTotal(dateMap);
-		double menZhenKangShengSuTotal = reportService.queryMenZhenKangShengSuTotal(dateMap);
-		double ruYuanAndYiBaoTotal = reportService.queryRuYuanAndYiBaoTotal(dateMap);
-		double zaiYuanTotal = reportService.queryZaiYuanTotal(dateMap);
-		double zaiYuanAndYiBaoTotal = reportService.queryZaiYuanAndYiBaoTotal(dateMap);
-		double zaiYuanAndXueTouTotal = reportService.queryZaiYuanAndXueTouTotal(dateMap);
-		double chuYuanAndYiBaoTotal = reportService.queryChuYuanAndYiBaoTotal(dateMap);
-		double queryXueTouShouRu = reportService.queryXueTouShouRu(dateMap);
+		ZhuYuanShouRuDto zhuYuanShouRuDto = reportService.queryZhuYuanShouRu(dateMap); // 在院收入
+		double opBaoXianTotal = reportService.queryOpBaoXianTotal(dateMap);	// 门诊保险收入
+		double ipBaoXianTotal = reportService.queryIpBaoXianTotal(dateMap);	// 在院保险收入
+		double opTongChouTotal = reportService.queryOpTongChouTotal(dateMap);	// 门诊医保 统筹收入
+		double ipTongChouTotal = reportService.queryIpTongChouTotal(dateMap);	// 在院医保 统筹收入
+
+		double menJiZhenRenCiTotal = reportService.queryMenJiZhenRenCiTotal(dateMap);	// 门急诊人次
+		double jiZhenRenCiTotal = reportService.queryJiZhenRenCiTotal(dateMap);	// 急诊人次
+		double menZhenYiBaoTotal = reportService.queryMenZhenYiBaoTotal(dateMap);	// 门诊医保人次
+		double chuZhenYiShengTotal = reportService.queryChuZhenYiShengTotal(dateMap);	// 门诊出诊医生
+		double chuFangTotal = reportService.queryChuFangTotal(dateMap);	//门诊处方数
+		double menZhenTuiFeiTotal = reportService.queryMenZhenTuiFeiTotal(dateMap);	//门诊退费金额
+		double menZhenKangShengSuTotal = reportService.queryMenZhenKangShengSuTotal(dateMap);	//门诊使用抗生素数
+		double ruYuanAndYiBaoTotal = reportService.queryRuYuanAndYiBaoTotal(dateMap);	//入院人数 医保人数
+		double zaiYuanTotal = reportService.queryZaiYuanTotal(dateMap);	//在院人数
+		double zaiYuanAndYiBaoTotal = reportService.queryZaiYuanAndYiBaoTotal(dateMap);	//在院人数 医保人数
+		double zaiYuanAndXueTouTotal = reportService.queryZaiYuanAndXueTouTotal(dateMap);	//在院人数 血透人数
+		double chuYuanAndYiBaoTotal = reportService.queryChuYuanAndYiBaoTotal(dateMap);	//出院人数 医保人数
+		double queryXueTouShouRu = reportService.queryXueTouShouRu(dateMap);	// 血透收入
 		
-		RuChuYuanShuDto ruChuYuanShu = reportService.queryRuChuYuanShu(dateMap);
-		MenZhenShouRuDto menZhenShouRu = reportService.queryMenZhenShouRu(dateMap);
+		RuChuYuanShuDto ruChuYuanShu = reportService.queryRuChuYuanShu(dateMap); // 入出院人数
+		double menZhenYaoPinShouRu = reportService.queryMenZhenYaoPinShouRu(dateMap); // 门诊药品收入
 
-		double sum = ipTotal + menZhenShouRu.getYaoPinShouRu() + menZhenShouRu.getZhenLiaoShouRu();
+		double sum = zhuYuanShouRuDto.getZongShouRu() + menZhenShouRu;
 
 		model.addAttribute("sum", sum); // 总收入
 		model.addAttribute("dateStart", dateStart);
 		model.addAttribute("dateEnd", dateEnd);
-		model.addAttribute("opTotal", menZhenShouRu.getYaoPinShouRu() + menZhenShouRu.getZhenLiaoShouRu()); // 门诊收入
-		model.addAttribute("ipTotal", ipTotal); // 在院收入
-		model.addAttribute("opDrugsTotal", menZhenShouRu.getYaoPinShouRu()); // 门诊药品收入
-		model.addAttribute("opTreatmentTotal", menZhenShouRu.getZhenLiaoShouRu()); // 门诊诊疗收入
-		model.addAttribute("ipDrugsTotal", ipDrugsTotal); // 在院药品收入
-		model.addAttribute("ipTreatmentTotal", ipTotal - ipDrugsTotal); // 在院诊疗收入
+		model.addAttribute("opTotal", menZhenShouRu); // 门诊收入
+		model.addAttribute("ipTotal", zhuYuanShouRuDto.getZongShouRu()); // 在院收入
+		model.addAttribute("opDrugsTotal", menZhenYaoPinShouRu); // 门诊药品收入
+		model.addAttribute("opTreatmentTotal", menZhenShouRu - menZhenYaoPinShouRu); // 门诊诊疗收入
+		model.addAttribute("ipDrugsTotal", zhuYuanShouRuDto.getYaoPinShouRu()); // 在院药品收入
+		model.addAttribute("ipTreatmentTotal", zhuYuanShouRuDto.getZhenLiaoShouRu()); // 在院诊疗收入
 		model.addAttribute("opBaoXianTotal", opBaoXianTotal); // 门诊保险收入
 		model.addAttribute("ipBaoXianTotal", ipBaoXianTotal); // 在院保险收入
 		model.addAttribute("opTongChouTotal", opTongChouTotal); // 门诊医保 统筹收入
@@ -299,20 +304,27 @@ public class ReportController {
 		String EndTime = dateEnd + " 23:59:59";
 		dateMap.put("StartTime", StartTime);
 		dateMap.put("EndTime", EndTime);
-		MenZhenShouRuDto menZhenShouRu = reportService.queryMenZhenShouRu(dateMap); // 门诊收入
+
+		// 门诊收入 = 挂号收入 + 门诊收费收入 + 体检收入
+		double guaHaoShouRu = reportService.queryGuaHaoShouRu(dateMap); // 门诊挂号收入
+		double menZhenShouFeiShouRu = reportService.queryMenZhenShouFeiShouRu(dateMap); // 门诊收费收入
+		double tiJianShouRu = reportService.queryTiJianShouRu(dateMap); // 体检收入
+		double menZhenShouRu = guaHaoShouRu + menZhenShouFeiShouRu + tiJianShouRu; // 门诊收入
+		double menZhenYaoPinShouRu = reportService.queryMenZhenYaoPinShouRu(dateMap); // 门诊药品收入
+
 		double menJiZhenRenCiTotal = reportService.queryMenJiZhenRenCiTotal(dateMap); // 门急诊人次
 		double ipTotal = reportService.queryIpTotal(dateMap); // 在院收入
 		double zaiYuanTotal = reportService.queryZaiYuanTotal(dateMap); // 在院人数
-		double ipDrugsTotal = reportService.queryIpDrugsTotal(dateMap); // 在院药品收入
+		ZhuYuanShouRuDto zhuYuanShouRuDto = reportService.queryZhuYuanShouRu(dateMap); // 在院收入
 
 		model.addAttribute("dateStart", dateStart);
 		model.addAttribute("dateEnd", dateEnd);
-		model.addAttribute("opTotal", menZhenShouRu.getYaoPinShouRu() + menZhenShouRu.getZhenLiaoShouRu()); // 门诊收入
+		model.addAttribute("opTotal", menZhenShouRu); // 门诊收入
 		model.addAttribute("menJiZhenRenCiTotal", menJiZhenRenCiTotal); // 门急诊人次
-		model.addAttribute("opDrugsTotal", menZhenShouRu.getYaoPinShouRu()); // 门诊药品收入
+		model.addAttribute("opDrugsTotal", menZhenYaoPinShouRu); // 门诊药品收入
 		model.addAttribute("ipTotal", ipTotal); // 在院收入
 		model.addAttribute("zaiYuanTotal", zaiYuanTotal); // 在院人数
-		model.addAttribute("ipDrugsTotal", ipDrugsTotal); // 在院药品收入
+		model.addAttribute("ipDrugsTotal", zhuYuanShouRuDto.getYaoPinShouRu()); // 在院药品收入
 		return View.ReportPatientCostView;
 	}
 
@@ -332,15 +344,16 @@ public class ReportController {
 		dateMap.put("StartTime", StartTime);
 		dateMap.put("EndTime", EndTime);
 
+		double menZhenYaoPinShouRu = reportService.queryMenZhenYaoPinShouRu(dateMap); // 门诊药品收入
+
 		double ipTotal = reportService.queryIpTotal(dateMap); // 在院收入
-		MenZhenShouRuDto menZhenShouRu = reportService.queryMenZhenShouRu(dateMap); // 门诊收入
-		double ipDrugsTotal = reportService.queryIpDrugsTotal(dateMap); // 在院药品收入
+		ZhuYuanShouRuDto zhuYuanShouRuDto = reportService.queryZhuYuanShouRu(dateMap); // 在院收入
 		double yiLiaoCaiLiaoShouRu = reportService.queryYiliaoCaiLiaoShouRu(dateMap); // 医疗材料收入
 
 		model.addAttribute("dateStart", dateStart);
 		model.addAttribute("dateEnd", dateEnd);
-		model.addAttribute("ipDrugsTotal", ipDrugsTotal); // 在院药品收入
-		model.addAttribute("opDrugsTotal", menZhenShouRu.getYaoPinShouRu()); // 门诊药品收入
+		model.addAttribute("ipDrugsTotal", zhuYuanShouRuDto.getYaoPinShouRu()); // 在院药品收入
+		model.addAttribute("opDrugsTotal", menZhenYaoPinShouRu); // 门诊药品收入
 		model.addAttribute("yiLiaoCaiLiaoShouRu", yiLiaoCaiLiaoShouRu); // 医疗材料收入
 		return View.AssetsOperationView;
 	}

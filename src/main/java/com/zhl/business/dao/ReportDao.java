@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.zhl.business.dto.MenZhenShouRuDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
+import com.zhl.business.dto.ZhuYuanShouRuDto;
 
 @Repository
 public class ReportDao extends BaseDao {
@@ -27,16 +27,6 @@ public class ReportDao extends BaseDao {
 	 */
 	public double queryIpTotal(Map<String, String> dateMap) {
 		return (Double) getSqlMapClientTemplate().queryForObject("report.queryIpTotal", dateMap);
-	}
-
-	/**
-	 * 入院药品收入
-	 * 
-	 * @param dateMap
-	 * @return
-	 */
-	public double queryIpDrugsTotal(Map<String, String> dateMap) {
-		return (Double) getSqlMapClientTemplate().queryForObject("report.queryIpDrugsTotal", dateMap);
 	}
 
 	/**
@@ -220,13 +210,13 @@ public class ReportDao extends BaseDao {
 	}
 
 	/**
-	 * 门诊收入 （包含：药品收入、诊疗收入）
+	 * 门诊药品收入
 	 * 
 	 * @param dateMap
 	 * @return
 	 */
-	public MenZhenShouRuDto queryMenZhenShouRu(Map<String, String> dateMap) {
-		return (MenZhenShouRuDto) getSqlMapClientTemplate().queryForObject("report.queryMenZhenShouRu", dateMap);
+	public double queryMenZhenYaoPinShouRu(Map<String, String> dateMap) {
+		return (Double) getSqlMapClientTemplate().queryForObject("report.queryMenZhenYaoPinShouRu", dateMap);
 	}
 
 	/**
@@ -419,5 +409,45 @@ public class ReportDao extends BaseDao {
 	 */
 	public double queryYiliaoCaiLiaoShouRu(Map<String, String> dateMap) {
 		return (Double) getSqlMapClientTemplate().queryForObject("report.queryYiliaoCaiLiaoShouRu", dateMap);
+	}
+
+	/**
+	 * 住院收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public ZhuYuanShouRuDto queryZhuYuanShouRu(Map<String, String> dateMap) {
+		return (ZhuYuanShouRuDto) getSqlMapClientTemplate().queryForObject("report.queryZhuYuanShouRu", dateMap);
+	}
+
+	/**
+	 * 门诊挂号收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryGuaHaoShouRu(Map<String, String> dateMap) {
+		return (Double) getSqlMapClientTemplate().queryForObject("report.queryGuaHaoShouRu", dateMap);
+	}
+
+	/**
+	 * 门诊收费收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryMenZhenShouFeiShouRu(Map<String, String> dateMap) {
+		return (Double) getSqlMapClientTemplate().queryForObject("report.queryMenZhenShouFeiShouRu", dateMap);
+	}
+
+	/**
+	 * 体检收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryTiJianShouRu(Map<String, String> dateMap) {
+		return (Double) getSqlMapClientTemplate().queryForObject("report.queryTiJianShouRu", dateMap);
 	}
 }

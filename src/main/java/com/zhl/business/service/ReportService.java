@@ -2,8 +2,8 @@ package com.zhl.business.service;
 
 import java.util.Map;
 
-import com.zhl.business.dto.MenZhenShouRuDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
+import com.zhl.business.dto.ZhuYuanShouRuDto;
 
 
 
@@ -29,14 +29,6 @@ public interface ReportService {
 	 */
 	public double queryIpTotal(Map<String, String> dateMap);
 
-	/**
-	 * 入院药品收入
-	 * 
-	 * @param dateMap
-	 * @return
-	 */
-	public double queryIpDrugsTotal(Map<String, String> dateMap);
-	
 	/**
 	 * 门诊保险收入
 	 * 
@@ -182,12 +174,12 @@ public interface ReportService {
 	public RuChuYuanShuDto queryRuChuYuanShu(Map<String, String> dateMap);
 
 	/**
-	 * 门诊收入 （包含：药品收入、诊疗收入）
+	 * 门诊药品收入
 	 * 
 	 * @param dateMap
 	 * @return
 	 */
-	public MenZhenShouRuDto queryMenZhenShouRu(Map<String, String> dateMap);
+	public double queryMenZhenYaoPinShouRu(Map<String, String> dateMap);
 
 	/**
 	 * 体检人次
@@ -324,4 +316,36 @@ public interface ReportService {
 	 * @return
 	 */
 	public double queryYiliaoCaiLiaoShouRu(Map<String, String> dateMap);
+
+	/**
+	 * 住院收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public ZhuYuanShouRuDto queryZhuYuanShouRu(Map<String, String> dateMap);
+
+	/**
+	 * 门诊挂号收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryGuaHaoShouRu(Map<String, String> dateMap);
+
+	/**
+	 * 门诊收费收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryMenZhenShouFeiShouRu(Map<String, String> dateMap);
+
+	/**
+	 * 体检收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryTiJianShouRu(Map<String, String> dateMap);
 }

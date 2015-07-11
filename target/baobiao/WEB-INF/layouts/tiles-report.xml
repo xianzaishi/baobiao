@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	<!-- 模板 -->
+    <definition name="business.base" template="/WEB-INF/pages/commons/business/layouts.jsp">
+        <put-attribute name="head" value="/WEB-INF/pages/commons/business/head.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/commons/business/body.jsp"/>
+        <put-attribute name="foot" value="/WEB-INF/pages/commons/business/foot.jsp"/>
+    </definition> 
+    
+    <!-- 显示结果过渡页 -->
+    <definition name="reportIndexView" template="/WEB-INF/pages/report/searching.jsp">
+    </definition>
+    
+    <!-- 院长日报 -->
+    <definition name="report4DeanView" template="/WEB-INF/pages/report/daily4dean.jsp">
+    </definition>
+    
+    <!-- 显示查询中页面 -->
+    <definition name="reportSearchingView" template="/WEB-INF/pages/report/searching.jsp">
+    </definition>
+    
+    <!-- 资源配置页面 -->
+    <definition name="reportResourcesView" template="/WEB-INF/pages/report/reportResources.jsp">
+    </definition>
+    
+    <!-- 工作负荷页面 -->
+    <definition name="reportWorkloadView" template="/WEB-INF/pages/report/reportWorkload.jsp">
+    </definition>
+    
+    <!-- 治疗质量页面 -->
+    <definition name="reportWorkQualityView" template="/WEB-INF/pages/report/reportWorkQuality.jsp">
+    </definition>
+    
+    <!-- 工作效率页面 -->
+    <definition name="reportWorkEfficiencyView" template="/WEB-INF/pages/report/reportWorkEfficiency.jsp">
+    </definition>
+    
+    <!-- 患者负担页面 -->
+    <definition name="reportPatientCostView" template="/WEB-INF/pages/report/reportPatientCost.jsp">
+    </definition>
+    
+    <!-- 资产运营页面 -->
+    <definition name="assetsOperationView" template="/WEB-INF/pages/report/reportAssetsOperation.jsp">
+    </definition>
+    
+</tiles-definitions>

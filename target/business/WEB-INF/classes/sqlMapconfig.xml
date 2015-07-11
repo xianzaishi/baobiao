@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE sqlMapConfig SYSTEM "file:///D:/dtd/sql-map-config-2.dtd" >
-<sqlMapConfig>
- 	<settings useStatementNamespaces="true" cacheModelsEnabled="true" enhancementEnabled="true"
-		lazyLoadingEnabled="true" />
-		
-	<sqlMap resource="sqlMap/report_sqlMap.xml"/>
-</sqlMapConfig> 

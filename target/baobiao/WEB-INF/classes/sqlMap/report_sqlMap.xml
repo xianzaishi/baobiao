@@ -1,0 +1,565 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="report">
+<select id="query" resultClass="java.lang.String">
+	Select 用户名 From zluserparas Where 参数id = 2 And 用户名 = 'ZLHIS'
+</select>
+<!-- 住院收入 -->
+<select id="queryIpTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 病人费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+		And 记录状态 <> 0 And (门诊标志 = '2' Or 门诊标志 = '3')
+	]]>
+</select>
+<!-- 入院药品收入 -->
+<select id="queryIpDrugsTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 住院费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 收费类别 In ('5','6','7')
+	]]>
+</select>
+<!-- 门诊保险收入 -->
+<select id="queryOpBaoXianTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 门诊费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 保险项目否 = 1
+	]]>
+</select>
+<!-- 入院保险收入 -->
+<select id="queryIpBaoXianTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 住院费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 保险项目否 = 1
+	]]>
+</select>
+<!-- 门诊医保 统筹收入 -->
+<select id="queryOpTongChouTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(统筹金额) From 门诊费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 保险项目否 = 1
+	]]>
+</select>
+<!-- 入院医保 统筹收入 -->
+<select id="queryIpTongChouTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(统筹金额) From 住院费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 保险项目否 = 1
+	]]>
+</select>
+<!-- 门急诊人次 -->
+<select id="queryMenJiZhenRenCiTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(已挂数) From 病人挂号汇总
+	<![CDATA[
+	Where 日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+	]]>
+</select>
+<!-- 急诊人次 -->
+<select id="queryJiZhenRenCiTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(已挂数) From 病人挂号汇总 a
+	Left Join 部门表 b On b.Id = a.科室id
+	<![CDATA[
+	Where b.名称 Like '%急诊%' And a.日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+	]]>
+</select>
+<!-- 门诊医保人次 -->
+<select id="queryMenZhenYiBaoTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病人挂号记录 b 
+	Left Join 病人信息 x On b.门诊号 = x.门诊号
+	<![CDATA[
+	Where b.登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And (x.医疗付款方式 <> '自费医疗' Or x.医疗付款方式 Is Null)
+	]]>
+</select>
+<!-- 门诊出诊医生 -->
+<select id="queryChuZhenYiShengTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From (
+	Select distinct(执行人) From 病人挂号记录
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+	)
+	]]>
+</select>
+<!-- 门诊处方数 -->
+<select id="queryChuFangTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	<!-- 门诊西药房95、门诊中药房96、住院药房94 -->
+	Select Sum(处方数) From (
+	select id,开单科室,执行科室 as 药房,count(no) as 处方数
+	from 
+	<![CDATA[
+	(
+	select distinct a.No ,nvl(b.名称,'未明确') as 开单科室,c.id as id ,c.名称 as 执行科室
+	from 病人费用记录 a ,药品收发记录 d,部门表 b ,部门表 c
+	where a.开单部门id=b.id and a.执行部门id =c.id  and a.id=d.费用id and a.门诊标志=1 and a.记录性质=1 and a.记录状态<>0 and 
+	      d.单据 in (8,9,10) and a.执行部门id in (94,95,96)  and d.审核日期 between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') and To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+	)
+	]]>
+	group by id,开单科室,执行科室
+	order by Id
+	)
+</select>
+<!-- 门诊退费金额 -->
+<select id="queryMenZhenTuiFeiTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额)
+	From 门诊费用记录
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 = 3
+	]]>
+</select>
+<!-- 门诊使用抗生素数 -->
+<select id="queryMenZhenKangShengSuTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病人医嘱记录 y
+	Left Join 门诊费用记录 m On y.病人id = m.病人id
+	Left Join 药品特性 z On y.诊疗项目id = z.药名id
+	<![CDATA[
+	Where m.登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And z.抗生素 = 1
+	]]>
+</select>
+<!-- 入院人数 医保人数 -->
+<select id="queryRuYuanAndYiBaoTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m, 医保病人关联表 y
+	Where m.Id = b.入院病区id And y.病人id = b.病人id And b.入院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 在院人数 -->
+<select id="queryZaiYuanTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m
+	<![CDATA[
+	Where m.Id = b.当前病区id and b.入院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') And 
+	       (b.出院日期 > TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') Or b.出院日期 Is Null)
+	]]>
+</select>
+<!-- 在院人数 医保人数 -->
+<select id="queryZaiYuanAndYiBaoTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m, 医保病人关联表 y
+	<![CDATA[
+	Where m.Id = b.当前病区id And y.病人id = b.病人id and m.id <> 135 And b.入院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') And 
+       (b.出院日期 > TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') Or b.出院日期 Is Null)
+	]]>
+</select>
+<!-- 在院人数 血透人数 -->
+<select id="queryZaiYuanAndXueTouTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m
+	<![CDATA[
+	Where m.Id = b.当前病区id And m.Id = 135 And b.入院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') And 
+       (b.出院日期 > TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') Or b.出院日期 Is Null)
+    ]]>
+</select>
+<!-- 出院人数 医保人数 -->
+<select id="queryChuYuanAndYiBaoTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Count(*) From 病案主页 b, 部门表 m, 医保病人关联表 y
+	Where m.Id = b.入院病区id And y.病人id = b.病人id And b.出院日期 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And
+				TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 血透收入 -->
+<select id="queryXueTouShouRu" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(y.实收金额) From 病案主页 b, 病人费用记录 y, 部门表 m
+	<![CDATA[
+	Where b.病人id = y.病人id And  b.当前病区id = m.Id And m.Id = 135
+      And y.登记时间 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+      And y.记录状态 <> 0
+    ]]>
+</select>
+<!-- 入出院人数 -->
+<select id="queryRuChuYuanShu" resultClass="com.zhl.business.dto.RuChuYuanShuDto" parameterClass="java.util.Map">
+	<![CDATA[
+	Select Sum(入院数) As ruYuanShu, Sum(出院数) As chuYuanShu
+	From (Select Distinct a.病人id, 1 As 入院数, 0 As 转入数, 0 As 出院数, 0 As 转出数, 0 As 陪伴, 0 As 危重, 0 As 开放床数,
+											 0 As 其中死亡, 0 As 本日加床
+		 From (Select Distinct a.病人id, a.主页id, b.住院号, Decode(Nvl(b.病人性质, 0), 2, '1', '0') As 附加信息
+						From 病人变动记录 a, 病案主页 b
+						Where a.病人id = b.病人id And a.主页id = b.主页id And a.开始原因 = 2 And Nvl(a.附加床位, 0) = 0 And
+									a.开始时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+									To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And Nvl(b.病人性质, 0) = 0 And
+									(Not (Exists
+										(Select 1
+												 From 病人变动记录
+												 Where 病人id = a.病人id And 主页id = a.主页id And 开始时间 > a.开始时间 And 开始原因 = 9)) And
+									Nvl(b.病人性质, 0) <> 2)
+						Union All /*需要加上中途转住院的留观病人*/
+						Select Distinct a.病人id, a.主页id, b.住院号, Decode(Nvl(b.病人性质, 0), 2, '1', '0') As 附加信息
+						From 病人变动记录 a, 病案主页 b
+						Where a.病人id = b.病人id And a.主页id = b.主页id And a.开始原因 = 9 And Nvl(b.病人性质, 0) <> 2 And
+									Nvl(a.附加床位, 0) = 0 And a.开始时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+									To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+						Union All /*主要是加上对在病案新增的病案统计*/
+						Select b.病人id, b.主页id, b.住院号, Decode(Nvl(b.病人性质, 0), 2, '1', '0') As 附加信息
+						From 病案主页 b
+						Where Not Exists (Select 1 From 病人变动记录 Where b.病人id = 病人id And b.主页id = 主页id) And b.主页id <> 0 And
+									b.入院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+									To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And Nvl(b.病人性质, 0) = 0) a
+		 Union All
+		 Select Distinct a.病人id, 0 As 入院数, 0 As 转入数, 1 As 出院数, 0 As 转出数, 0 As 陪伴, 0 As 危重, 0 As 开放床数,
+										 0 As 其中死亡, 0 As 本日加床
+		 From 病人信息 a, 病案主页 c
+		 Where a.病人id = c.病人id And Nvl(c.主页id, 0) <> 0 And
+					 (c.出院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+					 To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')) And Nvl(c.病人性质, 0) In (0)
+		 Union All
+		 Select a.病人id, 0 As 入院数, Sum(1) As 转入数, 0 As 出院数, 0 As 转出数, 0 As 陪伴, 0 As 危重, 0 As 开放床数,
+						0 As 其中死亡, 0 As 本日加床
+		 From (Select 病人id, 主页id, 科室id, 开始时间, 开始原因
+						From 病人变动记录 a, 部门表 b
+						Where a.科室id = b.Id And Nvl(a.附加床位, 0) = 0 And
+									((a.开始时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+									To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')) Or
+									(a.终止时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+									To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')))) a, 病案主页 b
+		 Where a.病人id = b.病人id And a.主页id = b.主页id And Nvl(b.主页id, 0) <> 0 And a.开始原因 = 3 And
+					 Nvl(b.病人性质, 0) In (0) And (a.开始时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+					 To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')) And Not Exists
+			(Select 1
+						From 病人变动记录
+						Where a.病人id = 病人id And a.主页id = b.主页id And 开始原因 = 9 /*9-留观病人转住院*/
+									And a.开始时间 < 开始时间)
+		 Group By a.病人id
+		 Union All
+		 Select a.病人id, 0 As 入院数, 0 As 转入数, 0 As 出院数, Sum(1) As 转出数, 0 As 陪伴, 0 As 危重, 0 As 开放床数,
+						0 As 其中死亡, 0 As 本日加床
+		 From (Select 病人id, 主页id, 科室id, 开始时间, 终止时间, 开始原因, 终止原因
+						From 病人变动记录 a, 部门表 b
+						Where a.科室id = b.Id And Nvl(a.附加床位, 0) = 0 And
+									((a.开始时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+									To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')) Or
+									(a.终止时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+									To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS'))) And a.终止原因 In (1, 2, 3)) a, 病案主页 b
+		 Where a.病人id = b.病人id And a.主页id = b.主页id And Nvl(b.主页id, 0) <> 0 And a.终止原因 = 3 And
+					 Nvl(b.病人性质, 0) In (0) And (a.终止时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+					 To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')) And Not Exists
+			(Select 1
+						From 病人变动记录
+						Where a.病人id = 病人id And a.主页id = b.主页id And 终止原因 = 9 /*9-留观病人转住院*/
+									And a.终止时间 < 终止时间)
+		 Group By a.病人id
+		 Union All
+		 Select Distinct (a.病人id) As 病人id, 0 As 入院数, 0 As 转入数, 0 As 出院数, 0 As 转出数, 0 As 陪伴, 1 As 危重,
+										 0 As 开放床数, 0 As 其中死亡, 0 As 本日加床
+		 From 病人变动记录 a, 病案主页 b
+		 Where a.病人id = b.病人id And a.主页id = b.主页id And
+					 (a.开始时间 <= To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And
+					 Nvl(a.终止时间, To_Date('3000-01-01', 'yyyy-mm-dd')) >=
+					 To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS')) And (a.病情 Like '%危%' Or a.病情 Like '%重%')
+					
+					 And Nvl(b.病人性质, 0) = 0
+		 Union All
+		 Select Distinct (病人id) As 病人id, 0 As 入院数, 0 As 转入数, 0 As 出院数, 0 As 转出数, 0 As 陪伴, 1 As 危重,
+										 0 As 开放床数, 0 As 其中死亡, 0 As 本日加床
+		 From 病案主页 b
+		 Where (b.入院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+					 To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')) And
+					 (b.入院病况 Like '%危%' Or b.入院病况 Like '%重%')
+					
+					 And Not Exists
+			(Select 1 From 病人变动记录 Where b.病人id = 病人id And b.主页id = 主页id) And Nvl(b.病人性质, 0) = 0
+		 Union All
+		 Select Distinct (a.病人id) As 病人id, 0 As 入院数, 0 As 转入数, 0 As 出院数, 0 As 转出数, 1 As 陪伴, 0 As 危重,
+										 0 As 开放床数, 0 As 其中死亡, 0 As 本日加床
+		 From 病人变动记录 a, 病案主页 b
+		 Where a.病人id = b.病人id And a.主页id = b.主页id And
+					 (a.开始时间 <= To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And
+					 Nvl(a.终止时间, To_Date('3000-01-01', 'yyyy-mm-dd')) >=
+					 To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS')) And b.是否陪伴 = 1
+					
+					 And Nvl(b.病人性质, 0) = 0
+		 Union All
+		 Select Distinct (病人id) As 病人id, 0 As 入院数, 0 As 转入数, 0 As 出院数, 0 As 转出数, 0 As 陪伴, 0 As 危重,
+										 0 As 开放床数, Decode(出院方式, '死亡', 1, 0) As 其中死亡, 0 As 本日加床
+		 From 病案主页 b
+		 Where (出院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+					 To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS'))
+					
+					 And Nvl(b.病人性质, 0) = 0
+		 ) a
+		 ]]>
+</select>
+<!-- 门诊收入 （包含：药品收入、诊疗收入） -->
+<select id="queryMenZhenShouRu" resultClass="com.zhl.business.dto.MenZhenShouRuDto" parameterClass="java.util.Map">
+<![CDATA[
+select sum(药品收入) as yaoPinShouRu, sum(医疗收入) as zhenLiaoShouRu
+from 
+(
+select  sum(药品收入) as 药品收入,sum(医疗收入) as 医疗收入
+from 
+(
+select  decode(d.id,90,sum(实收金额),91,sum(实收金额),92,sum(实收金额),0) as 药品收入,
+       decode(d.id,90,0,91,0,92,0,115,0,sum(实收金额)) as 医疗收入
+from 病人费用记录 B,收入项目 D
+where 登记时间 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') and b.记录性质=1 
+      and D.id=B.收入项目id AND B.记录状态<>0
+group by d.id
+)
+)
+]]>
+</select>
+<!-- 健康体检人次 -->
+<select id="queryTiJianRenShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+<![CDATA[
+Select Sum(人数)            
+FROM 
+(
+Select nvl(A.男性人数,0)+nvl(A.女性人数,0) AS 人数
+FROM 
+(
+select Nvl(A.体检团体id,0) As 体检团体id,
+       SUM(DECODE(sign(instr(B.性别,'女')-0),1,0,1)) AS 男性人数,
+       SUM(DECODE(sign(instr(B.性别,'女')-0),1,1,0)) AS 女性人数
+from 体检任务记录 A,
+     体检任务人员 B     
+WHERE A.ID=B.任务ID AND A.开始时间 BETWEEN TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')+1-1/24/60/60
+GROUP BY Nvl(A.体检团体id,0)
+) A,
+体检团体目录 B
+WHERE A.体检团体id=B.ID(+)
+)
+]]>
+</select>
+<!-- 出院患者实际占用总床日 -->
+<select id="queryChuYuanZongChuangRi" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Sum(住院天数) From 病案主页
+Where 出院日期 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 住院手术例数 -->
+<select id="queryZhuYuanShouShuLiShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select 手术次数 From (
+select ' ' as 编码,
+       '全院' as 名称,
+     sum(decode(B.序号, 1, 1, 0)) as 病人数,
+     count(B.手术操作ID) as 手术次数,
+     sum(decode(B.切口 || B.愈合, 'Ⅰ甲', 1, 0)) as 甲1,
+     sum(decode(B.切口 || B.愈合, 'Ⅰ乙', 1, 0)) as 乙1,
+     sum(decode(B.切口 || B.愈合, 'Ⅰ丙', 1, 0)) as 丙1,
+     sum(decode(B.切口 || B.愈合, 'Ⅱ甲', 1, 0)) as 甲2,
+     sum(decode(B.切口 || B.愈合, 'Ⅱ乙', 1, 0)) as 乙2,
+     sum(decode(B.切口 || B.愈合, 'Ⅱ丙', 1, 0)) as 丙2,
+     sum(decode(B.切口 || B.愈合, 'Ⅲ甲', 1, 0)) as 甲3,
+     sum(decode(B.切口 || B.愈合, 'Ⅲ乙', 1, 0)) as 乙3,
+     sum(decode(B.切口 || B.愈合, 'Ⅲ丙', 1, 0)) as 丙3,
+     sum(decode(B.切口 || B.愈合, null, 1, '', 1, 0)) as 无切口数,
+     sum(decode(B.麻醉类型, '全麻', 1, 0)) as 全麻,
+     sum(decode(B.麻醉类型, '局麻', 1, 0)) as 局麻,
+     sum(decode(B.麻醉类型, '持硬', 1, 0)) as 持硬,
+     sum(decode(B.麻醉类型, '其他', 1, 0)) as 其他,
+     sum(B.手术日期 - trunc(A.入院日期)) as 术前日,
+     sum(decode(B.序号, 1, A.费用和, 0)) as 费用
+from 病案主页 A, (  select Row_Number() Over(Partition by a.病人id,a.主页id Order by 手术日期) as 序号,a.* from 病人手麻记录 a where a.记录来源=4 order by a.病人id,a.主页id,序号) B
+<![CDATA[
+where A.病人ID = B.病人ID and A.主页ID = B.主页ID and
+     A.出院日期 >= TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') and
+     A.出院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') + 1
+]]>
+)
+</select>
+<!-- 门诊手术例数 -->
+<select id="queryMenZhenShouShuLiShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Count(病人id) From 病人医嘱记录 Where 执行科室id = 124 And 病人来源 = 1
+And 开始执行时间 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 留观人次 -->
+<select id="queryLiuGuanRenCi" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select count(distinct(病人id)) From 病人医嘱记录 Where 医嘱内容 = '门诊留观床位费'
+	And 开始执行时间 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 住院患者死亡例数 -->
+<select id="queryZhuYuanSiWangShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Count(*) From (
+select B.住院号,B.姓名,B.性别,B.年龄,A.职业,A.单位地址,to_char(A.入院日期,'yyyy-MM-dd') as 入院日期,to_char(A.出院日期,'yyyy-MM-dd') as 出院日期
+      ,D.名称 as 出院科室,C.诊断描述 as 出院诊断,E.病案号
+from 病案主页 A,病人信息 B,病人诊断记录 C,部门表 D,住院病案记录 E
+Where A.病人ID = B.病人ID and A.出院科室ID=D.ID and A.病人ID=E.病人ID
+      and A.病人ID=C.病人ID and A.主页ID=C.主页ID and C.记录来源=4 and C.诊断类型=3 and C.诊断次序=1 
+      and C.编码序号=1 and C.出院情况='死亡' And e.主页id = a.主页id
+      and A.出院日期  Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+order by B.姓名)
+</select>
+<!-- 住院手术死亡例数 from:REPORT_ZYSI72 手术疾病疗效及费用查询-->
+<select id="queryZhuYuanShouShuSiWangShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+<![CDATA[
+Select decode(sum(死亡), '', 0, Sum(死亡)) From (
+Select P.死亡
+FROM
+(
+SELECT id, sum(A.死亡) AS 死亡
+FROM 
+(
+select E.id,A.病人ID,A.主页ID,A.住院天数,A.费用和
+		,decode(D.出院情况,'治愈',1,0) AS 治愈,decode(D.出院情况,'好转',1,0) AS 好转,decode(D.出院情况,'未愈',1,0) AS 未愈
+		,decode(D.出院情况,'死亡',1,0) AS 死亡,decode(D.出院情况,'治愈',A.费用和,0) AS 治愈费
+		,decode(A.医疗付款方式,'社会基本医疗保险',1,0) AS 社保,decode(A.医疗付款方式,'公费医疗',1,0) AS 公疗
+		,decode(A.医疗付款方式,'大病统筹',1,0) AS 统筹,decode(A.医疗付款方式,'商业保险',1,0) AS 商保,decode(A.医疗付款方式,'自费医疗',1,0) AS 自费
+from 病案主页 A,临床部门 C,病人诊断记录 D,病人手麻记录 F,
+    疾病编码目录 E
+where A.出院日期 >= TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') and A.出院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')+1 and A.出院科室ID=C.部门ID AND A.病人ID=F.病人ID AND A.病人ID=F.病人ID AND F.记录来源 = 4
+     and A.病人ID=D.病人ID and A.主页ID=D.主页ID and D.记录来源=4  and D.诊断类型=3  and D.诊断次序=1 and D.编码序号=1 and F.手术操作ID=E.Id
+) A
+GROUP BY A.id
+) P,
+疾病编码目录  S
+WHERE P.id=S.Id
+order by S.编码 Desc
+)
+]]>
+</select>
+<select id="queryXinShengErChuYuanShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+<![CDATA[
+Select 出院数 From (
+select b.名称,sum(a.原有人数) AS 原有人数,sum(入院数) as 入院数,sum(转入数) as 转入数,sum(转出数) as 转出数,sum(出院数) as 出院数,sum(死亡数) as 死亡数,
+		 sum(开放总床数) as 开放总床数,sum(开放床数) as 开放床数,sum(空床数) as 空床数,sum(加床数) as 加床数,
+		 sum(危重) as 危重,sum(实际占用总床日数) as 实际占用总床日数
+from (
+	select 科室id, 0 as 原有人数,sum(入院数) as 入院数,sum(转入数) as 转入数,sum(转出数) as 转出数,sum(出院数) as 出院数,sum(死亡数) as 死亡数,
+		 sum(开放床数) as 开放总床数,
+                  sum(开放床数)/count(distinct 日期) as 开放床数,0 as 空床数,sum(加床数) as 加床数,
+		 sum(危重人次) as 危重,sum(现人数) as 实际占用总床日数
+	from 住院日报
+	where 日期 between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') and TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS') 
+	group by 科室id
+	union all 
+	select 科室id ,sum(原人数) as 原有人数,0 as 入院数,0 as 转入数,0 as 转出数,0 as 出院数,0 as 死亡数,
+		 0 as 开放总床数,0 as 开放床数,0 as 空床数,0 as 加床数,0 as 危重 ,0 as 实际占用总床日数
+	from 住院日报
+	where 日期=(Select max(日期) as 日期 from 住院日报 where 日期<=TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS'))
+	group by 科室id
+        union all 
+	select 科室id ,0 as 原有人数,0 as 入院数,0 as 转入数,0 as 转出数,0 as 出院数,0 as 死亡数,
+		 0 as 开放总床数,0 as 开放床数,sum(空床数) as 空床数,0 as 加床数,0 as 危重 ,0 as 实际占用总床日数
+	from 住院日报
+	where 日期=(Select min(日期) as 日期 from 住院日报 where 日期>=TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS'))
+	group by 科室id
+) a,部门表 b
+WHERE a.科室id=b.id
+GROUP BY  b.编码,b.名称
+ORDER BY b.编码
+)
+Where 名称 = '新生儿科'
+]]>
+</select>
+<select id="queryXinShengErSiWangShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+<![CDATA[
+Select count(*) from 病案主页
+Where 出院方式 = '死亡' And 出院科室id = 1188
+And 出院日期 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+]]>
+</select>
+<!-- 住院危重抢救例数 from:REPORT_ZYSH91 抢救病人登记簿1 -->
+<select id="queryZhuYuanWeiZhongQiangQiu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Count(*) From (
+select B.住院号,B.姓名,B.性别,A.年龄,A.职业,A.单位地址,to_char(A.出院日期,'yyyy-MM-dd') as 出院日期,D.名称 as 出院科室
+      ,C.诊断描述 as 出院诊断,A.抢救次数,A.成功次数,C.出院情况 as 疗效,E.病案号
+from 病案主页 A,病人信息 B,病人诊断记录 C,部门表 D,住院病案记录 E
+<![CDATA[
+Where A.病人ID = B.病人ID and A.出院科室ID=D.ID and A.抢救次数>0 and A.病人ID=E.病人ID
+      and A.病人ID=C.病人ID and A.主页ID=C.主页ID and C.诊断次序=1 and C.编码序号=1 and C.记录来源=4 and C.诊断类型 =3
+      and A.出院日期 >= TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') and A.出院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')+1 
+]]>
+order by B.姓名
+)
+</select>
+<!-- 住院危重抢救死亡例数  from:REPORT_ZYSH91 抢救病人登记簿1 -->
+<select id="queryZhuYuanWeiZhongQiangQiuSiWang" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Count(*) From (
+select B.住院号,B.姓名,B.性别,A.年龄,A.职业,A.单位地址,to_char(A.出院日期,'yyyy-MM-dd') as 出院日期,D.名称 as 出院科室
+      ,C.诊断描述 as 出院诊断,A.抢救次数,A.成功次数,C.出院情况 as 疗效,E.病案号
+from 病案主页 A,病人信息 B,病人诊断记录 C,部门表 D,住院病案记录 E
+<![CDATA[
+Where A.病人ID = B.病人ID and A.出院科室ID=D.ID and A.抢救次数>0 and A.病人ID=E.病人ID
+      and A.病人ID=C.病人ID and A.主页ID=C.主页ID and C.诊断次序=1 and C.编码序号=1 and C.记录来源=4 and C.诊断类型 =3
+      and A.出院日期 >= TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') and A.出院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')+1 And C.出院情况 = '死亡'
+]]>
+order by B.姓名
+)
+</select>
+<!-- 急诊科危重抢救例数  from:REPORT_ZYSH91 抢救病人登记簿1 -->
+<select id="queryJiZhenWeiZhongQiangJiu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Count(*) From (
+select B.住院号,B.姓名,B.性别,A.年龄,A.职业,A.单位地址,to_char(A.出院日期,'yyyy-MM-dd') as 出院日期,D.名称 as 出院科室
+      ,C.诊断描述 as 出院诊断,A.抢救次数,A.成功次数,C.出院情况 as 疗效,E.病案号
+from 病案主页 A,病人信息 B,病人诊断记录 C,部门表 D,住院病案记录 E
+<![CDATA[
+Where A.病人ID = B.病人ID and A.出院科室ID=D.ID and A.抢救次数>0 and A.病人ID=E.病人ID
+      and A.病人ID=C.病人ID and A.主页ID=C.主页ID and C.诊断次序=1 and C.编码序号=1 and C.记录来源=4 and C.诊断类型 =3
+      and A.出院日期 >= TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') and A.出院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')+1 And d.名称 = '急诊科'
+]]>
+order by B.姓名
+)
+</select>
+<!-- 急诊科危重抢救死亡例数 from:REPORT_ZYSH91 抢救病人登记簿1 -->
+<select id="queryJiZhenWeiZhongQiangJiuSiWang" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Count(*) From (
+select B.住院号,B.姓名,B.性别,A.年龄,A.职业,A.单位地址,to_char(A.出院日期,'yyyy-MM-dd') as 出院日期,D.名称 as 出院科室
+      ,C.诊断描述 as 出院诊断,A.抢救次数,A.成功次数,C.出院情况 as 疗效,E.病案号
+from 病案主页 A,病人信息 B,病人诊断记录 C,部门表 D,住院病案记录 E
+<![CDATA[
+Where A.病人ID = B.病人ID and A.出院科室ID=D.ID and A.抢救次数>0 and A.病人ID=E.病人ID
+      and A.病人ID=C.病人ID and A.主页ID=C.主页ID and C.诊断次序=1 and C.编码序号=1 and C.记录来源=4 and C.诊断类型 =3
+      and A.出院日期 >= TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') and A.出院日期 < TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')+1 And d.名称 = '急诊科' And C.出院情况 = '死亡'
+]]>
+order by B.姓名
+)
+</select>
+<!-- 住院患者自动出院例数(无费出院) -->
+<select id="queryZiDongLiYuan" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+<![CDATA[
+Select Count(a.病人id) From       
+(      
+Select * From (
+Select Sum(实收金额) As money, 病人id From 住院费用记录
+Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') 
+Group By 病人id
+)Where money = 0
+) a, 病案主页 b
+Where a.病人id = b.病人id And b.出院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And b.住院天数 < 3
+]]>
+</select>
+<select id="queryJieZhangWuFei" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select 病人id From (
+Select Sum(实收金额) As jine, 病人id From 住院费用记录
+Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') 
+Group By 病人id
+)Where jine = 0
+</select>
+<select id="queryZhuYuanDuan" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select 病人id From 病案主页
+<![CDATA[
+Where 住院天数 < 3 And 出院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+			To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+]]>
+</select>
+<!-- 恶性肿瘤手术前诊断与术后病理诊断符合例数 	 -->
+<select id="queryShuQianZhenDuanFuHe" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Count(*) From 病案主页 a, 病人诊断记录 b
+Where a.病人id In (Select 病人id From  诊断符合情况 Where 符合类型 = 6 And 符合情况 = 1)
+      And a.出院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+      And b.诊断id In (Select id From 疾病编码目录 Where 名称 Like '%恶性%')
+      And b.记录日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+      And a.病人id = b.病人id
+</select>
+<!-- 换床总次数 -->
+<select id="queryHuanChuangShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+Select Count(*) From 病人变动记录
+	Where 开始原因 = 4 
+	And 开始时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+</select>
+<!-- 医疗材料收入 -->
+<select id="queryYiliaoCaiLiaoShouRu" resultClass="java.lang.Double" parameterClass="java.util.Map">
+	Select Sum(实收金额) From 病人费用记录 
+	<![CDATA[
+	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And
+				To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS') And 记录状态 <> 0 And 收费类别 In ('4','M')
+	]]>
+</select>
+</sqlMap>
+
+
+

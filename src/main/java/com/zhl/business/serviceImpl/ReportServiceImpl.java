@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zhl.business.dao.ReportDao;
-import com.zhl.business.dto.MenZhenShouRuDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
+import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.service.ReportService;
 
 @Service
@@ -29,16 +29,6 @@ public class ReportServiceImpl implements ReportService {
 	 */
 	public double queryIpTotal(Map<String, String> dateMap) {
 		return reportDao.queryIpTotal(dateMap);
-	}
-
-	/**
-	 * 入院药品收入
-	 * 
-	 * @param dateMap
-	 * @return
-	 */
-	public double queryIpDrugsTotal(Map<String, String> dateMap) {
-		return reportDao.queryIpDrugsTotal(dateMap);
 	}
 
 	/**
@@ -222,13 +212,13 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	/**
-	 * 门诊收入 （包含：药品收入、诊疗收入）
+	 * 门诊药品收入
 	 * 
 	 * @param dateMap
 	 * @return
 	 */
-	public MenZhenShouRuDto queryMenZhenShouRu(Map<String, String> dateMap) {
-		return reportDao.queryMenZhenShouRu(dateMap);
+	public double queryMenZhenYaoPinShouRu(Map<String, String> dateMap) {
+		return reportDao.queryMenZhenYaoPinShouRu(dateMap);
 	}
 
 	/**
@@ -412,5 +402,45 @@ public class ReportServiceImpl implements ReportService {
 	 */
 	public double queryYiliaoCaiLiaoShouRu(Map<String, String> dateMap) {
 		return reportDao.queryYiliaoCaiLiaoShouRu(dateMap);
+	}
+
+	/**
+	 * 住院收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public ZhuYuanShouRuDto queryZhuYuanShouRu(Map<String, String> dateMap) {
+		return reportDao.queryZhuYuanShouRu(dateMap);
+	}
+
+	/**
+	 * 门诊挂号收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryGuaHaoShouRu(Map<String, String> dateMap) {
+		return reportDao.queryGuaHaoShouRu(dateMap);
+	}
+
+	/**
+	 * 门诊收费收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryMenZhenShouFeiShouRu(Map<String, String> dateMap) {
+		return reportDao.queryMenZhenShouFeiShouRu(dateMap);
+	}
+
+	/**
+	 * 体检收入
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryTiJianShouRu(Map<String, String> dateMap) {
+		return reportDao.queryTiJianShouRu(dateMap);
 	}
 }
