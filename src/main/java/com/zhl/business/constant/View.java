@@ -53,5 +53,10 @@ public class View {
 	 * 资产运营
 	 */
 	public static final String AssetsOperationView = "assetsOperationView";
+
+	/**
+	 * 按抢救成功率分析
+	 */
+	public static final String RescueSuccessRateView = "rescueSuccessRateView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

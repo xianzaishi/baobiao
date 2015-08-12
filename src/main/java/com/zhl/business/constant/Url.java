@@ -62,5 +62,10 @@ public class Url {
 	 * 资产运营
 	 */
 	public static final String REPORT_ASSETS_OPERATION = "/report/assetsOperation/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 按抢救成功率分析
+	 */
+	public static final String REPORT_RESCUE_SUCCESS_RATE = "/report/rescueSuccessRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

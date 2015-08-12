@@ -1,6 +1,8 @@
 package com.zhl.business.controller;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zhl.business.constant.Url;
 import com.zhl.business.constant.View;
+import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.service.ReportService;
@@ -161,6 +164,10 @@ public class ReportController {
 			break;
 		case 7: // 资产运营
 			url = "/report/assetsOperation/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 9: // 按抢救成功率分析
+			url = "/report/rescueSuccessRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		}
@@ -356,6 +363,59 @@ public class ReportController {
 		model.addAttribute("opDrugsTotal", menZhenYaoPinShouRu); // 门诊药品收入
 		model.addAttribute("yiLiaoCaiLiaoShouRu", yiLiaoCaiLiaoShouRu); // 医疗材料收入
 		return View.AssetsOperationView;
+	}
+
+	/**
+	 * 按抢救成功率分析
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.REPORT_RESCUE_SUCCESS_RATE)
+	public String rescueSuccessRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		String StartTime = dateStart + " 00:00:00";
+		String EndTime = dateEnd + " 23:59:59";
+		dateMap.put("StartTime", StartTime);
+		dateMap.put("EndTime", EndTime);
+
+		// 查询医疗部门
+		List<DeptDateDto> deptDateDtoList = new LinkedList<DeptDateDto>();
+		deptDateDtoList = reportService.queryYiLiaoDept();
+		
+		List<DeptDateDto> deptDateDtoResultList = new LinkedList<DeptDateDto>();
+
+		for (int i = 0; i < deptDateDtoList.size(); i++) {
+			DeptDateDto deptDateDto = new DeptDateDto();
+			int id = deptDateDtoList.get(i).getId();
+			deptDateDto.setId(id);
+			deptDateDto.setName(deptDateDtoList.get(i).getName());
+			dateMap.put("id", Integer.toString(deptDateDtoList.get(i).getId()));
+			List<Double> dateList = reportService.queryQiangJiuChengGongLvByDeptId(dateMap);
+			dateMap.remove("id");
+			deptDateDto.setDateList(dateList);
+			deptDateDtoResultList.add(deptDateDto);
+		}
+		
+		String data = "";
+		for (int i = 0; i < deptDateDtoList.size(); i++) {
+			if ((deptDateDtoResultList.get(i).getDateList().get(1) == 0 ? 0 : (deptDateDtoResultList.get(i).getDateList().get(0) / deptDateDtoResultList.get(i)
+					.getDateList().get(1)) * 100) > 0) {
+				data += "['"
+						+ deptDateDtoResultList.get(i).getName()
+						+ "',"
+						+ (deptDateDtoResultList.get(i).getDateList().get(1) == 0 ? 0
+								: (deptDateDtoResultList.get(i).getDateList().get(0) / deptDateDtoResultList.get(i).getDateList().get(1)) * 100) + "],";
+			}
+		}
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("deptDateDtoResultList", deptDateDtoResultList);
+		model.addAttribute("data", data);
+		return View.RescueSuccessRateView;
 	}
 }
 

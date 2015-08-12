@@ -44,4 +44,8 @@
     <definition name="assetsOperationView" template="/WEB-INF/pages/report/reportAssetsOperation.jsp">
     </definition>
     
+    <!-- 按抢救成功率分析 -->
+    <definition name="rescueSuccessRateView" template="/WEB-INF/pages/report/rescueSuccessRate.jsp">
+    </definition>
+    
 </tiles-definitions>

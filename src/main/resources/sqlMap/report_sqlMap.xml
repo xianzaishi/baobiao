@@ -626,6 +626,35 @@ From (Select 1 As 序号, a.收费时间 As 日期, b.病人id, Decode(a.记录�
 Where a.病人id = o.病人id
 ]]>
 </select>
+<!-- 查询医疗部门 -->
+<select id="queryYiLiaoDept" resultClass="com.zhl.business.dto.DeptDateDto">
+Select id, 名称 as name from 部门表 Where 上级id = 62
+</select>
+<!-- 根据科室id查询科室抢救成功率 from:REPORT_ZYSH91 抢救病人登记簿1 -->
+<select id="queryQiangJiuChengGongLvByDeptId" resultClass="java.lang.Double" parameterClass="java.util.Map">
+Select Count(*) As 抢救成功 From (
+select B.住院号,B.姓名,B.性别,A.年龄,A.职业,A.单位地址,to_char(A.出院日期,'yyyy-MM-dd') as 出院日期,D.名称 as 出院科室
+      ,C.诊断描述 as 出院诊断,A.抢救次数,A.成功次数,C.出院情况 as 疗效,E.病案号
+from 病案主页 A,病人信息 B,病人诊断记录 C,部门表 D,住院病案记录 E
+<![CDATA[
+Where A.病人ID = B.病人ID and A.出院科室ID=D.ID and A.抢救次数>0 and A.病人ID=E.病人ID
+      and A.病人ID=C.病人ID and A.主页ID=C.主页ID and C.诊断次序=1 and C.编码序号=1 and C.记录来源=4 and C.诊断类型 =3
+      and A.出院日期 >= To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') and A.出院日期 < To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')+1 And d.Id = #id#
+      And C.出院情况 Not In ('死亡', '无效')
+)
+]]>
+Union All
+Select Count(*) As 抢救数 From (
+select B.住院号,B.姓名,B.性别,A.年龄,A.职业,A.单位地址,to_char(A.出院日期,'yyyy-MM-dd') as 出院日期,D.名称 as 出院科室
+      ,C.诊断描述 as 出院诊断,A.抢救次数,A.成功次数,C.出院情况 as 疗效,E.病案号
+from 病案主页 A,病人信息 B,病人诊断记录 C,部门表 D,住院病案记录 E
+<![CDATA[
+Where A.病人ID = B.病人ID and A.出院科室ID=D.ID and A.抢救次数>0 and A.病人ID=E.病人ID
+      and A.病人ID=C.病人ID and A.主页ID=C.主页ID and C.诊断次序=1 and C.编码序号=1 and C.记录来源=4 and C.诊断类型 =3
+      and A.出院日期 >= To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') and A.出院日期 < To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')+1 And d.Id = #id#
+)
+]]>
+</select>
 </sqlMap>
 
 
