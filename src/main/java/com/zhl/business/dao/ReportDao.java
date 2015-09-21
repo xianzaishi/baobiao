@@ -512,4 +512,14 @@ public class ReportDao extends BaseDao {
 	public int queryBingChuangGongZuoRiByMonth(Map<String, String> dateMap) {
 		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryBingChuangGongZuoRiByMonth", dateMap);
 	}
+
+	/**
+	 * 病床周转次数
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public double queryBedTurnoverTimes(Map<String, String> dateMap) {
+		return (Double) getSqlMapClientTemplate().queryForObject("report.queryBedTurnoverTimes", dateMap);
+	}
 }

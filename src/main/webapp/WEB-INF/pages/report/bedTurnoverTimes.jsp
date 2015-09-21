@@ -72,7 +72,7 @@ $(function(){
 		if(dateStart == "" || dateEnd == "" || dateStart > dateEnd){
 			alert("请输入正确的查询时间段");
 		}else{
-			var url = "${contextPath }/report/search/dateStart/" + $("#dateStart").val() + "/dateEnd/" + $("#dateEnd").val() + "/parm/11";
+			var url = "${contextPath }/report/search/dateStart/" + $("#dateStart").val() + "/dateEnd/" + $("#dateEnd").val() + "/parm/12";
 			window.location.href = url;
 		}
 	});

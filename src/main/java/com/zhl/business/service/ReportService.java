@@ -398,4 +398,12 @@ public interface ReportService {
 	 * @return
 	 */
 	public int queryBingChuangGongZuoRiByMonth(Map<String, String> dateMap);
+	
+	/**
+	 * 病床周转次数
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public double queryBedTurnoverTimes(Map<String, String> dateMap);
 }

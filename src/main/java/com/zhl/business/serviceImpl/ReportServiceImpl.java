@@ -504,4 +504,14 @@ public class ReportServiceImpl implements ReportService {
 	public int queryBingChuangGongZuoRiByMonth(Map<String, String> dateMap) {
 		return reportDao.queryBingChuangGongZuoRiByMonth(dateMap);
 	}
+	
+	/**
+	 * 病床周转次数
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public double queryBedTurnoverTimes(Map<String, String> dateMap){
+		return reportDao.queryBedTurnoverTimes(dateMap);
+	}
 }

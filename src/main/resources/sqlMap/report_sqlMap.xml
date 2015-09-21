@@ -814,6 +814,28 @@ Select nvl(sum(现人数),0) as 实际占用总床日数
 	where 日期 >= To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') and 日期 < To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')+1
 ]]>
 </select>
+<!-- 病床周转次数 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
+<select id="queryBedTurnoverTimes"  resultClass="java.lang.Double" parameterClass="java.util.Map">
+<![CDATA[
+SELECT 总计/1061 FROM  (
+	SELECT  ' ' AS 编码,'合计' as 科室,count(A.主页ID) as 总计,sum(A.住院天数) As 出院者占用总床日数
+		  ,sum(decode(B.出院情况,'治愈',1,0)) as 治愈,sum(decode(B.出院情况,'好转',1,0)) as 好转
+		  ,sum(decode(B.出院情况,'未愈',1,0)) as 未愈,sum(decode(B.出院情况,'死亡',1,0)) as 死亡
+		  ,sum(decode(B.出院情况,'死亡',decode(sign((A.出院日期-A.入院日期)-1),1,0,1),0)) as 死亡24 
+		  ,sum(decode(B.出院情况,'其他',1,0)) as 其他,sum(A.抢救次数) as 抢救次数,sum(A.成功次数) as 成功次数
+		  ,sum(decode(A.是否确诊,1,1,0)) as 明确诊断
+		  ,sum(decode(A.是否确诊,1,decode(C.符合情况,1,1,0),0)) as 诊断符合
+	from 
+		(select 病人ID,主页ID,入院日期,出院日期,住院天数,出院科室ID as 科室ID,抢救次数,成功次数,是否确诊 
+		 from 病案主页 
+		 where 出院日期 >= To_Date(#StartTime#, 'YYYY-MM-DD') and 出院日期 < To_Date(#EndTime#, 'YYYY-MM-DD')+1
+		 ) A,病人诊断记录 B,诊断符合情况 C 
+	Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
+		  and A.主页ID = C.主页ID and A.病人ID=C.病人ID and C.符合类型=2
+	)
+order by 编码
+]]>
+</select>
 </sqlMap>
 
 

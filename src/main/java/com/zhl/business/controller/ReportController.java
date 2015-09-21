@@ -568,7 +568,7 @@ public class ReportController {
 	}
 
 	/**
-	 * 病床周转次数分析
+	 * 病床周转次数
 	 * 
 	 * @param dateStart
 	 * @param dateEnd
@@ -577,6 +577,29 @@ public class ReportController {
 	 */
 	@RequestMapping(value = Url.BED_TURNOVER_TIMES)
 	public String bedTurnoverTimes(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+
+		String data = "";
+		List<DataDto> dataDtoList = new LinkedList<DataDto>();
+		for (int i = 1; i <= 12; i++) {
+			DataDto dataDto = new DataDto();
+			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			dateMap.put("StartTime", strStartTime);
+			dateMap.put("EndTime", strEndTime);
+			double bedTurnoverTimes = reportService.queryBedTurnoverTimes(dateMap);
+			dataDto.setName(i + "月");
+			dataDto.setData(bedTurnoverTimes);
+			dataDtoList.add(dataDto);
+			data += "['" + i + "月'," + bedTurnoverTimes + "],";
+			dateMap.remove("StartTime");
+			dateMap.remove("EndTime");
+		}
+
+		model.addAttribute("dateStart", dateStart.split("-")[0]);
+		model.addAttribute("dateEnd", dateStart.split("-")[0]);
+		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("data", data);
 		return View.BedTurnoverTimesView;
 	}
 
