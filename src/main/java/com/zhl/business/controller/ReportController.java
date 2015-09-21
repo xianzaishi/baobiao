@@ -1,5 +1,6 @@
 package com.zhl.business.controller;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zhl.business.constant.Url;
 import com.zhl.business.constant.View;
+import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
+import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.service.ReportService;
 
@@ -168,6 +171,18 @@ public class ReportController {
 			break;
 		case 9: // 按抢救成功率分析
 			url = "/report/rescueSuccessRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 10: // 患者平均住院天数分析
+			url = "/report/dayOfPatientCost/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 11: // 平均病床工作日
+			url = "/report/avgWorkingBeds/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 12: // 病床周转次数分析
+			url = "/report/bedTurnoverTimes/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		}
@@ -417,5 +432,153 @@ public class ReportController {
 		model.addAttribute("data", data);
 		return View.RescueSuccessRateView;
 	}
+
+	/**
+	 * 出院患者平均住院天数分析
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.REPORT_DAY_OF_PATIENT_COST)
+	public String dayOfPatientCost(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		String StartTime = dateStart + " 00:00:00";
+		String EndTime = dateEnd + " 23:59:59";
+		dateMap.put("StartTime", StartTime);
+		dateMap.put("EndTime", EndTime);
+
+		// 查询医疗部门
+		List<DeptDateDto> deptDateDtoList = new LinkedList<DeptDateDto>();
+		deptDateDtoList = reportService.queryYiLiaoDept();
+
+		List<DeptDateDto> deptDateDtoResultList = new LinkedList<DeptDateDto>();
+
+		String data = "";
+		for (int i = 0; i < deptDateDtoList.size(); i++) {
+			DeptDateDto deptDateDto = new DeptDateDto();
+			int id = deptDateDtoList.get(i).getId();
+			deptDateDto.setId(id);
+			deptDateDto.setName(deptDateDtoList.get(i).getName());
+			dateMap.put("id", Integer.toString(deptDateDtoList.get(i).getId()));
+			List<Double> dateList = new LinkedList<Double>();
+
+			int chuYuanZongChuangRi = reportService.queryChuYuanZongChuangRiByDeptId(dateMap); // 出院患者实际占用总床日
+			int chuYuanShu = reportService.queryChuYuanShuByDeptId(dateMap); // 出院人数
+			double chuYuanPingJunZhuYuanRi = (chuYuanShu == 0 ? 0 : chuYuanZongChuangRi / chuYuanShu); // 出院患者平均住院日
+			dateList.add(chuYuanPingJunZhuYuanRi);
+
+			dateMap.remove("id");
+
+			if (chuYuanPingJunZhuYuanRi != 0) {
+				data += "['" + deptDateDtoList.get(i).getName() + "'," + chuYuanPingJunZhuYuanRi + "],";
+			}
+
+			deptDateDto.setDateList(dateList);
+			deptDateDtoResultList.add(deptDateDto);
+		}
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("deptDateDtoResultList", deptDateDtoResultList);
+		model.addAttribute("data", data);
+		return View.DayOfPatientCostView;
+	}
+
+	/**
+	 * 在院病人分布
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.REPORT_IP_SPREAD)
+	public String ipSpread(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		String StartTime = dateStart + " 00:00:00";
+		String EndTime = dateEnd + " 23:59:59";
+		dateMap.put("StartTime", StartTime);
+		dateMap.put("EndTime", EndTime);
+
+		List<ZaiYuanBingRenFenBuDto> zaiYuanBingRenFenBuList = new LinkedList<ZaiYuanBingRenFenBuDto>();
+		zaiYuanBingRenFenBuList = reportService.queryZaiYuanBingRenFenBu();
+
+		String data = "";
+		for (int i = 0; i < zaiYuanBingRenFenBuList.size(); i++) {
+			data += "['" + zaiYuanBingRenFenBuList.get(i).getName() + "'," + zaiYuanBingRenFenBuList.get(i).getCount() + "],";
+		}
+
+		model.addAttribute("zaiYuanBingRenFenBuList", zaiYuanBingRenFenBuList);
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("data", data);
+		return View.IpSpreadView;
+	}
+
+	/**
+	 * 平均病床工作日
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.REPORT_AVG_WORKING_BEDS)
+	public String averageWorkingDaysOfHospitalBeds(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+
+		String data = "";
+		List<DataDto> dataDtoList = new LinkedList<DataDto>();
+		// 病床工作日：实际占用总床日数÷平均开放病床数(1061)
+		for (int i = 1; i <= 12; i++) {
+			DataDto dataDto = new DataDto();
+			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01 00:00:00";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i) + " 23:59:59";
+			dateMap.put("StartTime", strStartTime);
+			dateMap.put("EndTime", strEndTime);
+			double avg = reportService.queryBingChuangGongZuoRiByMonth(dateMap) / 1061.00;
+			dataDto.setName(i + "月");
+			dataDto.setData(avg);
+			dataDtoList.add(dataDto);
+			data += "['" + i + "月'," + avg + "],";
+			dateMap.remove("StartTime");
+			dateMap.remove("EndTime");
+		}
+
+		model.addAttribute("dateStart", dateStart.split("-")[0]);
+		model.addAttribute("dateEnd", dateStart.split("-")[0]);
+		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("data", data);
+		return View.AvgWorkingBedsView;
+	}
+
+	/**
+	 * 获得一个月的天数
+	 * 
+	 * @param month
+	 * @return
+	 */
+	private static int getDayOfMonth(int month) {
+        Calendar cal = Calendar.getInstance();  
+        //下面可以设置月份，注：月份设置要减1，所以设置1月就是1-1，设置2月就是2-1，如此类推  
+		cal.set(Calendar.MONTH, month - 1);
+		int MaxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		return MaxDay;
+	}
+
+	/**
+	 * 病床周转次数分析
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.BED_TURNOVER_TIMES)
+	public String bedTurnoverTimes(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		return View.BedTurnoverTimesView;
+	}
+
 }
 

@@ -24,7 +24,7 @@
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
           <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
-		  <property name="url" value="jdbc:oracle:thin:@172.16.0.122:1521/orcl"></property>
+		  <property name="url" value="jdbc:oracle:thin:@172.16.0.121:1521/orcl"></property>
 		  <property name="username" value="zlhis"></property>
 		  <property name="password" value="c6yi6d"></property>
 	</bean>

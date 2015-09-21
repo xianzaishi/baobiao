@@ -58,5 +58,25 @@ public class View {
 	 * 按抢救成功率分析
 	 */
 	public static final String RescueSuccessRateView = "rescueSuccessRateView";
+
+	/**
+	 * 出院患者平均住院天数分析
+	 */
+	public static final String DayOfPatientCostView = "dayOfPatientCostView";
+
+	/**
+	 * 在院病人分布
+	 */
+	public static final String IpSpreadView = "ipSpreadView";
+
+	/**
+	 * 平均病床工作日
+	 */
+	public static final String AvgWorkingBedsView = "avgWorkingBedsView";
+
+	/**
+	 * 病床周转次数分析
+	 */
+	public static final String BedTurnoverTimesView = "bedTurnoverTimesView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

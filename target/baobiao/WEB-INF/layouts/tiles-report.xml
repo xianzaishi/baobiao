@@ -44,4 +44,20 @@
     <definition name="assetsOperationView" template="/WEB-INF/pages/report/reportAssetsOperation.jsp">
     </definition>
     
+    <!-- 按抢救成功率分析 -->
+    <definition name="rescueSuccessRateView" template="/WEB-INF/pages/report/rescueSuccessRate.jsp">
+    </definition>
+    
+    <!-- 出院患者平均住院天数分析 -->
+    <definition name="dayOfPatientCostView" template="/WEB-INF/pages/report/dayOfPatientCost.jsp">
+    </definition>
+    
+    <!-- 在院病人分布 -->
+    <definition name="ipSpreadView" template="/WEB-INF/pages/report/ipSpread.jsp">
+    </definition>
+    
+    <!-- 平均病床工作日 -->
+    <definition name="avgWorkingBedsView" template="/WEB-INF/pages/report/avgWorkingBeds.jsp">
+    </definition>
+    
 </tiles-definitions>

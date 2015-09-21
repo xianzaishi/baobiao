@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
+import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 
 @Repository
@@ -241,6 +242,16 @@ public class ReportDao extends BaseDao {
 	}
 
 	/**
+	 * 出院患者实际占用总床日 按科室
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public int queryChuYuanZongChuangRiByDeptId(Map<String, String> dateMap) {
+		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryChuYuanZongChuangRiByDeptId", dateMap);
+	}
+
+	/**
 	 * 住院手术例数
 	 * 
 	 * @param dateMap<StartTime, EndTime>
@@ -471,5 +482,34 @@ public class ReportDao extends BaseDao {
 	@SuppressWarnings("unchecked")
 	public List<Double> queryQiangJiuChengGongLvByDeptId(Map<String, String> dateMap) {
 		return (List<Double>) getSqlMapClientTemplate().queryForList("report.queryQiangJiuChengGongLvByDeptId", dateMap);
+	}
+	
+	/**
+	 * 出院数 按科室
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public int queryChuYuanShuByDeptId(Map<String, String> dateMap) {
+		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryChuYuanShuByDeptId", dateMap);
+	}
+
+	/**
+	 * 在院病人分布
+	 * 
+	 * @return
+	 */
+	public List<ZaiYuanBingRenFenBuDto> queryZaiYuanBingRenFenBu() {
+		return (List<ZaiYuanBingRenFenBuDto>) getSqlMapClientTemplate().queryForList("report.queryZaiYuanBingRenFenBu");
+	}
+
+	/**
+	 * 病床工作日 按月查询
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public int queryBingChuangGongZuoRiByMonth(Map<String, String> dateMap) {
+		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryBingChuangGongZuoRiByMonth", dateMap);
 	}
 }

@@ -67,5 +67,25 @@ public class Url {
 	 * 按抢救成功率分析
 	 */
 	public static final String REPORT_RESCUE_SUCCESS_RATE = "/report/rescueSuccessRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 出院患者平均住院天数分析
+	 */
+	public static final String REPORT_DAY_OF_PATIENT_COST = "/report/dayOfPatientCost/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 在院病人分布
+	 */
+	public static final String REPORT_IP_SPREAD = "/report/ipSpread/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 平均病床工作日
+	 */
+	public static final String REPORT_AVG_WORKING_BEDS = "/report/avgWorkingBeds/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 病床周转次数分析
+	 */
+	public static final String BED_TURNOVER_TIMES = "/report/bedTurnoverTimes/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

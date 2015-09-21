@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.zhl.business.dao.ReportDao;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
+import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.service.ReportService;
 
@@ -211,7 +212,7 @@ public class ReportServiceImpl implements ReportService {
 	public RuChuYuanShuDto queryRuChuYuanShu(Map<String, String> dateMap) {
 		return reportDao.queryRuChuYuanShu(dateMap);
 	}
-
+	
 	/**
 	 * 门诊药品收入
 	 * 
@@ -240,6 +241,16 @@ public class ReportServiceImpl implements ReportService {
 	 */
 	public int queryChuYuanZongChuangRi(Map<String, String> dateMap) {
 		return reportDao.queryChuYuanZongChuangRi(dateMap);
+	}
+	
+	/**
+	 * 出院患者实际占用总床日 按科室
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public int queryChuYuanZongChuangRiByDeptId(Map<String, String> dateMap) {
+		return reportDao.queryChuYuanZongChuangRiByDeptId(dateMap);
 	}
 
 	/**
@@ -462,5 +473,35 @@ public class ReportServiceImpl implements ReportService {
 	 */
 	public List<Double> queryQiangJiuChengGongLvByDeptId(Map<String, String> dateMap) {
 		return reportDao.queryQiangJiuChengGongLvByDeptId(dateMap);
+	}
+	
+	/**
+	 * 出院数 按科室
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public int queryChuYuanShuByDeptId(Map<String, String> dateMap) {
+		return reportDao.queryChuYuanShuByDeptId(dateMap);
+	}
+
+	/**
+	 * 在院病人分布
+	 * 
+	 * @return
+	 */
+	public List<ZaiYuanBingRenFenBuDto> queryZaiYuanBingRenFenBu() {
+		return reportDao.queryZaiYuanBingRenFenBu();
+	}
+
+	/**
+	 * 病床工作日 按月查询
+	 * 
+	 * @param dateMap
+	 *            <StartTime, EndTime>
+	 * @return
+	 */
+	public int queryBingChuangGongZuoRiByMonth(Map<String, String> dateMap) {
+		return reportDao.queryBingChuangGongZuoRiByMonth(dateMap);
 	}
 }
