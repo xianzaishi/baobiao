@@ -78,5 +78,10 @@ public class View {
 	 * 病床周转次数分析
 	 */
 	public static final String BedTurnoverTimesView = "bedTurnoverTimesView";
+
+	/**
+	 * 门诊诊断符合率
+	 */
+	public static final String OpDiagnosticRateView = "opDiagnosticRateView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

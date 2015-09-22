@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.zhl.business.dao.ReportDao;
 import com.zhl.business.dto.DeptDateDto;
+import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
@@ -511,7 +512,17 @@ public class ReportServiceImpl implements ReportService {
 	 * @param dateMap<StartTime, EndTime>
 	 * @return
 	 */
-	public double queryBedTurnoverTimes(Map<String, String> dateMap){
+	public double queryBedTurnoverTimes(Map<String, String> dateMap) {
 		return reportDao.queryBedTurnoverTimes(dateMap);
+	}
+	
+	/**
+	 * 门诊诊断符合率
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public OpDiagnosticDto queryOpDiagnosticRate(Map<String, String> dateMap) {
+		return reportDao.queryOpDiagnosticRate(dateMap);
 	}
 }

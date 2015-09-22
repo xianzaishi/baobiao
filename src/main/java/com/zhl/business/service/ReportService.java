@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.zhl.business.dto.DeptDateDto;
+import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
@@ -393,8 +394,7 @@ public interface ReportService {
 	/**
 	 * 病床工作日 按月查询
 	 * 
-	 * @param dateMap
-	 *            <StartTime, EndTime>
+	 * @param dateMap<StartTime, EndTime>
 	 * @return
 	 */
 	public int queryBingChuangGongZuoRiByMonth(Map<String, String> dateMap);
@@ -406,4 +406,12 @@ public interface ReportService {
 	 * @return
 	 */
 	public double queryBedTurnoverTimes(Map<String, String> dateMap);
+
+	/**
+	 * 门诊诊断符合率
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public OpDiagnosticDto queryOpDiagnosticRate(Map<String, String> dateMap);
 }

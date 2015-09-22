@@ -60,8 +60,12 @@
     <definition name="avgWorkingBedsView" template="/WEB-INF/pages/report/avgWorkingBeds.jsp">
     </definition>
     
-    <!-- 病床周转次数分析 -->
+    <!-- 病床周转次数 -->
     <definition name="bedTurnoverTimesView" template="/WEB-INF/pages/report/bedTurnoverTimes.jsp">
+    </definition>
+    
+    <!-- 门诊诊断符合率 -->
+    <definition name="opDiagnosticRateView" template="/WEB-INF/pages/report/opDiagnosticRate.jsp">
     </definition>
     
 </tiles-definitions>

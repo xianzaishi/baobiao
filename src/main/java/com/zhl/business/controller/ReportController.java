@@ -16,6 +16,7 @@ import com.zhl.business.constant.Url;
 import com.zhl.business.constant.View;
 import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
+import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
@@ -181,8 +182,12 @@ public class ReportController {
 			url = "/report/avgWorkingBeds/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
-		case 12: // 病床周转次数分析
+		case 12: // 病床周转次数
 			url = "/report/bedTurnoverTimes/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 13: // 门诊诊断符合率
+			url = "/report/opDiagnosticRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		}
@@ -603,5 +608,42 @@ public class ReportController {
 		return View.BedTurnoverTimesView;
 	}
 
+	/**
+	 * 门诊诊断符合率
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.OP_DIAGNOSTIC_RATE)
+	public String opDiagnosticRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+
+		String data = "";
+		List<OpDiagnosticDto> dataDtoList = new LinkedList<OpDiagnosticDto>();
+		for (int i = 1; i <= 12; i++) {
+			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			dateMap.put("StartTime", strStartTime);
+			dateMap.put("EndTime", strEndTime);
+			OpDiagnosticDto opDiagnosticDto = reportService.queryOpDiagnosticRate(dateMap);
+			opDiagnosticDto.setMonth(i + "月");
+			dataDtoList.add(opDiagnosticDto);
+			if (opDiagnosticDto.getZongShu() == 0) {
+				data += "['" + i + "月'," + 0 + "],";
+			} else {
+				data += "['" + i + "月'," + ((double) opDiagnosticDto.getFuHe() / (double) opDiagnosticDto.getZongShu()) * 100 + "],";
+			}
+			dateMap.remove("StartTime");
+			dateMap.remove("EndTime");
+		}
+
+		model.addAttribute("dateStart", dateStart.split("-")[0]);
+		model.addAttribute("dateEnd", dateStart.split("-")[0]);
+		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("data", data);
+		return View.OpDiagnosticRateView;
+	}
 }
 

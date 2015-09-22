@@ -815,7 +815,7 @@ Select nvl(sum(现人数),0) as 实际占用总床日数
 ]]>
 </select>
 <!-- 病床周转次数 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
-<select id="queryBedTurnoverTimes"  resultClass="java.lang.Double" parameterClass="java.util.Map">
+<select id="queryBedTurnoverTimes" resultClass="java.lang.Double" parameterClass="java.util.Map">
 <![CDATA[
 SELECT 总计/1061 FROM  (
 	SELECT  ' ' AS 编码,'合计' as 科室,count(A.主页ID) as 总计,sum(A.住院天数) As 出院者占用总床日数
@@ -834,6 +834,24 @@ SELECT 总计/1061 FROM  (
 		  and A.主页ID = C.主页ID and A.病人ID=C.病人ID and C.符合类型=2
 	)
 order by 编码
+]]>
+</select>
+<!-- 门诊诊断符合率 from:ZL3_REPORT_289 门诊与出院诊断及危重病人统计 -->
+<select id="queryOpDiagnosticRate" resultClass="com.zhl.business.dto.OpDiagnosticDto" parameterClass="java.util.Map">
+<![CDATA[
+select * from 
+(Select H.出院病人 as zongShu, nvl(H.符合, 0) as fuHe, H.不符 as buFu, H.疑诊 as yiZhen from (
+  select ' ' as 编码,'全院' as 名称,count(A.病人ID) as 出院病人
+      ,sum(decode(B.符合情况,1,1,0)) as 符合,nvl(sum(decode(B.符合情况,2,1,0)),0) as 不符,nvl(sum(decode(B.符合情况,3,1,0)),0) as 疑诊,
+      nvl(sum(nvl(a.抢救次数,0)),0) AS 抢救次数,nvl(sum(nvl(a.成功次数,0)),0) AS 成功次数,
+      nvl(sum(decode(a.入院病况,'危',1,0)),0) as 危重病人,
+      nvl(sum(decode(sign(nvl(a.抢救次数,0)),1,1,0)),0) as 抢救人数
+  from 病案主页 A,诊断符合情况 B,病人诊断记录 E
+  where A.出院日期 >= To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期 < To_Date(#EndTime#, 'YYYY-MM-DD')+1 
+     and A.病人ID=E.病人ID and A.主页ID=E.主页ID and E.诊断类型 IN (1,3) and E.记录来源=4 and E.诊断次序=1 and E.编码序号=1 and E.出院情况<>'其他'
+     and A.病人ID=B.病人ID(+) and A.主页ID=B.主页ID(+) and B.符合类型(+)=1) H,
+     (Select sum(危重人次) as 危重人次,sum(开放床数) as 开放床数 from 住院日报 where 日期 between To_Date(#StartTime#, 'YYYY-MM-DD') and To_Date(#EndTime#, 'YYYY-MM-DD') ) C
+)
 ]]>
 </select>
 </sqlMap>

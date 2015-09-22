@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.zhl.business.dto.DeptDateDto;
+import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
@@ -521,5 +522,15 @@ public class ReportDao extends BaseDao {
 	 */
 	public double queryBedTurnoverTimes(Map<String, String> dateMap) {
 		return (Double) getSqlMapClientTemplate().queryForObject("report.queryBedTurnoverTimes", dateMap);
+	}
+
+	/**
+	 * 门诊诊断符合率
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public OpDiagnosticDto queryOpDiagnosticRate(Map<String, String> dateMap) {
+		return (OpDiagnosticDto) getSqlMapClientTemplate().queryForObject("report.queryOpDiagnosticRate", dateMap);
 	}
 }

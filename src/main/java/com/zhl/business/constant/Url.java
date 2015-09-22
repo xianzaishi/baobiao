@@ -87,5 +87,10 @@ public class Url {
 	 * 病床周转次数分析
 	 */
 	public static final String BED_TURNOVER_TIMES = "/report/bedTurnoverTimes/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 门诊诊断符合率
+	 */
+	public static final String OP_DIAGNOSTIC_RATE = "/report/opDiagnosticRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }
