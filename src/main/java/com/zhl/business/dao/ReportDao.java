@@ -554,4 +554,14 @@ public class ReportDao extends BaseDao {
 	public EquipmentPositiveRate queryEquipmentPositiveRate(Map<String, String> dateMap) {
 		return (EquipmentPositiveRate) getSqlMapClientTemplate().queryForObject("report.queryEquipmentPositiveRate", dateMap);
 	}
+
+	/**
+	 * 好转率 按月份
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryImprovementRateByMonth(Map<String, String> dateMap) {
+		return (Double) getSqlMapClientTemplate().queryForObject("report.queryImprovementRateByMonth", dateMap);
+	}
 }

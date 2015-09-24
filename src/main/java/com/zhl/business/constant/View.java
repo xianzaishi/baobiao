@@ -93,5 +93,10 @@ public class View {
 	 * 大型设备阳性率
 	 */
 	public static final String EquipmentPositiveRateView = "equipmentPositiveRateView";
+
+	/**
+	 * 好转率
+	 */
+	public static final String ImprovementRateView = "improvementRate";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

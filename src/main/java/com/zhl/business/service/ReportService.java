@@ -432,4 +432,12 @@ public interface ReportService {
 	 * @return EquipmentPositiveRate
 	 */
 	public EquipmentPositiveRate queryEquipmentPositiveRate(Map<String, String> dateMap);
+
+	/**
+	 * 好转率 按月份
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryImprovementRateByMonth(Map<String, String> dateMap);
 }

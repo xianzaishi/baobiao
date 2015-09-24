@@ -76,4 +76,8 @@
     <definition name="equipmentPositiveRateView" template="/WEB-INF/pages/report/equipmentPositiveRate.jsp">
     </definition>
     
+    <!-- 好转率 -->
+    <definition name="improvementRate" template="/WEB-INF/pages/report/improvementRate.jsp">
+    </definition>
+    
 </tiles-definitions>

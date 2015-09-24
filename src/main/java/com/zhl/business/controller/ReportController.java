@@ -199,6 +199,10 @@ public class ReportController {
 			url = "/report/equipmentPositiveRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
+		case 16: // 好转率
+			url = "/report/improvementRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
 		}
 		return View.ReportSearchingView;
 	}
@@ -743,6 +747,41 @@ public class ReportController {
 		model.addAttribute("equipmentPositiveRateList", equipmentPositiveRateList);
 		model.addAttribute("data", data);
 		return View.EquipmentPositiveRateView;
+	}
+
+	/**
+	 * 好转率
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.IMPROVEMENT_RATE)
+	public String improvementRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+
+		String data = "";
+		List<DataDto> dataDtoList = new LinkedList<DataDto>();
+		for (int i = 1; i <= 12; i++) {
+			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			dateMap.put("StartTime", strStartTime);
+			dateMap.put("EndTime", strEndTime);
+			DataDto dataDto = new DataDto();
+			dataDto.setData(reportService.queryImprovementRateByMonth(dateMap));
+			dataDto.setName(i + "月");
+			dataDtoList.add(dataDto);
+			data += "['" + i + "月'," + dataDto.getData() + "],";
+			dateMap.remove("StartTime");
+			dateMap.remove("EndTime");
+		}
+
+		model.addAttribute("dateStart", dateStart.split("-")[0]);
+		model.addAttribute("dateEnd", dateStart.split("-")[0]);
+		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("data", data);
+		return View.ImprovementRateView;
 	}
 }
 

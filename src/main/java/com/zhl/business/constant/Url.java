@@ -102,5 +102,10 @@ public class Url {
 	 * 大型设备阳性率
 	 */
 	public static final String EQUIPMENT_POSITIVE_RATE = "/report/equipmentPositiveRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 好转型
+	 */
+	public static final String IMPROVEMENT_RATE = "/report/improvementRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

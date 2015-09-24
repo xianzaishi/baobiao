@@ -546,4 +546,14 @@ public class ReportServiceImpl implements ReportService {
 	public EquipmentPositiveRate queryEquipmentPositiveRate(Map<String, String> dateMap){
 		return reportDao.queryEquipmentPositiveRate(dateMap);
 	}
+
+	/**
+	 * 好转率 按月份
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryImprovementRateByMonth(Map<String, String> dateMap) {
+		return reportDao.queryImprovementRateByMonth(dateMap);
+	}
 }
