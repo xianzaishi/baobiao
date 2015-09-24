@@ -83,5 +83,15 @@ public class View {
 	 * 门诊诊断符合率
 	 */
 	public static final String OpDiagnosticRateView = "opDiagnosticRateView";
+
+	/**
+	 * 全院临床病理符合率
+	 */
+	public static final String PathologicalRateView = "pathologicalRateView";
+
+	/**
+	 * 大型设备阳性率
+	 */
+	public static final String EquipmentPositiveRateView = "equipmentPositiveRateView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

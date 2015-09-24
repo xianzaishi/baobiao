@@ -13,6 +13,7 @@ import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
+import com.zhl.business.model.EquipmentPositiveRate;
 import com.zhl.business.service.ReportService;
 
 @Service
@@ -524,5 +525,25 @@ public class ReportServiceImpl implements ReportService {
 	 */
 	public OpDiagnosticDto queryOpDiagnosticRate(Map<String, String> dateMap) {
 		return reportDao.queryOpDiagnosticRate(dateMap);
+	}
+	
+	/**
+	 * 全院临床病理符合率
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public OpDiagnosticDto queryPathologicalRate(Map<String, String> dateMap) {
+		return reportDao.queryPathologicalRate(dateMap);
+	}
+	
+	/**
+	 * 设备阳性率
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return EquipmentPositiveRate
+	 */
+	public EquipmentPositiveRate queryEquipmentPositiveRate(Map<String, String> dateMap){
+		return reportDao.queryEquipmentPositiveRate(dateMap);
 	}
 }

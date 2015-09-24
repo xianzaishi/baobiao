@@ -20,6 +20,7 @@ import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
+import com.zhl.business.model.EquipmentPositiveRate;
 import com.zhl.business.service.ReportService;
 
 @Controller
@@ -188,6 +189,14 @@ public class ReportController {
 			break;
 		case 13: // 门诊诊断符合率
 			url = "/report/opDiagnosticRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 14: // 全院临床病理符合率
+			url = "/report/pathologicalRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 15: // 大型设备阳性率
+			url = "/report/equipmentPositiveRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		}
@@ -644,6 +653,96 @@ public class ReportController {
 		model.addAttribute("dataDtoList", dataDtoList);
 		model.addAttribute("data", data);
 		return View.OpDiagnosticRateView;
+	}
+
+	/**
+	 * 全院临床病理符合率
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.PATHOLOGICA_RATE)
+	public String pathologicalRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+
+		String data = "";
+		List<OpDiagnosticDto> dataDtoList = new LinkedList<OpDiagnosticDto>();
+		for (int i = 1; i <= 12; i++) {
+			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			dateMap.put("StartTime", strStartTime);
+			dateMap.put("EndTime", strEndTime);
+			OpDiagnosticDto opDiagnosticDto = reportService.queryPathologicalRate(dateMap);
+			opDiagnosticDto.setMonth(i + "月");
+			dataDtoList.add(opDiagnosticDto);
+			if (opDiagnosticDto.getZongShu() == 0) {
+				data += "['" + i + "月'," + 0 + "],";
+			} else {
+				data += "['" + i + "月'," + ((double) opDiagnosticDto.getFuHe() / (double) opDiagnosticDto.getZongShu()) * 100 + "],";
+			}
+			dateMap.remove("StartTime");
+			dateMap.remove("EndTime");
+		}
+
+		model.addAttribute("dateStart", dateStart.split("-")[0]);
+		model.addAttribute("dateEnd", dateStart.split("-")[0]);
+		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("data", data);
+		return View.PathologicalRateView;
+	}
+
+	/**
+	 * 大型设备阳性率
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.EQUIPMENT_POSITIVE_RATE)
+	public String equipmentPositiveRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		EquipmentPositiveRate equipmentPositiveRate = new EquipmentPositiveRate();
+		List<EquipmentPositiveRate> equipmentPositiveRateList = new LinkedList<EquipmentPositiveRate>();
+		String data = "";
+		String data1 = ""; // 彩超
+		String data2 = ""; // ct
+		String data3 = ""; // mri
+		String data4 = ""; // dr
+
+		for (int i = 1; i <= 12; i++) {
+			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01 00:00:00";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i) + " 23:59:59";
+			dateMap.put("StartTime", strStartTime);
+			dateMap.put("EndTime", strEndTime);
+			equipmentPositiveRate = reportService.queryEquipmentPositiveRate(dateMap);
+			equipmentPositiveRate.setMonth(i + "月");
+			equipmentPositiveRateList.add(equipmentPositiveRate);
+			if (i == 12) {
+				data1 += equipmentPositiveRate.getCaiChao();
+				data2 += equipmentPositiveRate.getCt();
+				data3 += equipmentPositiveRate.getMri();
+				data4 += equipmentPositiveRate.getDr();
+			} else {
+				data1 += equipmentPositiveRate.getCaiChao() + ",";
+				data2 += equipmentPositiveRate.getCt() + ",";
+				data3 += equipmentPositiveRate.getMri() + ",";
+				data4 += equipmentPositiveRate.getDr() + ",";
+			}
+
+			dateMap.remove("StartTime");
+			dateMap.remove("EndTime");
+		}
+
+		data = "{name:'彩超',data:[" + data1 + "]},{name:'ct',data:[" + data2 + "]},{name:'mri',data:[" + data3 + "]},{name:'dr',data:[" + data4 + "]}";
+
+		model.addAttribute("dateStart", dateStart.split("-")[0]);
+		model.addAttribute("dateEnd", dateStart.split("-")[0]);
+		model.addAttribute("equipmentPositiveRateList", equipmentPositiveRateList);
+		model.addAttribute("data", data);
+		return View.EquipmentPositiveRateView;
 	}
 }
 

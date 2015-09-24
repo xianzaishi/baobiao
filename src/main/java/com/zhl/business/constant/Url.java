@@ -92,5 +92,15 @@ public class Url {
 	 * 门诊诊断符合率
 	 */
 	public static final String OP_DIAGNOSTIC_RATE = "/report/opDiagnosticRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 全院临床病理符合率
+	 */
+	public static final String PATHOLOGICA_RATE = "/report/pathologicalRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 大型设备阳性率
+	 */
+	public static final String EQUIPMENT_POSITIVE_RATE = "/report/equipmentPositiveRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

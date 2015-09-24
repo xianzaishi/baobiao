@@ -68,4 +68,12 @@
     <definition name="opDiagnosticRateView" template="/WEB-INF/pages/report/opDiagnosticRate.jsp">
     </definition>
     
+    <!-- 全院临床病理符合率 -->
+    <definition name="pathologicalRateView" template="/WEB-INF/pages/report/pathologicalRate.jsp">
+    </definition>
+    
+    <!-- 大型设备阳性率 -->
+    <definition name="equipmentPositiveRateView" template="/WEB-INF/pages/report/equipmentPositiveRate.jsp">
+    </definition>
+    
 </tiles-definitions>

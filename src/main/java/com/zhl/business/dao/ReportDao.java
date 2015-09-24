@@ -10,6 +10,7 @@ import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
+import com.zhl.business.model.EquipmentPositiveRate;
 
 @Repository
 public class ReportDao extends BaseDao {
@@ -528,9 +529,29 @@ public class ReportDao extends BaseDao {
 	 * 门诊诊断符合率
 	 * 
 	 * @param dateMap<StartTime, EndTime>
-	 * @return
+	 * @return OpDiagnosticDto
 	 */
 	public OpDiagnosticDto queryOpDiagnosticRate(Map<String, String> dateMap) {
 		return (OpDiagnosticDto) getSqlMapClientTemplate().queryForObject("report.queryOpDiagnosticRate", dateMap);
+	}
+	
+	/**
+	 * 全院临床病理符合率
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return OpDiagnosticDto
+	 */
+	public OpDiagnosticDto queryPathologicalRate(Map<String, String> dateMap) {
+		return (OpDiagnosticDto) getSqlMapClientTemplate().queryForObject("report.queryPathologicalRate", dateMap);
+	}
+
+	/**
+	 * 设备阳性率
+	 * 
+	 * @param dateMap<StartTime, EndTime>
+	 * @return EquipmentPositiveRate
+	 */
+	public EquipmentPositiveRate queryEquipmentPositiveRate(Map<String, String> dateMap) {
+		return (EquipmentPositiveRate) getSqlMapClientTemplate().queryForObject("report.queryEquipmentPositiveRate", dateMap);
 	}
 }
