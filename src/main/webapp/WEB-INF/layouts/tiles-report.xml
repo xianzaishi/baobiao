@@ -77,7 +77,15 @@
     </definition>
     
     <!-- 好转率 -->
-    <definition name="improvementRate" template="/WEB-INF/pages/report/improvementRate.jsp">
+    <definition name="improvementRateView" template="/WEB-INF/pages/report/improvementRate.jsp">
+    </definition>
+    
+    <!-- 治愈率 -->
+    <definition name="cureRateView" template="/WEB-INF/pages/report/cureRate.jsp">
+    </definition>
+    
+    <!-- 死亡率 -->
+    <definition name="deathRateView" template="/WEB-INF/pages/report/deathRate.jsp">
     </definition>
     
 </tiles-definitions>

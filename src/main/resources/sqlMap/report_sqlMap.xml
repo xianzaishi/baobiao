@@ -923,7 +923,33 @@ Where a.医嘱id=b.医嘱Id and a.位置一 in (012,044)  and a.接收日期 bet
 </select>
 <!-- 好转率 按月 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
 <select id="queryImprovementRateByMonth" resultClass="java.lang.Double" parameterClass="java.util.Map">
+SELECT nvl(sum(decode(B.出院情况,'好转',1,0))/ count(A.主页ID) * 100, 0) As 治愈率
+from 
+		(select 病人ID,主页ID,入院日期,出院日期,住院天数,出院科室ID as 科室ID,抢救次数,成功次数,是否确诊 
+		 from 病案主页 
+<![CDATA[
+		 where 出院日期 >= To_Date(#StartTime#, 'YYYY-MM-DD') and 出院日期 < To_Date(#EndTime#, 'YYYY-MM-DD')+1
+]]>
+		 ) A,病人诊断记录 B,诊断符合情况 C 
+	Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
+		  and A.主页ID = C.主页ID and A.病人ID=C.病人ID and C.符合类型=2
+</select>
+<!-- 治愈率 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
+<select id="queryCureRateByMonth" resultClass="java.lang.Double" parameterClass="java.util.Map">
 SELECT nvl(sum(decode(B.出院情况,'治愈',1,0))/ count(A.主页ID) * 100, 0) As 治愈率
+from 
+		(select 病人ID,主页ID,入院日期,出院日期,住院天数,出院科室ID as 科室ID,抢救次数,成功次数,是否确诊 
+		 from 病案主页 
+<![CDATA[
+		 where 出院日期 >= To_Date(#StartTime#, 'YYYY-MM-DD') and 出院日期 < To_Date(#EndTime#, 'YYYY-MM-DD')+1
+]]>
+		 ) A,病人诊断记录 B,诊断符合情况 C 
+	Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
+		  and A.主页ID = C.主页ID and A.病人ID=C.病人ID and C.符合类型=2
+</select>
+<!-- 死亡率 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
+<select id="queryDeathRateByMonth" resultClass="java.lang.Double" parameterClass="java.util.Map">
+SELECT nvl(sum(decode(B.出院情况,'死亡',1,0))/ count(A.主页ID) * 100, 0) As 治愈率
 from 
 		(select 病人ID,主页ID,入院日期,出院日期,住院天数,出院科室ID as 科室ID,抢救次数,成功次数,是否确诊 
 		 from 病案主页 

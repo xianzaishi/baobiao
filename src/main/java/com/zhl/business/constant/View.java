@@ -97,6 +97,16 @@ public class View {
 	/**
 	 * 好转率
 	 */
-	public static final String ImprovementRateView = "improvementRate";
+	public static final String ImprovementRateView = "improvementRateView";
+
+	/**
+	 * 治愈率
+	 */
+	public static final String CureRateView = "cureRateView";
+
+	/**
+	 * 死亡率
+	 */
+	public static final String DeathRateView = "deathRateView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

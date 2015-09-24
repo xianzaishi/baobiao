@@ -107,5 +107,14 @@ public class Url {
 	 * 好转型
 	 */
 	public static final String IMPROVEMENT_RATE = "/report/improvementRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 治愈率
+	 */
+	public static final String CURE_RATE = "/report/cureRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+	/**
+	 * 死亡率
+	 */
+	public static final String DEATH_RATE = "/report/deathRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

@@ -556,4 +556,24 @@ public class ReportServiceImpl implements ReportService {
 	public double queryImprovementRateByMonth(Map<String, String> dateMap) {
 		return reportDao.queryImprovementRateByMonth(dateMap);
 	}
+
+	/**
+	 * 治愈率 按月份
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryCureRateByMonth(Map<String, String> dateMap) {
+		return reportDao.queryCureRateByMonth(dateMap);
+	}
+
+	/**
+	 * 死亡率 按月份
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryDeathRateByMonth(Map<String, String> dateMap) {
+		return reportDao.queryDeathRateByMonth(dateMap);
+	}
 }

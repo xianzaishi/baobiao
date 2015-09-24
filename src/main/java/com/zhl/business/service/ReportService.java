@@ -440,4 +440,20 @@ public interface ReportService {
 	 * @return
 	 */
 	public double queryImprovementRateByMonth(Map<String, String> dateMap);
+
+	/**
+	 * 治愈率 按月份
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryCureRateByMonth(Map<String, String> dateMap);
+
+	/**
+	 * 死亡率 按月份
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryDeathRateByMonth(Map<String, String> dateMap);
 }

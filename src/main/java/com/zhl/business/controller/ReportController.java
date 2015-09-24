@@ -203,6 +203,14 @@ public class ReportController {
 			url = "/report/improvementRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
+		case 17: // 治愈率
+			url = "/report/cureRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 18: // 死亡率
+			url = "/report/deathRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
 		}
 		return View.ReportSearchingView;
 	}
@@ -782,6 +790,76 @@ public class ReportController {
 		model.addAttribute("dataDtoList", dataDtoList);
 		model.addAttribute("data", data);
 		return View.ImprovementRateView;
+	}
+
+	/**
+	 * 治愈率
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.CURE_RATE)
+	public String cureRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+
+		String data = "";
+		List<DataDto> dataDtoList = new LinkedList<DataDto>();
+		for (int i = 1; i <= 12; i++) {
+			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			dateMap.put("StartTime", strStartTime);
+			dateMap.put("EndTime", strEndTime);
+			DataDto dataDto = new DataDto();
+			dataDto.setData(reportService.queryCureRateByMonth(dateMap));
+			dataDto.setName(i + "月");
+			dataDtoList.add(dataDto);
+			data += "['" + i + "月'," + dataDto.getData() + "],";
+			dateMap.remove("StartTime");
+			dateMap.remove("EndTime");
+		}
+
+		model.addAttribute("dateStart", dateStart.split("-")[0]);
+		model.addAttribute("dateEnd", dateStart.split("-")[0]);
+		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("data", data);
+		return View.CureRateView;
+	}
+
+	/**
+	 * 死亡率
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.DEATH_RATE)
+	public String deathRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+
+		String data = "";
+		List<DataDto> dataDtoList = new LinkedList<DataDto>();
+		for (int i = 1; i <= 12; i++) {
+			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			dateMap.put("StartTime", strStartTime);
+			dateMap.put("EndTime", strEndTime);
+			DataDto dataDto = new DataDto();
+			dataDto.setData(reportService.queryDeathRateByMonth(dateMap));
+			dataDto.setName(i + "月");
+			dataDtoList.add(dataDto);
+			data += "['" + i + "月'," + dataDto.getData() + "],";
+			dateMap.remove("StartTime");
+			dateMap.remove("EndTime");
+		}
+
+		model.addAttribute("dateStart", dateStart.split("-")[0]);
+		model.addAttribute("dateEnd", dateStart.split("-")[0]);
+		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("data", data);
+		return View.DeathRateView;
 	}
 }
 

@@ -564,4 +564,24 @@ public class ReportDao extends BaseDao {
 	public double queryImprovementRateByMonth(Map<String, String> dateMap) {
 		return (Double) getSqlMapClientTemplate().queryForObject("report.queryImprovementRateByMonth", dateMap);
 	}
+
+	/**
+	 * 治愈率 按月份
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryCureRateByMonth(Map<String, String> dateMap) {
+		return (Double) getSqlMapClientTemplate().queryForObject("report.queryCureRateByMonth", dateMap);
+	}
+
+	/**
+	 * 死亡率 按月份
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryDeathRateByMonth(Map<String, String> dateMap) {
+		return (Double) getSqlMapClientTemplate().queryForObject("report.queryDeathRateByMonth", dateMap);
+	}
 }
