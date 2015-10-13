@@ -104,17 +104,33 @@ public class Url {
 	public static final String EQUIPMENT_POSITIVE_RATE = "/report/equipmentPositiveRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
 
 	/**
-	 * 好转型
+	 * 好转率 按月
 	 */
-	public static final String IMPROVEMENT_RATE = "/report/improvementRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+	public static final String IMPROVEMENT_RATE_BY_MONTH = "/report/improvementRateByMonth/dateStart/{dateStart}/dateEnd/{dateEnd}";
 
 	/**
-	 * 治愈率
+	 * 好转率 按科室
 	 */
-	public static final String CURE_RATE = "/report/cureRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+	public static final String IMPROVEMENT_RATE_BY_DEPT = "/report/improvementRateByDept/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
 	/**
-	 * 死亡率
+	 * 治愈率 按月
 	 */
-	public static final String DEATH_RATE = "/report/deathRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+	public static final String CURE_RATE_BY_MONTH = "/report/cureRateByMonth/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 治愈率 按科室
+	 */
+	public static final String CURE_RATE_BY_DEPT = "/report/cureRateByDept/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 死亡率 按月
+	 */
+	public static final String DEATH_RATE_BY_MONTH = "/report/deathRateByMonth/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 死亡率 按科室
+	 */
+	public static final String DEATH_RATE_BY_DEPT = "/report/deathRateByDept/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

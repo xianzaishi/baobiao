@@ -20,6 +20,7 @@ import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
+import com.zhl.business.model.ComputeRateModel;
 import com.zhl.business.model.EquipmentPositiveRate;
 import com.zhl.business.service.ReportService;
 
@@ -200,15 +201,27 @@ public class ReportController {
 			model.addAttribute("url", url);
 			break;
 		case 16: // 好转率
-			url = "/report/improvementRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			url = "/report/improvementRateByMonth/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		case 17: // 治愈率
-			url = "/report/cureRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			url = "/report/cureRateByMonth/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		case 18: // 死亡率
-			url = "/report/deathRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			url = "/report/deathRateByMonth/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 23: // 好转率 按科室
+			url = "/report/improvementRateByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 24: // 治愈率 按科室
+			url = "/report/cureRateByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 25: // 死亡率 按科室
+			url = "/report/deathRateByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		}
@@ -437,19 +450,24 @@ public class ReportController {
 			List<Double> dateList = reportService.queryQiangJiuChengGongLvByDeptId(dateMap);
 			dateMap.remove("id");
 			deptDateDto.setDateList(dateList);
-			deptDateDtoResultList.add(deptDateDto);
+			// 去掉没有抢救的
+			if (dateList.get(1) != 0) {
+				deptDateDtoResultList.add(deptDateDto);
+			}
 		}
 		
 		String data = "";
-		for (int i = 0; i < deptDateDtoList.size(); i++) {
-			if ((deptDateDtoResultList.get(i).getDateList().get(1) == 0 ? 0 : (deptDateDtoResultList.get(i).getDateList().get(0) / deptDateDtoResultList.get(i)
-					.getDateList().get(1)) * 100) > 0) {
+		for (int i = 0; i < deptDateDtoResultList.size(); i++) {
+			// if ((deptDateDtoResultList.get(i).getDateList().get(1) == 0 ? 0 :
+			// (deptDateDtoResultList.get(i).getDateList().get(0) /
+			// deptDateDtoResultList.get(i)
+			// .getDateList().get(1)) * 100) > 0) {
 				data += "['"
 						+ deptDateDtoResultList.get(i).getName()
 						+ "',"
 						+ (deptDateDtoResultList.get(i).getDateList().get(1) == 0 ? 0
 								: (deptDateDtoResultList.get(i).getDateList().get(0) / deptDateDtoResultList.get(i).getDateList().get(1)) * 100) + "],";
-			}
+			// }
 		}
 
 		model.addAttribute("dateStart", dateStart);
@@ -758,108 +776,196 @@ public class ReportController {
 	}
 
 	/**
-	 * 好转率
+	 * 好转率 按月
 	 * 
 	 * @param dateStart
 	 * @param dateEnd
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = Url.IMPROVEMENT_RATE)
-	public String improvementRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+	@RequestMapping(value = Url.IMPROVEMENT_RATE_BY_MONTH)
+	public String improvementRateByMonth(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
 		Map<String, String> dateMap = new HashMap<String, String>();
 
 		String data = "";
-		List<DataDto> dataDtoList = new LinkedList<DataDto>();
+		List<ComputeRateModel> computeRateModelList = new LinkedList<ComputeRateModel>();
+		ComputeRateModel computeRateModel = new ComputeRateModel();
 		for (int i = 1; i <= 12; i++) {
 			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
 			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
 			dateMap.put("StartTime", strStartTime);
 			dateMap.put("EndTime", strEndTime);
-			DataDto dataDto = new DataDto();
-			dataDto.setData(reportService.queryImprovementRateByMonth(dateMap));
-			dataDto.setName(i + "月");
-			dataDtoList.add(dataDto);
-			data += "['" + i + "月'," + dataDto.getData() + "],";
+			computeRateModel = reportService.queryImprovementRateByMonth(dateMap);
+			computeRateModel.setName(i + "月");
+			computeRateModelList.add(computeRateModel);
+			data += "['" + i + "月'," + (computeRateModel.getData() / computeRateModel.getTotal()) * 100 + "],";
 			dateMap.remove("StartTime");
 			dateMap.remove("EndTime");
 		}
 
 		model.addAttribute("dateStart", dateStart.split("-")[0]);
 		model.addAttribute("dateEnd", dateStart.split("-")[0]);
-		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("computeRateModelList", computeRateModelList);
 		model.addAttribute("data", data);
-		return View.ImprovementRateView;
+		return View.ImprovementRateByMonthView;
 	}
 
 	/**
-	 * 治愈率
+	 * 好转率 按科室
 	 * 
 	 * @param dateStart
 	 * @param dateEnd
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = Url.CURE_RATE)
-	public String cureRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+	@RequestMapping(value = Url.IMPROVEMENT_RATE_BY_DEPT)
+	public String improvementRateByDept(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
 		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
 
 		String data = "";
-		List<DataDto> dataDtoList = new LinkedList<DataDto>();
-		for (int i = 1; i <= 12; i++) {
-			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
-			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
-			dateMap.put("StartTime", strStartTime);
-			dateMap.put("EndTime", strEndTime);
-			DataDto dataDto = new DataDto();
-			dataDto.setData(reportService.queryCureRateByMonth(dateMap));
-			dataDto.setName(i + "月");
-			dataDtoList.add(dataDto);
-			data += "['" + i + "月'," + dataDto.getData() + "],";
-			dateMap.remove("StartTime");
-			dateMap.remove("EndTime");
+		List<ComputeRateModel> computeRateModelList = new LinkedList<ComputeRateModel>();
+		computeRateModelList = reportService.queryImprovementRateByDept(dateMap);
+
+		for (int i = 0; i < computeRateModelList.size(); i++) {
+			data += "['" + computeRateModelList.get(i).getName() + "'," + (computeRateModelList.get(i).getData() / computeRateModelList.get(i).getTotal()) * 100 + "],";
 		}
 
-		model.addAttribute("dateStart", dateStart.split("-")[0]);
-		model.addAttribute("dateEnd", dateStart.split("-")[0]);
-		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("computeRateModelList", computeRateModelList);
 		model.addAttribute("data", data);
-		return View.CureRateView;
+		return View.ImprovementRateByDeptView;
 	}
 
 	/**
-	 * 死亡率
+	 * 治愈率 按月
 	 * 
 	 * @param dateStart
 	 * @param dateEnd
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = Url.DEATH_RATE)
-	public String deathRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+	@RequestMapping(value = Url.CURE_RATE_BY_MONTH)
+	public String cureRateByMonth(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
 		Map<String, String> dateMap = new HashMap<String, String>();
 
 		String data = "";
-		List<DataDto> dataDtoList = new LinkedList<DataDto>();
+		List<ComputeRateModel> computeRateModelList = new LinkedList<ComputeRateModel>();
+		ComputeRateModel computeRateModel = new ComputeRateModel();
 		for (int i = 1; i <= 12; i++) {
 			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
 			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
 			dateMap.put("StartTime", strStartTime);
 			dateMap.put("EndTime", strEndTime);
-			DataDto dataDto = new DataDto();
-			dataDto.setData(reportService.queryDeathRateByMonth(dateMap));
-			dataDto.setName(i + "月");
-			dataDtoList.add(dataDto);
-			data += "['" + i + "月'," + dataDto.getData() + "],";
+			computeRateModel = reportService.queryCureRateByMonth(dateMap);
+			computeRateModel.setName(i + "月");
+			computeRateModelList.add(computeRateModel);
+			data += "['" + i + "月'," + (computeRateModel.getData() / computeRateModel.getTotal()) * 100 + "],";
 			dateMap.remove("StartTime");
 			dateMap.remove("EndTime");
 		}
 
 		model.addAttribute("dateStart", dateStart.split("-")[0]);
 		model.addAttribute("dateEnd", dateStart.split("-")[0]);
-		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("computeRateModelList", computeRateModelList);
 		model.addAttribute("data", data);
-		return View.DeathRateView;
+		return View.CureRateByMonthView;
 	}
+
+	/**
+	 * 治愈率 按科室
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.CURE_RATE_BY_DEPT)
+	public String cureRateByDept(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model){
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+
+		String data = "";
+		List<ComputeRateModel> computeRateModelList = reportService.queryCureRateByDept(dateMap);
+
+		for (int i = 0; i < computeRateModelList.size(); i++) {
+			data += "['" + computeRateModelList.get(i).getName() + "'," + (computeRateModelList.get(i).getData() / computeRateModelList.get(i).getTotal())
+					* 100 + "],";
+		}
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("computeRateModelList", computeRateModelList);
+		model.addAttribute("data", data);
+		return View.CureRateByDeptView;
+	}
+
+	/**
+	 * 死亡率 按月
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.DEATH_RATE_BY_MONTH)
+	public String deathRateByMonth(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+
+		String data = "";
+		List<ComputeRateModel> computeRateModelList = new LinkedList<ComputeRateModel>();
+		ComputeRateModel computeRateModel = new ComputeRateModel();
+		for (int i = 1; i <= 12; i++) {
+			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			dateMap.put("StartTime", strStartTime);
+			dateMap.put("EndTime", strEndTime);
+			computeRateModel = reportService.queryDeathRateByMonth(dateMap);
+			computeRateModel.setName(i + "月");
+			computeRateModelList.add(computeRateModel);
+			data += "['" + i + "月'," + (computeRateModel.getData() / computeRateModel.getTotal()) * 100 + "],";
+			dateMap.remove("StartTime");
+			dateMap.remove("EndTime");
+		}
+
+		model.addAttribute("dateStart", dateStart.split("-")[0]);
+		model.addAttribute("dateEnd", dateStart.split("-")[0]);
+		model.addAttribute("computeRateModelList", computeRateModelList);
+		model.addAttribute("data", data);
+		return View.DeathRateByMonthView;
+	}
+
+	/**
+	 * 死亡率 按科室
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.DEATH_RATE_BY_DEPT)
+	public String deathRateByDept(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+
+		String data = "";
+		List<ComputeRateModel> computeRateModelList = reportService.queryDeathRateByDept(dateMap);
+
+		for (int i = 0; i < computeRateModelList.size(); i++) {
+			data += "['" + computeRateModelList.get(i).getName() + "'," + (computeRateModelList.get(i).getData() / computeRateModelList.get(i).getTotal())
+					* 100 + "],";
+		}
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("computeRateModelList", computeRateModelList);
+		model.addAttribute("data", data);
+		return View.DeathRateByDeptView;
+	}
+
 }
 

@@ -154,7 +154,7 @@
 </select>
 <!-- 血透收入 -->
 <select id="queryXueTouShouRu" resultClass="java.lang.Double" parameterClass="java.util.Map">
-	Select Sum(y.实收金额) From 病案主页 b, 病人费用记录 y, 部门表 m
+	Select nvl(Sum(y.实收金额), 0) From 病案主页 b, 病人费用记录 y, 部门表 m
 	<![CDATA[
 	Where b.病人id = y.病人id And  b.当前病区id = m.Id And m.Id = 135
       And y.登记时间 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
@@ -922,8 +922,8 @@ Where a.医嘱id=b.医嘱Id and a.位置一 in (012,044)  and a.接收日期 bet
 )
 </select>
 <!-- 好转率 按月 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
-<select id="queryImprovementRateByMonth" resultClass="java.lang.Double" parameterClass="java.util.Map">
-SELECT nvl(sum(decode(B.出院情况,'好转',1,0))/ count(A.主页ID) * 100, 0) As 治愈率
+<select id="queryImprovementRateByMonth" resultClass="com.zhl.business.model.ComputeRateModel" parameterClass="java.util.Map">
+Select count(A.主页ID) as total, nvl(sum(decode(B.出院情况,'好转',1,0)), 0) as data, null as name
 from 
 		(select 病人ID,主页ID,入院日期,出院日期,住院天数,出院科室ID as 科室ID,抢救次数,成功次数,是否确诊 
 		 from 病案主页 
@@ -931,12 +931,37 @@ from
 		 where 出院日期 >= To_Date(#StartTime#, 'YYYY-MM-DD') and 出院日期 < To_Date(#EndTime#, 'YYYY-MM-DD')+1
 ]]>
 		 ) A,病人诊断记录 B,诊断符合情况 C 
-	Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
+Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
 		  and A.主页ID = C.主页ID and A.病人ID=C.病人ID and C.符合类型=2
 </select>
-<!-- 治愈率 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
-<select id="queryCureRateByMonth" resultClass="java.lang.Double" parameterClass="java.util.Map">
-SELECT nvl(sum(decode(B.出院情况,'治愈',1,0))/ count(A.主页ID) * 100, 0) As 治愈率
+<!-- 好转率 按科室 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
+<select id="queryImprovementRateByDept" resultClass="com.zhl.business.model.ComputeRateModel" parameterClass="java.util.Map">
+<![CDATA[
+Select nvl(b.科室,0) as name, nvl(a.总计,0) as total, nvl(a.好转,0) as data
+from (select M.编码,M.名称 AS 科室,count(A.主页ID) as 总计,sum(A.住院天数) As 出院者占用总床日数
+		  ,sum(decode(B.出院情况,'治愈',1,0)) as 治愈,sum(decode(B.出院情况,'好转',1,0)) as 好转
+		  ,sum(decode(B.出院情况,'未愈',1,0)) as 未愈,sum(decode(B.出院情况,'死亡',1,0)) as 死亡
+		  ,sum(decode(B.出院情况,'死亡',decode(sign((A.出院日期-A.入院日期)-1),1,0,1),0)) as 死亡24 
+		  ,sum(decode(B.出院情况,'其他',1,0)) as 其他,sum(A.抢救次数) as 抢救次数,sum(A.成功次数) as 成功次数
+		  ,sum(decode(A.是否确诊,1,1,0)) as 明确诊断
+		  ,sum(decode(A.是否确诊,1,decode(C.符合情况,1,1,0),0)) as 诊断符合
+	  from (select 病人ID,主页ID,入院日期,出院日期,住院天数,出院科室ID as 科室ID,抢救次数,成功次数,是否确诊 from 病案主页 
+		 where 出院日期>=TO_DATE(#StartTime#,'YYYY-MM-DD') and 出院日期<TO_DATE(#EndTime#,'YYYY-MM-DD')+1
+		 ) A,病人诊断记录 B,诊断符合情况 C,部门表 M
+	  Where A.主页ID = B.主页ID and A.病人ID=B.病人ID AND a.科室id=M.id and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
+		  and A.主页ID = C.主页ID and A.病人ID=C.病人ID and C.符合类型=2
+	  group by M.编码,M.名称
+	) A,
+	(select J.编码,J.名称 AS 科室
+	 from 住院日报 A,部门表 J
+	 where A.日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 AND A.科室ID=J.ID
+         group by J.编码,J.名称) B
+where A.编码(+)=B.编码
+]]>
+</select>
+<!-- 治愈率 按月 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
+<select id="queryCureRateByMonth" resultClass="com.zhl.business.model.ComputeRateModel" parameterClass="java.util.Map">
+Select count(A.主页ID) as total, nvl(sum(decode(B.出院情况,'治愈',1,0)), 0) as data, null as name
 from 
 		(select 病人ID,主页ID,入院日期,出院日期,住院天数,出院科室ID as 科室ID,抢救次数,成功次数,是否确诊 
 		 from 病案主页 
@@ -944,12 +969,39 @@ from
 		 where 出院日期 >= To_Date(#StartTime#, 'YYYY-MM-DD') and 出院日期 < To_Date(#EndTime#, 'YYYY-MM-DD')+1
 ]]>
 		 ) A,病人诊断记录 B,诊断符合情况 C 
-	Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
+Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
 		  and A.主页ID = C.主页ID and A.病人ID=C.病人ID and C.符合类型=2
 </select>
-<!-- 死亡率 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
-<select id="queryDeathRateByMonth" resultClass="java.lang.Double" parameterClass="java.util.Map">
-SELECT nvl(sum(decode(B.出院情况,'死亡',1,0))/ count(A.主页ID) * 100, 0) As 治愈率
+<!-- 治愈率 按科室 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
+<select id="queryCureRateByDept" resultClass="com.zhl.business.model.ComputeRateModel" parameterClass="java.util.Map">
+Select nvl(b.科室,0) as name, nvl(a.总计,0) as total, nvl(a.治愈,0) as data
+from (select M.编码,M.名称 AS 科室,count(A.主页ID) as 总计,sum(A.住院天数) As 出院者占用总床日数
+		  ,sum(decode(B.出院情况,'治愈',1,0)) as 治愈,sum(decode(B.出院情况,'好转',1,0)) as 好转
+		  ,sum(decode(B.出院情况,'未愈',1,0)) as 未愈,sum(decode(B.出院情况,'死亡',1,0)) as 死亡
+		  ,sum(decode(B.出院情况,'死亡',decode(sign((A.出院日期-A.入院日期)-1),1,0,1),0)) as 死亡24 
+		  ,sum(decode(B.出院情况,'其他',1,0)) as 其他,sum(A.抢救次数) as 抢救次数,sum(A.成功次数) as 成功次数
+		  ,sum(decode(A.是否确诊,1,1,0)) as 明确诊断
+		  ,sum(decode(A.是否确诊,1,decode(C.符合情况,1,1,0),0)) as 诊断符合
+	  from (select 病人ID,主页ID,入院日期,出院日期,住院天数,出院科室ID as 科室ID,抢救次数,成功次数,是否确诊 from 病案主页 
+<![CDATA[
+		 where 出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and 出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1
+]]>
+		 ) A,病人诊断记录 B,诊断符合情况 C,部门表 M
+	  Where A.主页ID = B.主页ID and A.病人ID=B.病人ID AND a.科室id=M.id and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
+		  and A.主页ID = C.主页ID and A.病人ID=C.病人ID and C.符合类型=2
+	  group by M.编码,M.名称
+	) A,
+	(select J.编码,J.名称 AS 科室
+	 from 住院日报 A,部门表 J
+<![CDATA[
+	 where A.日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 AND A.科室ID=J.ID
+         group by J.编码,J.名称) B
+]]>
+where A.编码(+)=B.编码
+</select>
+<!-- 死亡率  按月 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
+<select id="queryDeathRateByMonth" resultClass="com.zhl.business.model.ComputeRateModel" parameterClass="java.util.Map">
+Select count(A.主页ID) as total, nvl(sum(decode(B.出院情况,'死亡',1,0)), 0) as data, null as name
 from 
 		(select 病人ID,主页ID,入院日期,出院日期,住院天数,出院科室ID as 科室ID,抢救次数,成功次数,是否确诊 
 		 from 病案主页 
@@ -957,8 +1009,35 @@ from
 		 where 出院日期 >= To_Date(#StartTime#, 'YYYY-MM-DD') and 出院日期 < To_Date(#EndTime#, 'YYYY-MM-DD')+1
 ]]>
 		 ) A,病人诊断记录 B,诊断符合情况 C 
-	Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
+Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
 		  and A.主页ID = C.主页ID and A.病人ID=C.病人ID and C.符合类型=2
+</select>
+<!-- 死亡率 按科室 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
+<select id="queryDeathRateByDept" resultClass="com.zhl.business.model.ComputeRateModel" parameterClass="java.util.Map">
+Select nvl(b.科室,0) as name, nvl(a.总计,0) as total, nvl(a.死亡,0) as data
+from (select M.编码,M.名称 AS 科室,count(A.主页ID) as 总计,sum(A.住院天数) As 出院者占用总床日数
+		  ,sum(decode(B.出院情况,'治愈',1,0)) as 治愈,sum(decode(B.出院情况,'好转',1,0)) as 好转
+		  ,sum(decode(B.出院情况,'未愈',1,0)) as 未愈,sum(decode(B.出院情况,'死亡',1,0)) as 死亡
+		  ,sum(decode(B.出院情况,'死亡',decode(sign((A.出院日期-A.入院日期)-1),1,0,1),0)) as 死亡24 
+		  ,sum(decode(B.出院情况,'其他',1,0)) as 其他,sum(A.抢救次数) as 抢救次数,sum(A.成功次数) as 成功次数
+		  ,sum(decode(A.是否确诊,1,1,0)) as 明确诊断
+		  ,sum(decode(A.是否确诊,1,decode(C.符合情况,1,1,0),0)) as 诊断符合
+	  from (select 病人ID,主页ID,入院日期,出院日期,住院天数,出院科室ID as 科室ID,抢救次数,成功次数,是否确诊 from 病案主页 
+<![CDATA[
+		 where 出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and 出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1
+]]>
+		 ) A,病人诊断记录 B,诊断符合情况 C,部门表 M
+	  Where A.主页ID = B.主页ID and A.病人ID=B.病人ID AND a.科室id=M.id and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
+		  and A.主页ID = C.主页ID and A.病人ID=C.病人ID and C.符合类型=2
+	  group by M.编码,M.名称
+	) A,
+	(select J.编码,J.名称 AS 科室
+	 from 住院日报 A,部门表 J
+<![CDATA[
+	 where A.日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 AND A.科室ID=J.ID
+         group by J.编码,J.名称) B
+]]>
+where A.编码(+)=B.编码
 </select>
 </sqlMap>
 

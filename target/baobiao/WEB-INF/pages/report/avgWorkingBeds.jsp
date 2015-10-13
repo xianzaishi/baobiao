@@ -45,18 +45,20 @@ table
 		<c:forEach items="${dataDtoList }" var="dataDtoList">
 		<tr>
 			<td>&nbsp;${dataDtoList.name }</td>
-			<td>&nbsp;<fmt:formatNumber type="number" value="${dataDtoList.data }" maxFractionDigits="0"/></td>
+			<td>&nbsp;<fmt:formatNumber type="number" value="${dataDtoList.data }" maxFractionDigits="2"/></td>
 		</tr>
 		</c:forEach>
 	</table>
 	
 	
 		<br/>
-		<div align="center"><c:out value="${dateStart }"/> &nbsp;to&nbsp;<c:out value="${dateEnd }"/></div>
+		<div align="center"><c:out value="${dateStart }"/></div>
 	</div>
 </div>
-平均开放病床数：实际开放总床日数÷本年日历数（365）
+<div>
+平均开放病床数：实际开放总床日数÷本年日历数（365）<br/>
 病床工作日：实际占用总床日数÷平均开放病床数(1061)
+</div>
 <div id="container" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
 <br/>
 <script type="text/javascript">

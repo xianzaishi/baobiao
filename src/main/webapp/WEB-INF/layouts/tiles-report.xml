@@ -76,16 +76,28 @@
     <definition name="equipmentPositiveRateView" template="/WEB-INF/pages/report/equipmentPositiveRate.jsp">
     </definition>
     
-    <!-- 好转率 -->
-    <definition name="improvementRateView" template="/WEB-INF/pages/report/improvementRate.jsp">
+    <!-- 好转率  按月 -->
+    <definition name="improvementRateByMonthView" template="/WEB-INF/pages/report/improvementRateByMonth.jsp">
     </definition>
     
-    <!-- 治愈率 -->
-    <definition name="cureRateView" template="/WEB-INF/pages/report/cureRate.jsp">
+    <!-- 好转率  按科室 -->
+    <definition name="improvementRateByDeptView" template="/WEB-INF/pages/report/improvementRateByDept.jsp">
     </definition>
     
-    <!-- 死亡率 -->
-    <definition name="deathRateView" template="/WEB-INF/pages/report/deathRate.jsp">
+    <!-- 治愈率  按月 -->
+    <definition name="cureRateByMonthView" template="/WEB-INF/pages/report/cureRateByMonth.jsp">
+    </definition>
+    
+    <!-- 治愈率  按科室 -->
+    <definition name="cureRateByDeptView" template="/WEB-INF/pages/report/cureRateByDept.jsp">
+    </definition>
+    
+    <!-- 死亡率  按月 -->
+    <definition name="deathRateByMonthView" template="/WEB-INF/pages/report/deathRateByMonth.jsp">
+    </definition>
+    
+    <!-- 死亡率  按科室 -->
+    <definition name="deathRateByDeptView" template="/WEB-INF/pages/report/deathRateByDept.jsp">
     </definition>
     
 </tiles-definitions>

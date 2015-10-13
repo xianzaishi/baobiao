@@ -60,4 +60,44 @@
     <definition name="avgWorkingBedsView" template="/WEB-INF/pages/report/avgWorkingBeds.jsp">
     </definition>
     
+    <!-- 病床周转次数 -->
+    <definition name="bedTurnoverTimesView" template="/WEB-INF/pages/report/bedTurnoverTimes.jsp">
+    </definition>
+    
+    <!-- 门诊诊断符合率 -->
+    <definition name="opDiagnosticRateView" template="/WEB-INF/pages/report/opDiagnosticRate.jsp">
+    </definition>
+    
+    <!-- 全院临床病理符合率 -->
+    <definition name="pathologicalRateView" template="/WEB-INF/pages/report/pathologicalRate.jsp">
+    </definition>
+    
+    <!-- 大型设备阳性率 -->
+    <definition name="equipmentPositiveRateView" template="/WEB-INF/pages/report/equipmentPositiveRate.jsp">
+    </definition>
+    
+    <!-- 好转率  按月 -->
+    <definition name="improvementRateByMonthView" template="/WEB-INF/pages/report/improvementRateByMonth.jsp">
+    </definition>
+    
+    <!-- 好转率  按科室 -->
+    <definition name="improvementRateByDeptView" template="/WEB-INF/pages/report/improvementRateByDept.jsp">
+    </definition>
+    
+    <!-- 治愈率  按月 -->
+    <definition name="cureRateByMonthView" template="/WEB-INF/pages/report/cureRateByMonth.jsp">
+    </definition>
+    
+    <!-- 治愈率  按科室 -->
+    <definition name="cureRateByDeptView" template="/WEB-INF/pages/report/computeRateByDept.jsp">
+    </definition>
+    
+    <!-- 死亡率  按月 -->
+    <definition name="deathRateByMonthView" template="/WEB-INF/pages/report/deathRateByMonth.jsp">
+    </definition>
+    
+    <!-- 死亡率  按科室 -->
+    <definition name="deathRateByDeptView" template="/WEB-INF/pages/report/computeRateByDept.jsp">
+    </definition>
+    
 </tiles-definitions>

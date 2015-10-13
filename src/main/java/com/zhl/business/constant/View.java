@@ -95,18 +95,33 @@ public class View {
 	public static final String EquipmentPositiveRateView = "equipmentPositiveRateView";
 
 	/**
-	 * 好转率
+	 * 好转率 按月
 	 */
-	public static final String ImprovementRateView = "improvementRateView";
+	public static final String ImprovementRateByMonthView = "improvementRateByMonthView";
 
 	/**
-	 * 治愈率
+	 * 好转率 按科室
 	 */
-	public static final String CureRateView = "cureRateView";
+	public static final String ImprovementRateByDeptView = "improvementRateByDeptView";
 
 	/**
-	 * 死亡率
+	 * 治愈率 按月
 	 */
-	public static final String DeathRateView = "deathRateView";
+	public static final String CureRateByMonthView = "cureRateByMonthView";
+
+	/**
+	 * 治愈率 按科室
+	 */
+	public static final String CureRateByDeptView = "cureRateByDeptView";
+
+	/**
+	 * 死亡率 按月
+	 */
+	public static final String DeathRateByMonthView = "deathRateByMonthView";
+
+	/**
+	 * 死亡率 按科室
+	 */
+	public static final String DeathRateByDeptView = "deathRateByDeptView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

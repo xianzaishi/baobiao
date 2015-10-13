@@ -13,6 +13,7 @@ import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
+import com.zhl.business.model.ComputeRateModel;
 import com.zhl.business.model.EquipmentPositiveRate;
 import com.zhl.business.service.ReportService;
 
@@ -553,7 +554,7 @@ public class ReportServiceImpl implements ReportService {
 	 * @param dateMap
 	 * @return
 	 */
-	public double queryImprovementRateByMonth(Map<String, String> dateMap) {
+	public ComputeRateModel queryImprovementRateByMonth(Map<String, String> dateMap) {
 		return reportDao.queryImprovementRateByMonth(dateMap);
 	}
 
@@ -563,7 +564,7 @@ public class ReportServiceImpl implements ReportService {
 	 * @param dateMap
 	 * @return
 	 */
-	public double queryCureRateByMonth(Map<String, String> dateMap) {
+	public ComputeRateModel queryCureRateByMonth(Map<String, String> dateMap) {
 		return reportDao.queryCureRateByMonth(dateMap);
 	}
 
@@ -573,7 +574,37 @@ public class ReportServiceImpl implements ReportService {
 	 * @param dateMap
 	 * @return
 	 */
-	public double queryDeathRateByMonth(Map<String, String> dateMap) {
+	public ComputeRateModel queryDeathRateByMonth(Map<String, String> dateMap) {
 		return reportDao.queryDeathRateByMonth(dateMap);
+	}
+
+	/**
+	 * 好转率 按科室
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<ComputeRateModel> queryImprovementRateByDept(Map<String, String> dateMap){
+		return reportDao.queryImprovementRateByDept(dateMap);
+	}
+
+	/**
+	 * 治愈率 按科室
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<ComputeRateModel> queryCureRateByDept(Map<String, String> dateMap) {
+		return reportDao.queryCureRateByDept(dateMap);
+	}
+
+	/**
+	 * 死亡率 按科室
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<ComputeRateModel> queryDeathRateByDept(Map<String, String> dateMap) {
+		return reportDao.queryDeathRateByDept(dateMap);
 	}
 }
