@@ -937,7 +937,7 @@ Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and
 <!-- 好转率 按科室 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
 <select id="queryImprovementRateByDept" resultClass="com.zhl.business.model.ComputeRateModel" parameterClass="java.util.Map">
 <![CDATA[
-Select b.科室 as name, a.总计 as total, a.好转 as data
+Select nvl(b.科室,0) as name, nvl(a.总计,0) as total, nvl(a.好转,0) as data
 from (select M.编码,M.名称 AS 科室,count(A.主页ID) as 总计,sum(A.住院天数) As 出院者占用总床日数
 		  ,sum(decode(B.出院情况,'治愈',1,0)) as 治愈,sum(decode(B.出院情况,'好转',1,0)) as 好转
 		  ,sum(decode(B.出院情况,'未愈',1,0)) as 未愈,sum(decode(B.出院情况,'死亡',1,0)) as 死亡
@@ -974,7 +974,7 @@ Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and
 </select>
 <!-- 治愈率 按科室 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
 <select id="queryCureRateByDept" resultClass="com.zhl.business.model.ComputeRateModel" parameterClass="java.util.Map">
-Select b.科室 as name, a.总计 as total, a.治愈 as data
+Select nvl(b.科室,0) as name, nvl(a.总计,0) as total, nvl(a.治愈,0) as data
 from (select M.编码,M.名称 AS 科室,count(A.主页ID) as 总计,sum(A.住院天数) As 出院者占用总床日数
 		  ,sum(decode(B.出院情况,'治愈',1,0)) as 治愈,sum(decode(B.出院情况,'好转',1,0)) as 好转
 		  ,sum(decode(B.出院情况,'未愈',1,0)) as 未愈,sum(decode(B.出院情况,'死亡',1,0)) as 死亡
@@ -1014,7 +1014,7 @@ Where A.主页ID = B.主页ID and A.病人ID=B.病人ID and B.诊断次序=1 and
 </select>
 <!-- 死亡率 按科室 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
 <select id="queryDeathRateByDept" resultClass="com.zhl.business.model.ComputeRateModel" parameterClass="java.util.Map">
-Select b.科室 as name, a.总计 as total, a.死亡 as data
+Select nvl(b.科室,0) as name, nvl(a.总计,0) as total, nvl(a.死亡,0) as data
 from (select M.编码,M.名称 AS 科室,count(A.主页ID) as 总计,sum(A.住院天数) As 出院者占用总床日数
 		  ,sum(decode(B.出院情况,'治愈',1,0)) as 治愈,sum(decode(B.出院情况,'好转',1,0)) as 好转
 		  ,sum(decode(B.出院情况,'未愈',1,0)) as 未愈,sum(decode(B.出院情况,'死亡',1,0)) as 死亡

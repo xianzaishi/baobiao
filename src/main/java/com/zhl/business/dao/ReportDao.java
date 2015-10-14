@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.zhl.business.dto.BingChuangGongZuoRiDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
@@ -514,6 +515,16 @@ public class ReportDao extends BaseDao {
 	 */
 	public int queryBingChuangGongZuoRiByMonth(Map<String, String> dateMap) {
 		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryBingChuangGongZuoRiByMonth", dateMap);
+	}
+
+	/**
+	 * 病床工作日 按科室
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<BingChuangGongZuoRiDto> queryBingChuangGongZuoRiByDept(Map<String, String> dateMap) {
+		return (List<BingChuangGongZuoRiDto>) getSqlMapClientTemplate().queryForList("report.queryBingChuangGongZuoRiByDept", dateMap);
 	}
 
 	/**

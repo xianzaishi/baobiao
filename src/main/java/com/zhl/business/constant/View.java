@@ -75,6 +75,11 @@ public class View {
 	public static final String AvgWorkingBedsView = "avgWorkingBedsView";
 
 	/**
+	 * 平均病床工作日 按科室
+	 */
+	public static final String AvgWorkingBedsByDeptView = "avgWorkingBedsByDeptView";
+
+	/**
 	 * 病床周转次数分析
 	 */
 	public static final String BedTurnoverTimesView = "bedTurnoverTimesView";

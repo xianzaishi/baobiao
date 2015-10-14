@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zhl.business.constant.Url;
 import com.zhl.business.constant.View;
+import com.zhl.business.dto.BingChuangGongZuoRiDto;
 import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.OpDiagnosticDto;
@@ -222,6 +223,10 @@ public class ReportController {
 			break;
 		case 25: // 死亡率 按科室
 			url = "/report/deathRateByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 33: // 平均病床工作日 按科室
+			url = "/report/avgWorkingBedsByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		}
@@ -561,7 +566,7 @@ public class ReportController {
 	}
 
 	/**
-	 * 平均病床工作日
+	 * 平均病床工作日 按月
 	 * 
 	 * @param dateStart
 	 * @param dateEnd
@@ -595,6 +600,40 @@ public class ReportController {
 		model.addAttribute("dataDtoList", dataDtoList);
 		model.addAttribute("data", data);
 		return View.AvgWorkingBedsView;
+	}
+
+	/**
+	 * 平均病床工作日 按科室
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.REPORT_AVG_WORKING_BEDS_BY_DEPT)
+	public String bingChuangGongZuoRiByDept(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		
+		List<BingChuangGongZuoRiDto> bcgzrDtoList = new LinkedList<BingChuangGongZuoRiDto>();
+		bcgzrDtoList = reportService.queryBingChuangGongZuoRiByDept(dateMap);
+		String data = "";
+		for (int i = 0; i < bcgzrDtoList.size(); i++) {
+			if (bcgzrDtoList.get(i).getPingJuKaiFangChuangRiShu() != 0) {
+				data += "['" + bcgzrDtoList.get(i).getDept() + "'," + bcgzrDtoList.get(i).getShiJiZhanYongZongChuangRiShu()
+						/ bcgzrDtoList.get(i).getPingJuKaiFangChuangRiShu() + "],";
+			} else {
+				bcgzrDtoList.remove(i);
+				i = i - 1;
+			}
+		}
+		
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("bcgzrDtoList", bcgzrDtoList);
+		model.addAttribute("data", data);
+		return View.AvgWorkingBedsByDeptView;
 	}
 
 	/**

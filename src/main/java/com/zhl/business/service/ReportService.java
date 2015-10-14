@@ -3,6 +3,7 @@ package com.zhl.business.service;
 import java.util.List;
 import java.util.Map;
 
+import com.zhl.business.dto.BingChuangGongZuoRiDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
@@ -400,6 +401,13 @@ public interface ReportService {
 	 * @return
 	 */
 	public int queryBingChuangGongZuoRiByMonth(Map<String, String> dateMap);
+	
+	/**
+	 * 病床工作日 按科室
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public List<BingChuangGongZuoRiDto> queryBingChuangGongZuoRiByDept(Map<String, String> dateMap);
 	
 	/**
 	 * 病床周转次数

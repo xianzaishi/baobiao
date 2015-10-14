@@ -73,7 +73,7 @@ $(function(){
 		var dateStart = $("#dateStart").val();
 		var dateEnd = $("#dateEnd").val();
 		
-		if(dateStart == "" || dateEnd == "" || dateStart > dateEnd){
+		if(dateStart == "" || dateEnd == ""){
 			alert("请输入正确的查询时间段");
 		}else{
 			var url = "${contextPath }/report/search/dateStart/" + $("#dateStart").val() + "/dateEnd/" + $("#dateEnd").val() + "/parm/17";

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zhl.business.dao.ReportDao;
+import com.zhl.business.dto.BingChuangGongZuoRiDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
@@ -506,6 +507,15 @@ public class ReportServiceImpl implements ReportService {
 	 */
 	public int queryBingChuangGongZuoRiByMonth(Map<String, String> dateMap) {
 		return reportDao.queryBingChuangGongZuoRiByMonth(dateMap);
+	}
+	
+	/**
+	 * 病床工作日 按科室
+	 * @param dateMap<StartTime, EndTime>
+	 * @return
+	 */
+	public List<BingChuangGongZuoRiDto> queryBingChuangGongZuoRiByDept(Map<String, String> dateMap){
+		return reportDao.queryBingChuangGongZuoRiByDept(dateMap);
 	}
 	
 	/**

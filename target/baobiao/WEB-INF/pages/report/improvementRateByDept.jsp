@@ -41,8 +41,8 @@ table
 		<tr>
 			<td width="100">科室</td>
 			<td width="100">总数</td>
-			<td width="100">${name }数</td>
-			<td width="100">${name }率(%)</td>
+			<td width="100">好转数</td>
+			<td width="100">好转率(%)</td>
 		</tr>
 		<c:forEach items="${computeRateModelList }" var="computeRateModelList">
 		<tr>
@@ -73,7 +73,7 @@ $(function(){
 		var dateStart = $("#dateStart").val();
 		var dateEnd = $("#dateEnd").val();
 		
-		if(dateStart == "" || dateEnd == "" || dateStart > dateEnd){
+		if(dateStart == "" || dateEnd == ""){
 			alert("请输入正确的查询时间段");
 		}else{
 			var url = "${contextPath }/report/search/dateStart/" + $("#dateStart").val() + "/dateEnd/" + $("#dateEnd").val() + "/parm/23";
@@ -100,7 +100,7 @@ $(function () {
             }
         },
         title: {
-            text: '${name }率'
+            text: '好转率'
         },
         plotOptions: {
             column: {
@@ -112,7 +112,7 @@ $(function () {
         },
         yAxis: {
             title: {
-                text: '${name }率'
+                text: '好转率'
             }
         },
         series: [{

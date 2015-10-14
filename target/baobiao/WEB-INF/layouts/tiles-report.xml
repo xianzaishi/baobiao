@@ -89,7 +89,7 @@
     </definition>
     
     <!-- 治愈率  按科室 -->
-    <definition name="cureRateByDeptView" template="/WEB-INF/pages/report/computeRateByDept.jsp">
+    <definition name="cureRateByDeptView" template="/WEB-INF/pages/report/cureRateByDept.jsp">
     </definition>
     
     <!-- 死亡率  按月 -->
@@ -97,7 +97,7 @@
     </definition>
     
     <!-- 死亡率  按科室 -->
-    <definition name="deathRateByDeptView" template="/WEB-INF/pages/report/computeRateByDept.jsp">
+    <definition name="deathRateByDeptView" template="/WEB-INF/pages/report/deathRateByDept.jsp">
     </definition>
     
 </tiles-definitions>

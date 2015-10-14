@@ -84,6 +84,11 @@ public class Url {
 	public static final String REPORT_AVG_WORKING_BEDS = "/report/avgWorkingBeds/dateStart/{dateStart}/dateEnd/{dateEnd}";
 
 	/**
+	 * 平均病床工作日 按科室
+	 */
+	public static final String REPORT_AVG_WORKING_BEDS_BY_DEPT = "/report/avgWorkingBedsByDept/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
 	 * 病床周转次数分析
 	 */
 	public static final String BED_TURNOVER_TIMES = "/report/bedTurnoverTimes/dateStart/{dateStart}/dateEnd/{dateEnd}";

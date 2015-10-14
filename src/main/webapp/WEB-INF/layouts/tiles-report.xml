@@ -60,6 +60,10 @@
     <definition name="avgWorkingBedsView" template="/WEB-INF/pages/report/avgWorkingBeds.jsp">
     </definition>
     
+    <!-- 平均病床工作日 按科室 -->
+    <definition name="avgWorkingBedsByDeptView" template="/WEB-INF/pages/report/avgWorkingBedsByDept.jsp">
+    </definition>
+    
     <!-- 病床周转次数 -->
     <definition name="bedTurnoverTimesView" template="/WEB-INF/pages/report/bedTurnoverTimes.jsp">
     </definition>
