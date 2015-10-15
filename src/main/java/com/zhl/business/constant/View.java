@@ -80,9 +80,14 @@ public class View {
 	public static final String AvgWorkingBedsByDeptView = "avgWorkingBedsByDeptView";
 
 	/**
-	 * 病床周转次数分析
+	 * 病床周转次数分析 按月
 	 */
 	public static final String BedTurnoverTimesView = "bedTurnoverTimesView";
+
+	/**
+	 * 病床周转次数分析 按科室
+	 */
+	public static final String BedTurnoverTimesByDeptView = "bedTurnoverTimesByDeptView";
 
 	/**
 	 * 门诊诊断符合率

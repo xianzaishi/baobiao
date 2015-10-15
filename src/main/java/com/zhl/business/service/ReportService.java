@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.zhl.business.dto.BingChuangGongZuoRiDto;
+import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
@@ -410,12 +411,22 @@ public interface ReportService {
 	public List<BingChuangGongZuoRiDto> queryBingChuangGongZuoRiByDept(Map<String, String> dateMap);
 	
 	/**
-	 * 病床周转次数
+	 * 病床周转次数 按月
 	 * 
-	 * @param dateMap<StartTime, EndTime>
+	 * @param dateMap
+	 *            <StartTime, EndTime>
 	 * @return
 	 */
 	public double queryBedTurnoverTimes(Map<String, String> dateMap);
+
+	/**
+	 * 病床周转次数 按科室
+	 * 
+	 * @param dateMap
+	 *            <StartTime, EndTime>
+	 * @return
+	 */
+	public List<DataDto> queryBedTurnoverTimesByDept(Map<String, String> dateMap);
 
 	/**
 	 * 门诊诊断符合率

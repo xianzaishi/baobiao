@@ -39,7 +39,7 @@ table
 	<div align="center">
 	<table width="316" border="1" align="center" bordercolor="#000000">
 		<tr>
-			<td width="150">月份</td>
+			<td width="150">科室</td>
 			<td width="150">病床周转次数</td>
 		</tr>
 		<c:forEach items="${dataDtoList }" var="dataDtoList">
@@ -72,7 +72,7 @@ $(function(){
 		if(dateStart == "" || dateEnd == ""){
 			alert("请输入正确的查询时间段");
 		}else{
-			var url = "${contextPath }/report/search/dateStart/" + $("#dateStart").val() + "/dateEnd/" + $("#dateEnd").val() + "/parm/12";
+			var url = "${contextPath }/report/search/dateStart/" + $("#dateStart").val() + "/dateEnd/" + $("#dateEnd").val() + "/parm/27";
 			window.location.href = url;
 		}
 	});

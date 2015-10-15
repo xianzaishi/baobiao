@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.zhl.business.dto.BingChuangGongZuoRiDto;
+import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.OpDiagnosticDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
@@ -519,6 +520,7 @@ public class ReportDao extends BaseDao {
 
 	/**
 	 * 病床工作日 按科室
+	 * 
 	 * @param dateMap<StartTime, EndTime>
 	 * @return
 	 */
@@ -528,13 +530,25 @@ public class ReportDao extends BaseDao {
 	}
 
 	/**
-	 * 病床周转次数
+	 * 病床周转次数 按月
 	 * 
 	 * @param dateMap<StartTime, EndTime>
 	 * @return
 	 */
 	public double queryBedTurnoverTimes(Map<String, String> dateMap) {
 		return (Double) getSqlMapClientTemplate().queryForObject("report.queryBedTurnoverTimes", dateMap);
+	}
+	
+	/**
+	 * 病床周转次数 按科室
+	 * 
+	 * @param dateMap
+	 *            <StartTime, EndTime>
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<DataDto> queryBedTurnoverTimesByDept(Map<String, String> dateMap) {
+		return (List<DataDto>)getSqlMapClientTemplate().queryForList("report.queryBedTurnoverTimesByDept", dateMap);
 	}
 
 	/**

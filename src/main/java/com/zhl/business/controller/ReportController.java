@@ -225,6 +225,10 @@ public class ReportController {
 			url = "/report/deathRateByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
+		case 27: // 病床周转次数 按科室
+			url = "/report/bedTurnoverTimesByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
 		case 33: // 平均病床工作日 按科室
 			url = "/report/avgWorkingBedsByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
@@ -651,7 +655,7 @@ public class ReportController {
 	}
 
 	/**
-	 * 病床周转次数
+	 * 病床周转次数 按月
 	 * 
 	 * @param dateStart
 	 * @param dateEnd
@@ -682,6 +686,35 @@ public class ReportController {
 		model.addAttribute("dateStart", dateStart.split("-")[0]);
 		model.addAttribute("dateEnd", dateStart.split("-")[0]);
 		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("data", data);
+		return View.BedTurnoverTimesView;
+	}
+
+	/**
+	 * 病床周转次数 按科室
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.BED_TURNOVER_TIMES_BY_DEPT)
+	public String bedTurnoverTimesByDept(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+
+		List<DataDto> dataDtoList = new LinkedList<DataDto>();
+		dataDtoList = reportService.queryBedTurnoverTimesByDept(dateMap);
+
+		String data = "";
+		for (int i = 0; i < dataDtoList.size(); i++) {
+			data += "['" + dataDtoList.get(i).getName() + "'," + dataDtoList.get(i).getData() + "],";
+		}
+
+		model.addAttribute("dataDtoList", dataDtoList);
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
 		model.addAttribute("data", data);
 		return View.BedTurnoverTimesView;
 	}

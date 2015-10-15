@@ -64,8 +64,12 @@
     <definition name="avgWorkingBedsByDeptView" template="/WEB-INF/pages/report/avgWorkingBedsByDept.jsp">
     </definition>
     
-    <!-- 病床周转次数 -->
+    <!-- 病床周转次数 按月 -->
     <definition name="bedTurnoverTimesView" template="/WEB-INF/pages/report/bedTurnoverTimes.jsp">
+    </definition>
+    
+    <!-- 病床周转次数 按科室 -->
+    <definition name="bedTurnoverTimesByDeptView" template="/WEB-INF/pages/report/bedTurnoverTimesByDept.jsp">
     </definition>
     
     <!-- 门诊诊断符合率 -->

@@ -875,7 +875,7 @@ Select id, 名称 as name from 部门表 Where 上级id = 62
 	group by M.编码,M.名称
 </select>
 
-<!-- 病床周转次数 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
+<!-- 病床周转次数 按月 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
 <select id="queryBedTurnoverTimes" resultClass="java.lang.Double" parameterClass="java.util.Map">
 	<![CDATA[
 	SELECT 总计/1061 FROM  (
@@ -896,6 +896,28 @@ Select id, 名称 as name from 部门表 Where 上级id = 62
 		)
 	order by 编码
 	]]>
+</select>
+
+<!-- 病床周转次数 按科室 from:ZL3_REPORT_287 住院病人动态及指标分析 -->
+<select id="queryBedTurnoverTimesByDept" resultClass="com.zhl.business.dto.DataDto" parameterClass="java.util.Map">
+	Select a.编码 as id, a.科室 as name, (a.转出数+b.总计)/a.平均开放床日数 as data From (
+		select M.编码,M.名称 AS 科室,sum(A.转出数) as 转出数,sum(A.开放床数)/count(distinct 日期)  as 平均开放床日数
+		From 住院日报 A,部门表 M
+<![CDATA[
+		where A.科室id=M.id AND a.日期 >= To_Date(#StartTime#, 'YYYY-MM-DD') and 日期 < To_Date(#EndTime#, 'YYYY-MM-DD')+1
+]]>
+		group by M.编码,M.名称) a,
+		(select M.编码,M.名称 AS 科室,count(A.主页ID) as 总计
+		from (select 病人ID,主页ID,入院日期,出院日期,住院天数,出院科室ID as 科室ID,抢救次数,成功次数,是否确诊 from 病案主页 
+<![CDATA[
+		where 出院日期 >= To_Date(#StartTime#, 'YYYY-MM-DD') and 出院日期 < To_Date(#EndTime#, 'YYYY-MM-DD')+1
+]]>
+		) A,病人诊断记录 B,诊断符合情况 C,部门表 M
+		Where A.主页ID = B.主页ID and A.病人ID=B.病人ID AND a.科室id=M.id and B.诊断次序=1 and B.诊断类型=3 and B.记录来源=4 and B.编码序号=1
+				  and A.主页ID = C.主页ID and A.病人ID=C.病人ID and C.符合类型=2
+		group by M.编码,M.名称) b
+	Where a.编码 = b.编码
+	order by id
 </select>
 
 <!-- 门诊诊断符合率 from:ZL3_REPORT_289 门诊与出院诊断及危重病人统计 -->
