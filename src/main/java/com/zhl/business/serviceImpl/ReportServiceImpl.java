@@ -12,6 +12,7 @@ import com.zhl.business.dto.BingChuangGongZuoRiDto;
 import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.OpDiagnosticDto;
+import com.zhl.business.dto.PathologicalRateByDeptDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
@@ -555,9 +556,10 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	/**
-	 * 全院临床病理符合率
+	 * 全院临床病理符合率 按月
 	 * 
-	 * @param dateMap<StartTime, EndTime>
+	 * @param dateMap
+	 *            <StartTime, EndTime>
 	 * @return
 	 */
 	public OpDiagnosticDto queryPathologicalRate(Map<String, String> dateMap) {
@@ -565,9 +567,21 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	/**
+	 * 全院临床病理符合率 按科室
+	 * 
+	 * @param dateMap
+	 *            <StartTime, EndTime>
+	 * @return
+	 */
+	public List<PathologicalRateByDeptDto> queryPathologicalRateByDept(Map<String, String> dateMap) {
+		return reportDao.queryPathologicalRateByDept(dateMap);
+	}
+
+	/**
 	 * 设备阳性率
 	 * 
-	 * @param dateMap<StartTime, EndTime>
+	 * @param dateMap
+	 *            <StartTime, EndTime>
 	 * @return EquipmentPositiveRate
 	 */
 	public EquipmentPositiveRate queryEquipmentPositiveRate(Map<String, String> dateMap){

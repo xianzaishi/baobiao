@@ -51,6 +51,13 @@ table
 		<br/>
 		<div align="center"><c:out value="${dateStart }"/> &nbsp;to&nbsp;<c:out value="${dateEnd }"/></div>
 	</div>
+	<div style="float:left; margin-left: 40px;">
+		<br/>
+		<p style="font-size:80%">出院患者平均住院日：出院患者占用总床日数÷出院人数。</p>
+		<p style="font-size:80%">病床工作日：实际占用总床日数÷平均开放病床数。</p>
+		<p style="font-size:80%">床位使用率=实际占用床日数÷实际开放床日数。</p>
+		<p style="font-size:80%">病床周转次数=出院病人数÷平均开放床位数。</p>
+	</div>
 </div>
 <br/>
 <script type="text/javascript">

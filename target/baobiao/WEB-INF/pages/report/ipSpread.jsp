@@ -46,8 +46,8 @@ table
 		  <c:forEach items="${zaiYuanBingRenFenBuList }" var="zaiYuanBingRenFenBuList">
 			  <tr>
 			    <td>&nbsp;${zaiYuanBingRenFenBuList.name }</td>
-			    <td>&nbsp;${zaiYuanBingRenFenBuList.count }</td>
-			    <td>&nbsp;${zaiYuanBingRenFenBuList.scale }</td>
+			    <td>&nbsp;<fmt:formatNumber type="number" value="${zaiYuanBingRenFenBuList.count }" maxFractionDigits="2"/></td>
+			    <td>&nbsp;<fmt:formatNumber type="number" value="${zaiYuanBingRenFenBuList.scale }" maxFractionDigits="2"/></td>
 			  </tr>
 		   </c:forEach>
 		</table>	

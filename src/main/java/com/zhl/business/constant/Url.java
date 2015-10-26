@@ -104,9 +104,14 @@ public class Url {
 	public static final String OP_DIAGNOSTIC_RATE = "/report/opDiagnosticRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
 
 	/**
-	 * 全院临床病理符合率
+	 * 全院临床病理符合率 按月
 	 */
 	public static final String PATHOLOGICA_RATE = "/report/pathologicalRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 全院临床病理符合率 按科室
+	 */
+	public static final String PATHOLOGICA_RATE_BY_DEPY = "/report/pathologicalRateByDept/dateStart/{dateStart}/dateEnd/{dateEnd}";
 
 	/**
 	 * 大型设备阳性率

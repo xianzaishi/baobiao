@@ -51,6 +51,11 @@ table
 		<br/>
 		<div align="center"><c:out value="${dateStart }"/> &nbsp;to&nbsp;<c:out value="${dateEnd }"/></div>
 	</div>
+	<div style="float:left; margin-left: 40px;">
+		<br/>
+		<p style="font-size:80%">门诊患者人均医疗费用=（门诊医疗收入+门诊药品收入）÷门诊诊疗人次。</p>
+		<p style="font-size:80%">住院患者人均医疗费用=（住院医疗收入+住院药品收入）÷出院人数.反应医院收费水平。</p>
+	</div>
 </div>
 <br/>
 <script type="text/javascript">

@@ -65,6 +65,10 @@ table
 </div>
 <div id="container" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
 <br/>
+<div style="float:left; margin-left: 40px;">
+	<br/>
+	<p style="font-size:80%">大型设备检查阳性率=检查阳性人数÷检查人数。</p>
+</div>
 <script type="text/javascript">
 $(function(){
 	$("#dateStart").datepicker();

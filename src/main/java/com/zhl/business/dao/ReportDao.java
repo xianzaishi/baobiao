@@ -9,6 +9,7 @@ import com.zhl.business.dto.BingChuangGongZuoRiDto;
 import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.OpDiagnosticDto;
+import com.zhl.business.dto.PathologicalRateByDeptDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
@@ -562,13 +563,25 @@ public class ReportDao extends BaseDao {
 	}
 	
 	/**
-	 * 全院临床病理符合率
+	 * 全院临床病理符合率 按月
 	 * 
-	 * @param dateMap<StartTime, EndTime>
+	 * @param dateMap
+	 *            <StartTime, EndTime>
 	 * @return OpDiagnosticDto
 	 */
 	public OpDiagnosticDto queryPathologicalRate(Map<String, String> dateMap) {
 		return (OpDiagnosticDto) getSqlMapClientTemplate().queryForObject("report.queryPathologicalRate", dateMap);
+	}
+
+	/**
+	 * 全院临床病理符合率 按科室
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PathologicalRateByDeptDto> queryPathologicalRateByDept(Map<String, String> dateMap) {
+		return (List<PathologicalRateByDeptDto>) getSqlMapClientTemplate().queryForList("report.queryPathologicalRateByDept", dateMap);
 	}
 
 	/**

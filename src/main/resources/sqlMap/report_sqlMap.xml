@@ -939,7 +939,7 @@ Select id, 名称 as name from 部门表 Where 上级id = 62
 	]]>
 </select>
 
-<!-- 全院临床病理符合率 from:ZL3_REPORT_290 病区诊断符合统计 -->
+<!-- 全院临床病理符合率 按月 from:ZL3_REPORT_290 病区诊断符合统计 -->
 <select id="queryPathologicalRate" resultClass="com.zhl.business.dto.OpDiagnosticDto" parameterClass="java.util.Map">
 	Select nvl(sum(decode(D.符合情况,1,1,0)),0)+nvl(sum(decode(D.符合情况,2,1,0)),0) as zongShu,nvl(sum(decode(D.符合情况,1,1,0)),0) as fuHe, nvl(sum(decode(D.符合情况,2,1,0)),0) as buFu, nvl(sum(decode(D.符合情况,3,1,0)),0) as yiZhen
 	from 病案主页 A,诊断符合情况 B,诊断符合情况 C,诊断符合情况 D,病人诊断记录 E,诊断符合情况 J
@@ -951,6 +951,30 @@ Select id, 名称 as name from 部门表 Where 上级id = 62
 	     and A.病人ID=D.病人ID(+) and A.主页ID=D.主页ID(+) and D.符合类型(+)=4
 	     and A.病人ID=J.病人ID(+) and A.主页ID=J.主页ID(+) and J.符合类型(+)=3
 	]]>
+</select>
+
+<!-- 全院临床病理符合率 按科室 from:ZL3_REPORT_290 病区诊断符合统计 -->
+<select id="queryPathologicalRateByDept" resultClass="com.zhl.business.dto.PathologicalRateByDeptDto" parameterClass="java.util.Map">
+Select B.名称 as name, nvl(病理符合, 0) as fuhe, nvl(病理不符, 0) as bufu
+from (
+     select A.出院科室ID,count(A.病人ID) as 出院病人
+        ,sum(decode(B.符合情况,1,1,0)) as 入出符合,sum(decode(B.符合情况,2,1,0)) as 入出不符,sum(decode(B.符合情况,3,1,0)) as 入出疑诊
+        ,sum(decode(C.符合情况,1,1,0)) as 手术符合,sum(decode(C.符合情况,2,1,0)) as 手术不符,sum(decode(C.符合情况,3,1,0)) as 手术疑诊
+        ,sum(decode(D.符合情况,1,1,0)) as 病理符合,sum(decode(D.符合情况,2,1,0)) as 病理不符,sum(decode(D.符合情况,3,1,0)) as 病理疑诊
+        ,sum(decode(J.符合情况,1,1,0)) as 放射符合,sum(decode(J.符合情况,2,1,0)) as 放射不符,sum(decode(J.符合情况,3,1,0)) as 放射疑诊
+        ,sum(decode(A.是否确诊,1,1,0)) as 确诊,sum(decode(A.是否确诊,1,decode(sign(A.确诊日期-A.入院日期-3),1,0,1))) as 三日内确诊
+        ,sum(decode(A.尸检标志,1,1,0)) as 尸检
+     from 病案主页 A,诊断符合情况 B,诊断符合情况 C,诊断符合情况 D,病人诊断记录 E,诊断符合情况 J
+     <![CDATA[
+     where A.出院日期 >= To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期 < To_Date(#EndTime#, 'YYYY-MM-DD')+1
+        and A.病人ID=E.病人ID and A.主页ID=E.主页ID and E.诊断类型=3 and E.记录来源=4 and E.诊断次序=1 and E.编码序号=1 and E.出院情况<>'其他'
+        and A.病人ID=B.病人ID and A.主页ID=B.主页ID and B.符合类型=2
+        and A.病人ID=C.病人ID(+) and A.主页ID=C.主页ID(+) and C.符合类型(+)=6
+        and A.病人ID=D.病人ID(+) and A.主页ID=D.主页ID(+) and D.符合类型(+)=4
+        and A.病人ID=J.病人ID(+) and A.主页ID=J.主页ID(+) and J.符合类型(+)=3
+      ]]>
+     group by A.出院科室ID) A,部门表 B,部门性质说明 C
+  where A.出院科室ID(+)=B.ID and B.ID=C.部门ID and C.工作性质='临床' and C.服务对象 in (2,3)
 </select>
 
 <!-- 大型设备阳性率 from:REPORT_ZYSI70 大需变更设备检查阳性率 -->

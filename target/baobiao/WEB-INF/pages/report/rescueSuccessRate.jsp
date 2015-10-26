@@ -59,6 +59,10 @@ table
 </div>
 <div id="container" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
 <br/>
+<div style="float:left; margin-left: 40px;">
+	<br/>
+	<p style="font-size:80%">危重病人抢救成功率=危重病人抢救成功人次数÷抢救人次。</p>
+</div>
 <script type="text/javascript">
 $(function(){
 	$("#dateStart").datepicker();

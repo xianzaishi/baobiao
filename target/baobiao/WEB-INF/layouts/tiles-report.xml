@@ -60,16 +60,28 @@
     <definition name="avgWorkingBedsView" template="/WEB-INF/pages/report/avgWorkingBeds.jsp">
     </definition>
     
-    <!-- 病床周转次数 -->
+    <!-- 平均病床工作日 按科室 -->
+    <definition name="avgWorkingBedsByDeptView" template="/WEB-INF/pages/report/avgWorkingBedsByDept.jsp">
+    </definition>
+    
+    <!-- 病床周转次数 按月 -->
     <definition name="bedTurnoverTimesView" template="/WEB-INF/pages/report/bedTurnoverTimes.jsp">
+    </definition>
+    
+    <!-- 病床周转次数 按科室 -->
+    <definition name="bedTurnoverTimesByDeptView" template="/WEB-INF/pages/report/bedTurnoverTimesByDept.jsp">
     </definition>
     
     <!-- 门诊诊断符合率 -->
     <definition name="opDiagnosticRateView" template="/WEB-INF/pages/report/opDiagnosticRate.jsp">
     </definition>
     
-    <!-- 全院临床病理符合率 -->
+    <!-- 全院临床病理符合率 按月 -->
     <definition name="pathologicalRateView" template="/WEB-INF/pages/report/pathologicalRate.jsp">
+    </definition>
+    
+    <!-- 全院临床病理符合率 按科室 -->
+    <definition name="pathologicalRateByDeptView" template="/WEB-INF/pages/report/pathologicalRateByDept.jsp">
     </definition>
     
     <!-- 大型设备阳性率 -->

@@ -74,6 +74,10 @@ table
 </div>
 <div id="container" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
 <br/>
+<div style="float:left; margin-left: 40px;">
+	<br/>
+	<p style="font-size:80%">临床主要诊断与病理诊断符合率=临床与病理诊断符合人数÷病理人数。</p>
+</div>
 <script type="text/javascript">
 $(function(){
 	$("#dateStart").datepicker();

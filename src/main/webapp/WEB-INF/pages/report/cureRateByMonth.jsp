@@ -63,6 +63,10 @@ table
 </div>
 <div id="container" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
 <br/>
+<div style="float:left; margin-left: 40px;">
+	<br/>
+	<p style="font-size:80%">治愈率=治愈人数÷出院人数×100%。</p>
+</div>
 <script type="text/javascript">
 $(function(){
 	$("#dateStart").datepicker();

@@ -18,6 +18,7 @@ import com.zhl.business.dto.BingChuangGongZuoRiDto;
 import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.OpDiagnosticDto;
+import com.zhl.business.dto.PathologicalRateByDeptDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
@@ -227,6 +228,10 @@ public class ReportController {
 			break;
 		case 27: // 病床周转次数 按科室
 			url = "/report/bedTurnoverTimesByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 28: // 全院临床病理符合率 按科室
+			url = "/report/pathologicalRateByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		case 33: // 平均病床工作日 按科室
@@ -758,7 +763,7 @@ public class ReportController {
 	}
 
 	/**
-	 * 全院临床病理符合率
+	 * 全院临床病理符合率 按月
 	 * 
 	 * @param dateStart
 	 * @param dateEnd
@@ -793,6 +798,40 @@ public class ReportController {
 		model.addAttribute("dataDtoList", dataDtoList);
 		model.addAttribute("data", data);
 		return View.PathologicalRateView;
+	}
+
+	/**
+	 * 全院临床病理符合率 按科室
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(Url.PATHOLOGICA_RATE_BY_DEPY)
+	public String pathologicalRateByDept(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+
+		List<PathologicalRateByDeptDto> pathologicalList = new LinkedList<PathologicalRateByDeptDto>();
+		pathologicalList = reportService.queryPathologicalRateByDept(dateMap);
+		String data = "";
+		for (int i = 0; i < pathologicalList.size(); i++) {
+			if ((pathologicalList.get(i).getBufu() + pathologicalList.get(i).getFuhe()) != 0) {
+				data += "['" + pathologicalList.get(i).getName() + "',"
+						+ (pathologicalList.get(i).getFuhe() / (pathologicalList.get(i).getBufu() + pathologicalList.get(i).getFuhe())) * 100 + "],";
+			} else {
+				pathologicalList.remove(i);
+				i = i - 1;
+			}
+		}
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("pathologicalList", pathologicalList);
+		model.addAttribute("data", data);
+		return View.PathologicalRateByDeptView;
 	}
 
 	/**

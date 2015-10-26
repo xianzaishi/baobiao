@@ -59,6 +59,10 @@ table
 </div>
 <div id="container" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
 <br/>
+<div style="float:left; margin-left: 40px;">
+	<br/>
+	<p style="font-size:80%">病床周转次数=出院病人数÷平均开放床位数。</p>
+</div>
 <script type="text/javascript">
 $(function(){
 	$("#dateStart").datepicker();

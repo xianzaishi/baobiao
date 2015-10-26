@@ -142,6 +142,10 @@ table
   </tr>
    -->
 </table>
+	<div style="float:left; margin-left: 40px;">
+		<br/>
+		<p style="font-size:80%">医疗收入占业务收入的比重=医疗收入÷（医疗收入+药品收入+其他收入）×100%。</p>
+	</div>
 </div>
 </div>
 </body>

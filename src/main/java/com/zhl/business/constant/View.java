@@ -95,9 +95,14 @@ public class View {
 	public static final String OpDiagnosticRateView = "opDiagnosticRateView";
 
 	/**
-	 * 全院临床病理符合率
+	 * 全院临床病理符合率 按月
 	 */
 	public static final String PathologicalRateView = "pathologicalRateView";
+
+	/**
+	 * 全院临床病理符合率 按科室
+	 */
+	public static final String PathologicalRateByDeptView = "pathologicalRateByDeptView";
 
 	/**
 	 * 大型设备阳性率
