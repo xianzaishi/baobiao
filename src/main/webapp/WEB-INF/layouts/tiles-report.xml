@@ -112,4 +112,44 @@
     <definition name="deathRateByDeptView" template="/WEB-INF/pages/report/deathRateByDept.jsp">
     </definition>
     
+    <!-- 手术明细表 愈合 甲 -->
+    <definition name="operationDetailFirstView" template="/WEB-INF/pages/report/operationDetailFirst.jsp">
+    </definition>
+    
+    <!-- 手术明细表 愈合 乙 -->
+    <definition name="operationDetailSecondView" template="/WEB-INF/pages/report/operationDetailSecond.jsp">
+    </definition>
+    
+    <!-- 手术明细表 愈合 丙 -->
+    <definition name="operationDetailThirdView" template="/WEB-INF/pages/report/operationDetailThird.jsp">
+    </definition>
+    
+    <!-- 手术明细表 愈合 丁 -->
+    <definition name="operationDetailForthView" template="/WEB-INF/pages/report/operationDetailForth.jsp">
+    </definition>
+    
+    <!-- 分科病人手术操作质量 全院 -->
+    <definition name="operationQualityByDeptView" template="/WEB-INF/pages/report/operationQualityByDept.jsp">
+    </definition>
+    
+    <!-- 医疗质量月报表 外科系统 -->
+    <definition name="operationQualityByDeptWaiKeView" template="/WEB-INF/pages/report/operationQualityByDeptWaiKe.jsp">
+    </definition>
+    
+    <!-- 医疗质量月报表 内科系统 -->
+    <definition name="operationQualityByDeptNeiKeView" template="/WEB-INF/pages/report/operationQualityByDeptNeiKe.jsp">
+    </definition>
+    
+    <!-- 入出院诊断符合率 -->
+    <definition name="diagnosticRateView" template="/WEB-INF/pages/report/diagnosticRate.jsp">
+    </definition>
+    
+    <!-- 手术前后诊断符合率 -->
+    <definition name="operationDiagnosticRateView" template="/WEB-INF/pages/report/operationDiagnosticRate.jsp">
+    </definition>
+    
+    <!-- 临床主要诊断与病理诊断符合率 -->
+    <definition name="bingLiZhenDuanRateView" template="/WEB-INF/pages/report/bingLiZhenDuanRate.jsp">
+    </definition>
+    
 </tiles-definitions>

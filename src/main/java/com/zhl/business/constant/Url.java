@@ -147,5 +147,55 @@ public class Url {
 	 * 死亡率 按科室
 	 */
 	public static final String DEATH_RATE_BY_DEPT = "/report/deathRateByDept/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 手术明细表 愈合 甲
+	 */
+	public static final String OPERATION_DETAIL_FIRST = "/report/operationDetailFirst/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 手术明细表 愈合 乙
+	 */
+	public static final String OPERATION_DETAIL_SECOND = "/report/operationDetailSecond/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 手术明细表 愈合 丙
+	 */
+	public static final String OPERATION_DETAIL_THIRD = "/report/operationDetailThird/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 手术明细表 愈合 丁
+	 */
+	public static final String OPERATION_DETAIL_FORTH = "/report/operationDetailForth/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 分科病人手术操作质量 全院
+	 */
+	public static final String OPERATION_QUALITH_BY_DEPT = "/report/operationQualityByDept/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 分科病人手术操作质量 外科系统
+	 */
+	public static final String OPERATION_QUALITH_BY_DEPT_WAIKE = "/report/operationQualityByDeptWaiKe/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 分科病人手术操作质量 外科系统
+	 */
+	public static final String OPERATION_QUALITH_BY_DEPT_NEIKE = "/report/operationQualityByDeptNeiKe/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 入出院诊断符合率
+	 */
+	public static final String DIAGNOSTIC_RATE = "/report/diagnosticRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 手术前后诊断符合率
+	 */
+	public static final String OPERATION_DIAGNOSTIC_RATE = "/report/operationDiagnosticRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 临床主要诊断与病理诊断符合率
+	 */
+	public static final String BING_LI_ZHEN_DUAN_RATE = "/report/bingLiZhenDuanRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

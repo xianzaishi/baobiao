@@ -6,15 +6,21 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.zhl.business.dto.BingChuangGongZuoRiDto;
+import com.zhl.business.dto.BingLiZhenDuanFuHeLvDto;
 import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
+import com.zhl.business.dto.DiagnosticDto;
 import com.zhl.business.dto.OpDiagnosticDto;
+import com.zhl.business.dto.OperationDiagnostic;
 import com.zhl.business.dto.PathologicalRateByDeptDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.model.ComputeRateModel;
 import com.zhl.business.model.EquipmentPositiveRate;
+import com.zhl.business.model.OperationDetail;
+import com.zhl.business.model.OperationQuality;
+import com.zhl.business.model.ZhuYuanRiBao;
 
 @Repository
 public class ReportDao extends BaseDao {
@@ -496,8 +502,8 @@ public class ReportDao extends BaseDao {
 	 * @param dateMap<StartTime, EndTime>
 	 * @return
 	 */
-	public int queryChuYuanShuByDeptId(Map<String, String> dateMap) {
-		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryChuYuanShuByDeptId", dateMap);
+	public ZhuYuanRiBao queryZhuYuanRiBaoByDeptId(Map<String, String> dateMap) {
+		return (ZhuYuanRiBao) getSqlMapClientTemplate().queryForObject("report.queryZhuYuanRiBaoByDeptId", dateMap);
 	}
 
 	/**
@@ -505,6 +511,7 @@ public class ReportDao extends BaseDao {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<ZaiYuanBingRenFenBuDto> queryZaiYuanBingRenFenBu() {
 		return (List<ZaiYuanBingRenFenBuDto>) getSqlMapClientTemplate().queryForList("report.queryZaiYuanBingRenFenBu");
 	}
@@ -655,5 +662,115 @@ public class ReportDao extends BaseDao {
 	@SuppressWarnings("unchecked")
 	public List<ComputeRateModel> queryDeathRateByDept(Map<String, String> dateMap) {
 		return (List<ComputeRateModel>) getSqlMapClientTemplate().queryForList("report.queryDeathRateByDept", dateMap);
+	}
+
+	/**
+	 * 手术明细表 愈合 甲
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<OperationDetail> queryOperationDetailFirst(Map<String, String> dateMap) {
+		return (List<OperationDetail>) getSqlMapClientTemplate().queryForList("report.queryOperationDetailFirst", dateMap);
+	}
+
+	/**
+	 * 手术明细表 愈合 乙
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<OperationDetail> queryOperationDetailSecond(Map<String, String> dateMap) {
+		return (List<OperationDetail>) getSqlMapClientTemplate().queryForList("report.queryOperationDetailSecond", dateMap);
+	}
+
+	/**
+	 * 手术明细表 愈合 丙
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<OperationDetail> queryOperationDetailThird(Map<String, String> dateMap) {
+		return (List<OperationDetail>) getSqlMapClientTemplate().queryForList("report.queryOperationDetailThird", dateMap);
+	}
+
+	/**
+	 * 手术明细表 愈合 丁
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<OperationDetail> queryOperationDetailForth(Map<String, String> dateMap) {
+		return (List<OperationDetail>) getSqlMapClientTemplate().queryForList("report.queryOperationDetailForth", dateMap);
+	}
+
+	/**
+	 * 分科病人手术操作质量 全院
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<OperationQuality> queryOperationQualityByDept(Map<String, String> dateMap) {
+		return (List<OperationQuality>) getSqlMapClientTemplate().queryForList("report.queryOperationQualityByDept", dateMap);
+	}
+
+	/**
+	 * 分科病人手术操作质量 外科系统
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<OperationQuality> queryOperationQualityByDeptWaiKe(Map<String, String> dateMap) {
+		return (List<OperationQuality>) getSqlMapClientTemplate().queryForList("report.queryOperationQualityByDeptWaiKe", dateMap);
+	}
+
+	/**
+	 * 分科病人手术操作质量 内科系统
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<OperationQuality> queryOperationQualityByDeptNeiKe(Map<String, String> dateMap) {
+		return (List<OperationQuality>) getSqlMapClientTemplate().queryForList("report.queryOperationQualityByDeptNeiKe", dateMap);
+	}
+
+	/**
+	 * 入出院诊断符合率
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<DiagnosticDto> queryDiagnosticRate(Map<String, String> dateMap) {
+		return (List<DiagnosticDto>) getSqlMapClientTemplate().queryForList("report.queryDiagnosticRate", dateMap);
+	}
+
+	/**
+	 * 手术前后诊断符合率
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<OperationDiagnostic> queryOperationDiagnosticRate(Map<String, String> dateMap) {
+		return (List<OperationDiagnostic>) getSqlMapClientTemplate().queryForList("report.queryOperationDiagnosticRate", dateMap);
+	}
+
+	/**
+	 * 临床主要诊断与病理诊断符合率
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<BingLiZhenDuanFuHeLvDto> queryBingLiZhenDuanFuHeLv(Map<String, String> dateMap) {
+		return (List<BingLiZhenDuanFuHeLvDto>) getSqlMapClientTemplate().queryForList("report.queryBingLiZhenDuanFuHeLv", dateMap);
 	}
 }

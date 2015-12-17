@@ -15,15 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.zhl.business.constant.Url;
 import com.zhl.business.constant.View;
 import com.zhl.business.dto.BingChuangGongZuoRiDto;
+import com.zhl.business.dto.BingLiZhenDuanFuHeLvDto;
 import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
+import com.zhl.business.dto.DiagnosticDto;
 import com.zhl.business.dto.OpDiagnosticDto;
+import com.zhl.business.dto.OperationDiagnostic;
 import com.zhl.business.dto.PathologicalRateByDeptDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.model.ComputeRateModel;
 import com.zhl.business.model.EquipmentPositiveRate;
+import com.zhl.business.model.OperationDetail;
+import com.zhl.business.model.OperationQuality;
 import com.zhl.business.service.ReportService;
 
 @Controller
@@ -238,6 +243,46 @@ public class ReportController {
 			url = "/report/avgWorkingBedsByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
+		case 36: // 手术明细表 愈合 甲
+			url = "/report/operationDetailFirst/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 37: // 手术明细表 愈合 乙
+			url = "/report/operationDetailSecond/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 38: // 手术明细表 愈合 丙
+			url = "/report/operationDetailThird/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 39: // 手术明细表 愈合 丁
+			url = "/report/operationDetailForth/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 41: // 分科病人手术操作质量 全院
+			url = "/report/operationQualityByDept/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 42: // 分科病人手术操作质量 外科
+			url = "/report/operationQualityByDeptWaiKe/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 43: // 分科病人手术操作质量 内科
+			url = "/report/operationQualityByDeptNeiKe/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 44: // 入出院诊断符合率
+			url = "/report/diagnosticRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 45: // 手术前后诊断符合率
+			url = "/report/operationDiagnosticRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 46: // 临床主要诊断与病理诊断符合率
+			url = "/report/bingLiZhenDuanRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
 		}
 		return View.ReportSearchingView;
 	}
@@ -425,11 +470,18 @@ public class ReportController {
 		ZhuYuanShouRuDto zhuYuanShouRuDto = reportService.queryZhuYuanShouRu(dateMap); // 在院收入
 		double yiLiaoCaiLiaoShouRu = reportService.queryYiliaoCaiLiaoShouRu(dateMap); // 医疗材料收入
 
+		double guaHaoShouRu = reportService.queryGuaHaoShouRu(dateMap); // 门诊挂号收入
+		double menZhenShouFeiShouRu = reportService.queryMenZhenShouFeiShouRu(dateMap); // 门诊收费收入
+		double tiJianShouRu = reportService.queryTiJianShouRu(dateMap); // 体检收入
+		double menZhenShouRu = guaHaoShouRu + menZhenShouFeiShouRu + tiJianShouRu; // 门诊收入
+		double sum = zhuYuanShouRuDto.getZongShouRu() + menZhenShouRu;
+
 		model.addAttribute("dateStart", dateStart);
 		model.addAttribute("dateEnd", dateEnd);
 		model.addAttribute("ipDrugsTotal", zhuYuanShouRuDto.getYaoPinShouRu()); // 在院药品收入
 		model.addAttribute("opDrugsTotal", menZhenYaoPinShouRu); // 门诊药品收入
 		model.addAttribute("yiLiaoCaiLiaoShouRu", yiLiaoCaiLiaoShouRu); // 医疗材料收入
+		model.addAttribute("yiLiaoShouRu", sum); // 医疗材料收入
 		return View.AssetsOperationView;
 	}
 
@@ -523,7 +575,7 @@ public class ReportController {
 			List<Double> dateList = new LinkedList<Double>();
 
 			int chuYuanZongChuangRi = reportService.queryChuYuanZongChuangRiByDeptId(dateMap); // 出院患者实际占用总床日
-			int chuYuanShu = reportService.queryChuYuanShuByDeptId(dateMap); // 出院人数
+			int chuYuanShu = reportService.queryZhuYuanRiBaoByDeptId(dateMap).getChuYuanShu(); // 出院人数
 			double chuYuanPingJunZhuYuanRi = (chuYuanShu == 0 ? 0 : chuYuanZongChuangRi / chuYuanShu); // 出院患者平均住院日
 			dateList.add(chuYuanPingJunZhuYuanRi);
 
@@ -1076,6 +1128,226 @@ public class ReportController {
 		model.addAttribute("computeRateModelList", computeRateModelList);
 		model.addAttribute("data", data);
 		return View.DeathRateByDeptView;
+	}
+
+	/**
+	 * 手术明细表 愈合 甲
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.OPERATION_DETAIL_FIRST)
+	public String operationDetailFirst(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<OperationDetail> operationDetailList = new LinkedList<OperationDetail>();
+		operationDetailList = reportService.queryOperationDetailFirst(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("operationDetailList", operationDetailList);
+		return View.OperationDetailFirstView;
+	}
+
+	/**
+	 * 手术明细表 愈合 乙
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.OPERATION_DETAIL_SECOND)
+	public String operationDetailSecond(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<OperationDetail> operationDetailList = new LinkedList<OperationDetail>();
+		operationDetailList = reportService.queryOperationDetailSecond(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("operationDetailList", operationDetailList);
+		return View.OperationDetailSecondView;
+	}
+
+	/**
+	 * 手术明细表 愈合 丙
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.OPERATION_DETAIL_THIRD)
+	public String operationDetailThird(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<OperationDetail> operationDetailList = new LinkedList<OperationDetail>();
+		operationDetailList = reportService.queryOperationDetailThird(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("operationDetailList", operationDetailList);
+		return View.OperationDetailThirdView;
+	}
+
+	/**
+	 * 手术明细表 愈合 丁
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.OPERATION_DETAIL_FORTH)
+	public String operationDetailForth(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<OperationDetail> operationDetailList = new LinkedList<OperationDetail>();
+		operationDetailList = reportService.queryOperationDetailForth(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("operationDetailList", operationDetailList);
+		return View.OperationDetailForthView;
+	}
+
+	/**
+	 * 分科病人手术操作质量 全院
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.OPERATION_QUALITH_BY_DEPT)
+	public String operationQualityByDept(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<OperationQuality> operationQualityList = new LinkedList<OperationQuality>();
+		operationQualityList = reportService.queryOperationQualityByDept(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("operationQualityList", operationQualityList);
+		return View.OperationQualityByDeptView;
+	}
+
+	/**
+	 * 分科病人手术操作质量 外科系统
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.OPERATION_QUALITH_BY_DEPT_WAIKE)
+	public String operationQualityByDeptWaiKe(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<OperationQuality> operationQualityList = new LinkedList<OperationQuality>();
+		operationQualityList = reportService.queryOperationQualityByDeptWaiKe(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("operationQualityList", operationQualityList);
+		return View.OperationQualityByDeptWaiKeView;
+	}
+
+	/**
+	 * 分科病人手术操作质量 内科系统
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.OPERATION_QUALITH_BY_DEPT_NEIKE)
+	public String operationQualityByDeptNeiKe(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<OperationQuality> operationQualityList = new LinkedList<OperationQuality>();
+		operationQualityList = reportService.queryOperationQualityByDeptNeiKe(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("operationQualityList", operationQualityList);
+		return View.OperationQualityByDeptNeiKeView;
+	}
+
+	/**
+	 * 入出院诊断符合率
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.DIAGNOSTIC_RATE)
+	public String diagnosticRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<DiagnosticDto> diagnosticList = new LinkedList<DiagnosticDto>();
+		diagnosticList = reportService.queryDiagnosticRate(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("diagnosticList", diagnosticList);
+		return View.DiagnosticRateView;
+	}
+
+	/**
+	 * 手术前后诊断符合率
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.OPERATION_DIAGNOSTIC_RATE)
+	public String operationDiagnosticRate(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<OperationDiagnostic> diagnosticList = new LinkedList<OperationDiagnostic>();
+		diagnosticList = reportService.queryOperationDiagnosticRate(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("diagnosticList", diagnosticList);
+		return View.OperationDiagnosticRateView;
+	}
+	
+	/**
+	 * 临床主要诊断与病理诊断符合率
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.BING_LI_ZHEN_DUAN_RATE)
+	public String queryBingLiZhenDuanFuHeLv(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<BingLiZhenDuanFuHeLvDto> diagnosticList = new LinkedList<BingLiZhenDuanFuHeLvDto>();
+		diagnosticList = reportService.queryBingLiZhenDuanFuHeLv(dateMap);
+		
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("diagnosticList", diagnosticList);
+		return View.BingLiZhenDuanRateView;
 	}
 
 }

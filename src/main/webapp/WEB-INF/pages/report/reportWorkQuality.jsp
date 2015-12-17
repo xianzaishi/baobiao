@@ -61,7 +61,7 @@ table
 		    <td>&nbsp;<fmt:formatNumber type="number" value="${zhuYuanShouShuSiWangShu }" maxFractionDigits="0"/></td>
 		  </tr>
 		  <tr>
-		    <td rowspan="2">住院危重抢救</td>
+		    <td rowspan="3">住院危重抢救</td>
 		    <td>例数</td>
 		    <td>&nbsp;<fmt:formatNumber type="number" value="${zhuYuanWeiZhongQiangQiu }" maxFractionDigits="0"/></td>
 		  </tr>
@@ -70,13 +70,25 @@ table
 		    <td>&nbsp;<fmt:formatNumber type="number" value="${zhuYuanWeiZhongQiangQiuSiWang }" maxFractionDigits="0"/></td>
 		  </tr>
 		  <tr>
-		    <td rowspan="2">急诊科危重抢救</td>
+		    <td>成功率</td>
+		    <td>&nbsp;<fmt:formatNumber type="number" value="${(zhuYuanWeiZhongQiangQiu-zhuYuanWeiZhongQiangQiuSiWang)/zhuYuanWeiZhongQiangQiu * 100 }" maxFractionDigits="2"/>%</td>
+  		  </tr>
+		  <tr>
+		    <td rowspan="3">急诊科危重抢救</td>
 		    <td>例数</td>
 		    <td>&nbsp;<fmt:formatNumber type="number" value="${jiZhenWeiZhongQiangJiu }" maxFractionDigits="0"/></td>
 		  </tr>
 		  <tr>
 		    <td>死亡例数</td>
 		    <td>&nbsp;<fmt:formatNumber type="number" value="${jiZhenWeiZhongQiangJiuSiWang }" maxFractionDigits="0"/></td>
+		  </tr>
+		  <tr>
+		    <td>成功率</td>
+		    <td>&nbsp;<fmt:formatNumber type="number" value="${(jiZhenWeiZhongQiangJiu-jiZhenWeiZhongQiangJiuSiWang)/jiZhenWeiZhongQiangJiu * 100 }" maxFractionDigits="2"/>%</td>
+  		  </tr>
+  		  <tr>
+		    <td colspan="2">急危重症抢救成功率</td>
+		    <td>&nbsp;<fmt:formatNumber type="number" value="${(zhuYuanWeiZhongQiangQiu+jiZhenWeiZhongQiangJiu-zhuYuanWeiZhongQiangQiuSiWang-jiZhenWeiZhongQiangJiuSiWang)/(zhuYuanWeiZhongQiangQiu+jiZhenWeiZhongQiangJiu) * 100 }" maxFractionDigits="2"/>%</td>
 		  </tr>
 		  <tr>
 		    <td rowspan="3">新生儿患者</td>

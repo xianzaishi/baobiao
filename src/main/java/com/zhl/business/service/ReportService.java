@@ -4,15 +4,21 @@ import java.util.List;
 import java.util.Map;
 
 import com.zhl.business.dto.BingChuangGongZuoRiDto;
+import com.zhl.business.dto.BingLiZhenDuanFuHeLvDto;
 import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
+import com.zhl.business.dto.DiagnosticDto;
 import com.zhl.business.dto.OpDiagnosticDto;
+import com.zhl.business.dto.OperationDiagnostic;
 import com.zhl.business.dto.PathologicalRateByDeptDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.model.ComputeRateModel;
 import com.zhl.business.model.EquipmentPositiveRate;
+import com.zhl.business.model.OperationDetail;
+import com.zhl.business.model.OperationQuality;
+import com.zhl.business.model.ZhuYuanRiBao;
 
 
 
@@ -387,7 +393,7 @@ public interface ReportService {
 	 * @param dateMap<StartTime, EndTime>
 	 * @return
 	 */
-	public int queryChuYuanShuByDeptId(Map<String, String> dateMap);
+	public ZhuYuanRiBao queryZhuYuanRiBaoByDeptId(Map<String, String> dateMap);
 
 	/**
 	 * 在院病人分布
@@ -511,4 +517,84 @@ public interface ReportService {
 	 * @return
 	 */
 	public List<ComputeRateModel> queryDeathRateByDept(Map<String, String> dateMap);
+
+	/**
+	 * 手术明细表 愈合 甲
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<OperationDetail> queryOperationDetailFirst(Map<String, String> dateMap);
+
+	/**
+	 * 手术明细表 愈合 乙
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<OperationDetail> queryOperationDetailSecond(Map<String, String> dateMap);
+
+	/**
+	 * 手术明细表 愈合 丙
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<OperationDetail> queryOperationDetailThird(Map<String, String> dateMap);
+
+	/**
+	 * 手术明细表 愈合 丁
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<OperationDetail> queryOperationDetailForth(Map<String, String> dateMap);
+
+	/**
+	 * 分科病人手术操作质量 全院
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<OperationQuality> queryOperationQualityByDept(Map<String, String> dateMap);
+
+	/**
+	 * 分科病人手术操作质量 外科系统
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<OperationQuality> queryOperationQualityByDeptWaiKe(Map<String, String> dateMap);
+
+	/**
+	 * 分科病人手术操作质量 内科系统
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<OperationQuality> queryOperationQualityByDeptNeiKe(Map<String, String> dateMap);
+
+	/**
+	 * 入出院诊断符合率
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<DiagnosticDto> queryDiagnosticRate(Map<String, String> dateMap);
+
+	/**
+	 * 手术前后诊断符合率
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<OperationDiagnostic> queryOperationDiagnosticRate(Map<String, String> dateMap);
+
+	/**
+	 * 临床主要诊断与病理诊断符合率
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<BingLiZhenDuanFuHeLvDto> queryBingLiZhenDuanFuHeLv(Map<String, String> dateMap);
 }

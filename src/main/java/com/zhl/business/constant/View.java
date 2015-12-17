@@ -138,5 +138,55 @@ public class View {
 	 * 死亡率 按科室
 	 */
 	public static final String DeathRateByDeptView = "deathRateByDeptView";
+
+	/**
+	 * 手术明细表 愈合 甲
+	 */
+	public static final String OperationDetailFirstView = "operationDetailFirstView";
+
+	/**
+	 * 手术明细表 愈合 乙
+	 */
+	public static final String OperationDetailSecondView = "operationDetailSecondView";
+
+	/**
+	 * 手术明细表 愈合 丙
+	 */
+	public static final String OperationDetailThirdView = "operationDetailThirdView";
+
+	/**
+	 * 手术明细表 愈合 丁
+	 */
+	public static final String OperationDetailForthView = "operationDetailForthView";
+
+	/**
+	 * 分科病人手术操作质量 全院
+	 */
+	public static final String OperationQualityByDeptView = "operationQualityByDeptView";
+
+	/**
+	 * 分科病人手术操作质量 外科系统
+	 */
+	public static final String OperationQualityByDeptWaiKeView = "operationQualityByDeptWaiKeView";
+
+	/**
+	 * 分科病人手术操作质量 内科科系统
+	 */
+	public static final String OperationQualityByDeptNeiKeView = "operationQualityByDeptNeiKeView";
+
+	/**
+	 * 入出院诊断符合率
+	 */
+	public static final String DiagnosticRateView = "diagnosticRateView";
+
+	/**
+	 * 手术前后诊断符合率
+	 */
+	public static final String OperationDiagnosticRateView = "operationDiagnosticRateView";
+
+	/**
+	 * 临床主要诊断与病理诊断符合率
+	 */
+	public static final String BingLiZhenDuanRateView = "bingLiZhenDuanRateView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }
