@@ -197,5 +197,20 @@ public class Url {
 	 * 临床主要诊断与病理诊断符合率
 	 */
 	public static final String BING_LI_ZHEN_DUAN_RATE = "/report/bingLiZhenDuanRate/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 重点手术疗效及费用(ICD)18以上
+	 */
+	public static final String ZHONG_DIAN_SHOU_SHU_LIAO_XIAO = "/report/zhongDianShouShuLiaoXiao/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 重点疾病疗效及费用(ICD)18以上
+	 */
+	public static final String ZHONG_DIAN_JI_BING_LIAO_XIAO = "/report/zhongDianJiBingLiaoXiao/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 重点疾病疗效及费用(ICD)18以上 卫生部
+	 */
+	public static final String ZHONG_DIAN_JI_BING_LIAO_XIAO_WEI_SHENG_BU = "/report/zhongDianJiBingLiaoXiaoWeiShengBu/dateStart/{dateStart}/dateEnd/{dateEnd}";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

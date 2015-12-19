@@ -140,4 +140,28 @@
     <definition name="operationQualityByDeptNeiKeView" template="/WEB-INF/pages/report/operationQualityByDeptNeiKe.jsp">
     </definition>
     
+    <!-- 入出院诊断符合率 -->
+    <definition name="diagnosticRateView" template="/WEB-INF/pages/report/diagnosticRate.jsp">
+    </definition>
+    
+    <!-- 手术前后诊断符合率 -->
+    <definition name="operationDiagnosticRateView" template="/WEB-INF/pages/report/operationDiagnosticRate.jsp">
+    </definition>
+    
+    <!-- 临床主要诊断与病理诊断符合率 -->
+    <definition name="bingLiZhenDuanRateView" template="/WEB-INF/pages/report/bingLiZhenDuanRate.jsp">
+    </definition>
+    
+    <!-- 重点手术疗效及费用(ICD)18以上 -->
+    <definition name="zhongDianShouShuLiaoXiaoView" template="/WEB-INF/pages/report/zhongDianShouShuLiaoXiao18.jsp">
+    </definition>
+    
+    <!-- 重点疾病疗效及费用(ICD)18以上 -->
+    <definition name="zhongDianJiBingLiaoXiaoView" template="/WEB-INF/pages/report/zhongDianJiBingLiaoXiao18.jsp">
+    </definition>
+    
+    <!-- 重点疾病疗效及费用(ICD)18以上 卫生部 -->
+    <definition name="zhongDianJiBingLiaoXiaoWeiShengBuView" template="/WEB-INF/pages/report/zhongDianJiBingLiaoXiaoWeiShengBu18.jsp">
+    </definition>
+    
 </tiles-definitions>

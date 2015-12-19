@@ -188,5 +188,20 @@ public class View {
 	 * 临床主要诊断与病理诊断符合率
 	 */
 	public static final String BingLiZhenDuanRateView = "bingLiZhenDuanRateView";
+
+	/**
+	 * 重点手术疗效及费用(ICD)18以上
+	 */
+	public static final String ZhongDianShouShuLiaoXiaoView = "zhongDianShouShuLiaoXiaoView";
+
+	/**
+	 * 重点疾病疗效及费用(ICD)18以上
+	 */
+	public static final String ZhongDianJiBingLiaoXiaoView = "zhongDianJiBingLiaoXiaoView";
+
+	/**
+	 * 重点疾病疗效及费用(ICD)18以上 卫生部
+	 */
+	public static final String ZhongDianJiBingLiaoXiaoWeiShengBuView = "zhongDianJiBingLiaoXiaoWeiShengBuView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

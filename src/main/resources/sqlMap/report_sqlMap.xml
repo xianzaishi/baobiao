@@ -985,7 +985,7 @@ from (
 	from
 	(
 	<![CDATA[
-	select (case when 阳性率<0.8 then 0.8  else 阳性率 end )  as 彩超, 0 as ct,0 as mri,0 as dr
+	select 阳性率 as 彩超, 0 as ct,0 as mri,0 as dr
 	]]>
 	from 
 	(
@@ -997,7 +997,7 @@ from (
 	) 
 	union all
 	<![CDATA[
-	select 0 as 彩超, (case when 阳性率<0.85 then 0.85  else 阳性率 end )  as ct,0 as mri,0 as dr
+	select 0 as 彩超, 阳性率   as ct,0 as mri,0 as dr
 	]]>
 	from 
 	(
@@ -1009,7 +1009,7 @@ from (
 	) 
 	union all
 	<![CDATA[
-	select 0 as 彩超, 0 as ct,(case when 阳性率<0.78 then 0.78  else 阳性率 end )  as mri,0 as dr
+	select 0 as 彩超, 0 as ct, 阳性率  as mri,0 as dr
 	]]>
 	from 
 	(
@@ -1021,7 +1021,7 @@ from (
 	) 
 	union all
 	<![CDATA[
-	select 0 as 彩超, 0  as ct,0 as mri,(case when 阳性率<0.9 then 0.90  else 阳性率 end )  as dr
+	select 0 as 彩超, 0  as ct,0 as mri, 阳性率  as dr
 	]]>
 	from 
 	(
@@ -1235,7 +1235,26 @@ order by 编码
 
 <!-- 分科病人手术操作质量 外科系统 from:ZL3_REPORT_273 -->
 <select id="queryOperationQualityByDeptWaiKe" resultClass="com.zhl.business.model.OperationQuality" parameterClass="java.util.Map">
-select S.编码 as bianMa, S.名称 as mingCheng, M.病人数 as bingRenShu, M.手术次数 as shouShuCiShu, M.甲1 as jia1, M.乙1 as yi1, M.丙1 as bing1, M.甲2 as jia2, M.乙2 as yi2,M.丙2 as bing2
+<![CDATA[
+select '' as bianMa, '合计' as mingCheng, sum(M.病人数) as bingRenShu, sum(M.手术次数) as shouShuCiShu, sum(M.甲1) as jia1, sum(M.乙1) as yi1, sum(M.丙1) as bing1, sum(M.甲2) as jia2, sum(M.乙2) as yi2, sum(M.丙2) as bing2
+       , sum(M.甲3) as jia3, sum(M.乙3) as yi3, sum(M.丙3) as bing3, sum(M.全麻) as quanMa, sum(M.局麻) as juMa, sum(M.持硬) as chiYing, sum(M.其他) as qiTa, sum(M.术前日) as shuQianRi, sum(M.费用) as feiYong
+from 
+     (select A.出院科室ID,sum(decode(B.序号,1,1,0)) as 病人数,count(B.手术操作ID) as 手术次数
+             ,sum(decode(B.切口||B.愈合,'Ⅰ甲',1,0)) as 甲1,sum(decode(B.切口||B.愈合,'Ⅰ乙',1,0)) as 乙1,sum(decode(B.切口||B.愈合,'Ⅰ丙',1,0)) as 丙1
+             ,sum(decode(B.切口||B.愈合,'Ⅱ甲',1,0)) as 甲2,sum(decode(B.切口||B.愈合,'Ⅱ乙',1,0)) as 乙2,sum(decode(B.切口||B.愈合,'Ⅱ丙',1,0)) as 丙2
+             ,sum(decode(B.切口||B.愈合,'Ⅲ甲',1,0)) as 甲3,sum(decode(B.切口||B.愈合,'Ⅲ乙',1,0)) as 乙3,sum(decode(B.切口||B.愈合,'Ⅲ丙',1,0)) as 丙3
+             ,sum(decode(B.麻醉类型,'全麻',1,0)) as 全麻,sum(decode(B.麻醉类型,'局麻',1,0)) as 局麻
+             ,sum(decode(B.麻醉类型,'持硬',1,0)) as 持硬,sum(decode(B.麻醉类型,'其他',1,0)) as 其他
+             ,sum(B.手术日期-trunc(A.入院日期)) as 术前日,sum(decode(B.序号,1,A.费用和,0)) as 费用
+     from 病案主页 A,(  select Row_Number() Over(Partition by a.病人id,a.主页id Order by 手术日期) as 序号,a.* from 病人手麻记录 a where a.记录来源=4 order by a.病人id,a.主页id,序号) B
+     where A.病人ID=B.病人ID and A.主页ID=B.主页ID
+           and A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1
+     group by A.出院科室ID) M,部门表 S,部门性质说明 T
+  where M.出院科室ID(+)=S.ID and S.ID=T.部门ID and T.工作性质='临床' and T.服务对象 in (2,3) And s.Id In (122, 123, 544, 116, 118, 1664, 884, 114, 115, 1524, 1624, 1185, 545, 1244, 111, 1201, 1202, 241, 125, 117)
+  
+  union All
+  
+  select S.编码 as bianMa, S.名称 as mingCheng, M.病人数 as bingRenShu, M.手术次数 as shouShuCiShu, M.甲1 as jia1, M.乙1 as yi1, M.丙1 as bing1, M.甲2 as jia2, M.乙2 as yi2,M.丙2 as bing2
        ,M.甲3 as jia3, M.乙3 as yi3, M.丙3 as bing3, M.全麻 as quanMa, M.局麻 as juMa, M.持硬 as chiYing, M.其他 as qiTa, M.术前日 as shuQianRi, M.费用 as feiYong
 from 
      (select A.出院科室ID,sum(decode(B.序号,1,1,0)) as 病人数,count(B.手术操作ID) as 手术次数
@@ -1246,17 +1265,35 @@ from
              ,sum(decode(B.麻醉类型,'持硬',1,0)) as 持硬,sum(decode(B.麻醉类型,'其他',1,0)) as 其他
              ,sum(B.手术日期-trunc(A.入院日期)) as 术前日,sum(decode(B.序号,1,A.费用和,0)) as 费用
      from 病案主页 A,(  select Row_Number() Over(Partition by a.病人id,a.主页id Order by 手术日期) as 序号,a.* from 病人手麻记录 a where a.记录来源=4 order by a.病人id,a.主页id,序号) B
-     <![CDATA[
      where A.病人ID=B.病人ID and A.主页ID=B.主页ID
-           and A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1
-     ]]>
+           and A.出院日期>= To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期< To_Date(#EndTime#, 'YYYY-MM-DD')+1
      group by A.出院科室ID) M,部门表 S,部门性质说明 T
   where M.出院科室ID(+)=S.ID and S.ID=T.部门ID and T.工作性质='临床' and T.服务对象 in (2,3) And s.Id In (122, 123, 544, 116, 118, 1664, 884, 114, 115, 1524, 1624, 1185, 545, 1244, 111, 1201, 1202, 241, 125, 117)
   order by bianMa
+]]>
 </select>
 
 <!-- 分科病人手术操作质量 内科系统 from:ZL3_REPORT_273 -->
 <select id="queryOperationQualityByDeptNeiKe" resultClass="com.zhl.business.model.OperationQuality" parameterClass="java.util.Map">
+ <![CDATA[
+select '' as bianMa, '合计' as mingCheng, sum(M.病人数) as bingRenShu, sum(M.手术次数) as shouShuCiShu, sum(M.甲1) as jia1, sum(M.乙1) as yi1, sum(M.丙1) as bing1, sum(M.甲2) as jia2, sum(M.乙2) as yi2, sum(M.丙2) as bing2
+       , sum(M.甲3) as jia3, sum(M.乙3) as yi3, sum(M.丙3) as bing3, sum(M.全麻) as quanMa, sum(M.局麻) as juMa, sum(M.持硬) as chiYing, sum(M.其他) as qiTa, sum(M.术前日) as shuQianRi, sum(M.费用) as feiYong
+from 
+     (select A.出院科室ID,sum(decode(B.序号,1,1,0)) as 病人数,count(B.手术操作ID) as 手术次数
+             ,sum(decode(B.切口||B.愈合,'Ⅰ甲',1,0)) as 甲1,sum(decode(B.切口||B.愈合,'Ⅰ乙',1,0)) as 乙1,sum(decode(B.切口||B.愈合,'Ⅰ丙',1,0)) as 丙1
+             ,sum(decode(B.切口||B.愈合,'Ⅱ甲',1,0)) as 甲2,sum(decode(B.切口||B.愈合,'Ⅱ乙',1,0)) as 乙2,sum(decode(B.切口||B.愈合,'Ⅱ丙',1,0)) as 丙2
+             ,sum(decode(B.切口||B.愈合,'Ⅲ甲',1,0)) as 甲3,sum(decode(B.切口||B.愈合,'Ⅲ乙',1,0)) as 乙3,sum(decode(B.切口||B.愈合,'Ⅲ丙',1,0)) as 丙3
+             ,sum(decode(B.麻醉类型,'全麻',1,0)) as 全麻,sum(decode(B.麻醉类型,'局麻',1,0)) as 局麻
+             ,sum(decode(B.麻醉类型,'持硬',1,0)) as 持硬,sum(decode(B.麻醉类型,'其他',1,0)) as 其他
+             ,sum(B.手术日期-trunc(A.入院日期)) as 术前日,sum(decode(B.序号,1,A.费用和,0)) as 费用
+     from 病案主页 A,(  select Row_Number() Over(Partition by a.病人id,a.主页id Order by 手术日期) as 序号,a.* from 病人手麻记录 a where a.记录来源=4 order by a.病人id,a.主页id,序号) B
+     where A.病人ID=B.病人ID and A.主页ID=B.主页ID
+           and A.出院日期>= To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期< To_Date(#EndTime#, 'YYYY-MM-DD')+1
+     group by A.出院科室ID) M,部门表 S,部门性质说明 T
+  where M.出院科室ID(+)=S.ID and S.ID=T.部门ID and T.工作性质='临床' and T.服务对象 in (2,3) And s.Id In (133, 1199, 1200, 131, 1364, 1197, 1195, 1196, 1194, 1193, 1187, 1188, 1184, 1189, 1190, 1191, 1192, 1198, 105)
+  
+union All
+
 select S.编码 as bianMa, S.名称 as mingCheng, M.病人数 as bingRenShu, M.手术次数 as shouShuCiShu, M.甲1 as jia1, M.乙1 as yi1, M.丙1 as bing1, M.甲2 as jia2, M.乙2 as yi2,M.丙2 as bing2
        ,M.甲3 as jia3, M.乙3 as yi3, M.丙3 as bing3, M.全麻 as quanMa, M.局麻 as juMa, M.持硬 as chiYing, M.其他 as qiTa, M.术前日 as shuQianRi, M.费用 as feiYong
 from 
@@ -1268,13 +1305,12 @@ from
              ,sum(decode(B.麻醉类型,'持硬',1,0)) as 持硬,sum(decode(B.麻醉类型,'其他',1,0)) as 其他
              ,sum(B.手术日期-trunc(A.入院日期)) as 术前日,sum(decode(B.序号,1,A.费用和,0)) as 费用
      from 病案主页 A,(  select Row_Number() Over(Partition by a.病人id,a.主页id Order by 手术日期) as 序号,a.* from 病人手麻记录 a where a.记录来源=4 order by a.病人id,a.主页id,序号) B
-     <![CDATA[
      where A.病人ID=B.病人ID and A.主页ID=B.主页ID
-           and A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1
-     ]]>
+           and A.出院日期>= To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期< To_Date(#EndTime#, 'YYYY-MM-DD')+1
      group by A.出院科室ID) M,部门表 S,部门性质说明 T
   where M.出院科室ID(+)=S.ID and S.ID=T.部门ID and T.工作性质='临床' and T.服务对象 in (2,3) And s.Id In (133, 1199, 1200, 131, 1364, 1197, 1195, 1196, 1194, 1193, 1187, 1188, 1184, 1189, 1190, 1191, 1192, 1198, 105)
   Order By bianMa
+  ]]>
 </select>
 
 <select id="queryDiagnosticRate" resultClass="com.zhl.business.dto.DiagnosticDto" parameterClass="java.util.Map">
@@ -1335,6 +1371,313 @@ from 病案主页 A,诊断符合情况 B,病人诊断记录 C
 <![CDATA[
 where A.病人ID=B.病人ID and A.主页ID=B.主页ID and B.符合类型=4 and A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1
       and A.病人ID=C.病人ID and A.主页ID=C.主页ID and C.记录来源=4 and C.诊断类型=3 and C.诊断次序=1 and C.编码序号=1 and C.出院情况<>'其他')
+]]>
+</select>
+
+<!-- 重点手术疗效及费用(ICD)18以上 from:REPORT_ZY_576 -->
+<select id="queryZhongDianShouShuLiaoXiao18" resultClass="com.zhl.business.dto.ZhongDianShouShuLiaoXiao18Dto" parameterClass="java.util.Map">
+<![CDATA[
+SELECT p.科目代码 as mingCheng,p.序号 As xuHao,P.病人数 As bingRenShu,P.床日数 As chuangRiShu,P.费用总计 As feiYongZongJi,P.床位费 As chuangWeiFei,P.药费 As yaoFei,P.手术费 As shouShuFei,P.检查费 As jianChaFei
+	  ,P.治愈 As zhiYu,P.好转 As haoZhuan,P.未愈 As weiYu,P.死亡 As siWang,P.治愈费 As zhiYuFei,P.社保 As sheBao, P.公疗 As gongLiao,P.统筹 As tongChou,P.商保 As shangBao,P.自费 As ziFei
+FROM
+(
+SELECT 序号,科目代码,count(A.病人ID) AS 病人数,sum(A.住院天数) AS 床日数
+	,sum(A.治愈) AS 治愈,sum(A.好转) AS 好转,sum(A.未愈) AS 未愈,sum(A.死亡) AS 死亡,sum(A.治愈费) AS 治愈费
+	,sum(A.社保) AS 社保,sum(A.公疗) AS 公疗,sum(A.统筹) AS 统筹,sum(A.商保) AS 商保,sum(A.自费) AS 自费
+	,Sum(A.费用和) as 费用总计,Sum(B.床位费) as 床位费,Sum(B.药费) as 药费,Sum(B.手术费) as 手术费,Sum(B.检查费) as 检查费 
+FROM 
+(
+select E.科目代码, e.序号,A.病人ID,A.主页ID,A.住院天数,A.费用和
+		,decode(D.出院情况,'治愈',1,0) AS 治愈,decode(D.出院情况,'好转',1,0) AS 好转,decode(D.出院情况,'未愈',1,0) AS 未愈
+		,decode(D.出院情况,'死亡',1,0) AS 死亡,decode(D.出院情况,'治愈',A.费用和,0) AS 治愈费
+		,decode(A.医疗付款方式,'社会基本医疗保险',1,0) AS 社保,decode(A.医疗付款方式,'公费医疗',1,0) AS 公疗
+		,decode(A.医疗付款方式,'大病统筹',1,0) AS 统筹,decode(A.医疗付款方式,'商业保险',1,0) AS 商保,decode(A.医疗付款方式,'自费医疗',1,0) AS 自费
+from 病案主页 A,临床部门 C,病人诊断记录 D,病人手麻记录 F,
+    
+     (          select ID,'1. 髋、膝关节置换术' as 科目代码, 1 as 序号 from 疾病编码目录 A where  A.编码  like '81.51%' or A.编码  like '81.52%' or A.编码  like '81.53%' or A.编码  like '81.54%' or A.编码  like '81.55%' 
+                union all
+                select ID,'2. 椎板切除术或脊柱融合相关手术' as 科目代码, 2 as 序号 from 疾病编码目录 A where  A.编码  like '03.01%' Or A.编码  like '03.02%'  Or A.编码  like '03.09%'  Or A.编码  like '80.50%'  Or A.编码  like '80.51%'  Or A.编码  like '80.59%'  Or A.编码  like '81.00%'  Or A.编码  like '81.01%' 
+                                                           Or A.编码  like '81.02%'  Or A.编码  like '81.03%'  Or A.编码  like '81.04%'  Or A.编码  like '81.05%'  Or A.编码  like '81.06%'  Or A.编码  like '81.07%'  Or A.编码  like '81.08%'  Or A.编码  like '81.30%' 
+                                                            Or A.编码  like '81.31%'  Or A.编码  like '81.32%'  Or A.编码  like '81.33%'  Or A.编码  like '81.34%'  Or A.编码  like '81.35%'  Or A.编码  like '81.36%'  Or A.编码  like '81.37%'  Or A.编码  like '81.38%'  Or A.编码  like '81.39%' 
+                                                             Or A.编码  like '81.62%'  Or A.编码  like '81.63%'  Or A.编码  like '81.64%'  Or A.编码  like '81.65%'  Or A.编码  like '81.66%' 
+                                                              Or A.编码  like '84.60%'  Or A.编码  like '84.61%'  Or A.编码  like '84.62%'  Or A.编码  like '84.63%'  Or A.编码  like '84.64%'  Or A.编码  like '84.65%'  Or A.编码  like '84.66%'  Or A.编码  like '84.67%'  Or A.编码  like '84.68%'  Or A.编码  like '84.69%' 
+                                                               Or A.编码  like '03.1%'  Or A.编码  like '03.2%'  Or A.编码  like '03.4%'  Or A.编码  like '03.5%'  Or A.编码  like '03.6%'  Or A.编码  like '03.7%' 
+                union all
+                select ID,'3. 胰腺切除手术' as 科目代码, 3 as 序号 from 疾病编码目录 A where  A.编码  like '52.6%'  or A.编码  like '52.7%'
+                union all
+                select ID,'4. 食管切除手术 ' as 科目代码, 4 as 序号 from 疾病编码目录 A where  A.编码  like '42.4%'  Or A.编码  like '42.5%'  Or A.编码  like '42.6%'  Or A.编码  like '43.99%' 
+                union all
+                select ID,'5. 腹腔镜下胆囊切除术' as 科目代码, 5 as 序号 from 疾病编码目录 A where  A.编码  like '51.23%' or A.编码  like '51.24%' 
+                union all
+                select ID,'6. 冠状动脉旁路移植术' as 科目代码, 6 as 序号 from 疾病编码目录 A where  A.编码  like '36.1%'
+                union all
+                select ID,'7. 经皮冠状动脉介入治疗' as 科目代码, 7 as 序号 from 疾病编码目录 A where  A.编码 Like '0066%' Or A.编码 Like '36.01%' Or A.编码 Like '36.02%' Or A.编码 Like '36.05%' Or A.编码 Like '36.06%' Or A.编码 Like '36.07%' 
+                union all
+                select ID,'8. 颅、脑手术' as 科目代码, 8 as 序号 from 疾病编码目录 A where  A.编码  like '01.02%'  Or A.编码  like '01.03%'  Or A.编码  like '01.04%'  Or A.编码  like '01.05%'  Or A.编码  like '01.06%'  Or A.编码  like '02.0%'  Or A.编码  like '02.1%'  Or A.编码  like '02.2%'  
+                                                              Or A.编码  like '02.3%'  Or A.编码  like '02.4%'  
+                union all
+                select ID,'9. 子宫切除术' as 科目代码, 9 as 序号 from 疾病编码目录 A where  A.编码  like '68.4%' Or A.编码 Like '68.5%' Or A.编码 Like '68.6%' Or A.编码 Like '68.7%' 
+                union all
+                select ID,'10. 剖宫产' as 科目代码, 10 as 序号 from 疾病编码目录 A where  A.编码  like '74.0%' Or  A.编码 like '74.1%' Or  A.编码 like '74.2%' Or  A.编码 like '74.4%' Or  A.编码 like '74.99%' 
+                union all
+                select ID,'11. 阴道分娩' as 科目代码, 11 as 序号 from 疾病编码目录 A where  A.编码  like '72%'  Or A.编码  like '73.0%' Or  A.编码 like '73.1%' Or  A.编码 like '73.2%' Or  A.编码 like '73.4%' Or  A.编码 like '73.5%' Or  A.编码 like '73.6%' Or  A.编码 like '73.7%' Or  A.编码 like '73.8%' Or  A.编码 like '73.9%'  
+                union all
+                select ID,'12. 乳腺手术' as 科目代码, 12 as 序号 from 疾病编码目录 A where  A.编码  like '85.4%' 
+                union all
+                select ID,'13. 肺切除手术' as 科目代码, 13 as 序号 from 疾病编码目录 A where  A.编码  like '32.4%' Or A.编码  like '32.5%' 
+                union all
+                select ID,'14. 胃切除手术' as 科目代码, 14 as 序号 from 疾病编码目录 A where  A.编码  like '43.5%' Or A.编码  like '43.6%' Or  A.编码 like '43.7%' Or  A.编码 like '43.8%' Or A.编码  like '43.9%' 
+                union all
+                select ID,'15. 直肠切除术' as 科目代码, 15 as 序号 from 疾病编码目录 A where  A.编码  like '48.4%' Or A.编码  like '48.5%' Or A.编码  like '48.6%'
+                union all
+                select ID,'16. 肾与前列腺相关手术' as 科目代码, 16 as 序号 from 疾病编码目录 A where  A.编码  like '55.4%' Or  A.编码 like '55.5%' Or  A.编码 like '55.6%' Or  A.编码 like '60.3%' Or A.编码  like '60.4%' Or  A.编码 like '60.5%' 
+                union all
+                select ID,'17. 血管修补术' as 科目代码, 17 as 序号 from 疾病编码目录 A where  A.编码  like '38.34%' Or  A.编码 like '38.44%' Or  A.编码 like '38.64%' Or  A.编码 like '39.71%' Or  A.编码 like '39.72%' Or  A.编码 like '39.73%' Or A.编码  like '39.74%' 
+                Union All
+select ID,'18.2 喉癌联合根治术' as 科目代码, 18.2 as 序号 from 疾病编码目录 A where  A.编码  like '30.4%' 
+Union All
+select ID,'18.3 肺叶切除术' as 科目代码, 18.31 as 序号 from 疾病编码目录 A where  A.编码  like '32.4002%'
+Union All
+select ID,'18.3 全肺切除术' as 科目代码, 18.32 as 序号 from 疾病编码目录 A Where A.编码 like '32.5%' 
+Union All
+select ID,'18.4 食管部分切除术、食管胃弓上吻合术' as 科目代码, 18.41 as 序号 from 疾病编码目录 A Where A.编码 like '42.5%' 
+Union All
+select ID,'18.4 食管部分切除术、食管胃弓下吻合术' as 科目代码, 18.42 as 序号 from 疾病编码目录 A Where A.编码 like '42.5%' 
+Union All
+select ID,'18.5 胃远端切除术' as 科目代码, 18.51 as 序号 from 疾病编码目录 A Where	A.编码 like '43.6%' Or A.编码  like '43.7%'
+Union All
+select ID,'18.5 胃近端切除术' as 科目代码, 18.52 as 序号 from 疾病编码目录 A Where	A.编码  like '43.5%'
+Union All
+select ID,'18.5 全胃切除术' as 科目代码, 18.53 as 序号 from 疾病编码目录 A Where	 A.编码  like '43.99%' 
+Union All
+select ID,'18.5 根治性全胃切除术' as 科目代码, 18.54 as 序号 from 疾病编码目录 A Where	 A.编码  like '43.99%' 
+Union All
+select ID,'18.6 肝叶切除术' as 科目代码, 18.61 as 序号 from 疾病编码目录 A Where	 A.编码 like '50.301%' 
+Union All
+select ID,'18.6半肝切除术' as 科目代码, 18.62 as 序号 from 疾病编码目录 A Where	  A.编码 like '50.302%' 
+Union All
+select ID,'18.6 肝段切除术' as 科目代码, 18.63 as 序号 from 疾病编码目录 A Where	 A.编码 like '50.2203%' 
+Union All
+select ID,'18.6 肝肿物不规则切除术(部分切除术)' as 科目代码, 18.64 as 序号 from 疾病编码目录 A Where A.编码 like '50.2201%'
+Union All
+select ID,'18.7 左半结肠切除术' as 科目代码, 18.71 as 序号 from 疾病编码目录 A Where A.编码 like '45.7501%' 
+Union All
+select ID,'18.7 右半结肠切除术' as 科目代码, 18.72 as 序号 from 疾病编码目录 A Where A.编码  like '45.7301%' 
+Union All
+select ID,'18.7 直肠前切除术' as 科目代码, 18.73 as 序号 from 疾病编码目录 A Where A.编码 like '48.6301%' 
+Union All
+select ID,'18.7 腹会阴直肠切除术' as 科目代码, 18.74 as 序号 from 疾病编码目录 A Where A.编码 like '48.501%' 
+Union All
+select ID,'18.8 惠普尔氏(根治性胰十二指肠切除术)' as 科目代码, 18.81 as 序号 from 疾病编码目录 A Where A.编码 like '52.7%' 
+Union All
+select ID,'18.8 胰体尾切除术' as 科目代码, 18.82 as 序号 from 疾病编码目录 A Where A.编码 like '52.5902%' 
+Union All
+select ID,'18.9 乳腺癌改良根治术' as 科目代码, 18.91 as 序号 from 疾病编码目录 A Where A.编码 like '85.4%' 
+Union All
+select ID,'18.9 乳腺癌保留肾单位手术' as 科目代码, 18.92 as 序号 from 疾病编码目录 A Where A.编码 like '85.2103%' 
+Union All
+select ID,'18.10 肾癌根治术' as 科目代码, 18.101 as 序号 from 疾病编码目录 A Where A.编码 like '55.5%' 
+Union All
+select ID,'18.0 肾肿瘤保留肾单位手术' as 科目代码, 18.102 as 序号 from 疾病编码目录 A Where A.编码 like '55.3%'
+Union All
+select ID,'18.11 前列腺癌根治术' as 科目代码, 18.111 as 序号 from 疾病编码目录 A Where A.编码  like '60.5%'
+Union All
+select ID,'18.12 没有编码' as 科目代码, 18.121 as 序号 from 疾病编码目录 A Where A.编码  like '9999999%' 
+Union All
+select ID,'18.13 双侧输卵管-卵癌切除术' as 科目代码, 18.131 as 序号 from 疾病编码目录 A Where  A.编码 like '65.6%' 
+Union All
+select ID,'18.14 全子宫切除术' as 科目代码, 18.141 as 序号 from 疾病编码目录 A Where A.编码 like '68.4%' 
+Union All
+select ID,'18.18 盆腔淋巴结清扫术' as 科目代码, 18.151 as 序号 from 疾病编码目录 A Where  A.编码  like '40.59%' 
+	  ) E
+where A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 and A.出院科室ID=C.部门ID AND A.病人ID=F.病人ID AND A.主页ID=F.主页ID AND F.记录来源 = 4
+     and A.病人ID=D.病人ID and A.主页ID=D.主页ID and D.记录来源=4  and D.诊断类型=3  and D.诊断次序=1 and D.编码序号=1 and F.手术操作ID=E.ID
+   
+/*B2*/ and a.出院科室id is not null/*E2*/
+	
+Union All
+select E.科目代码, e.序号,A.病人ID,A.主页ID,A.住院天数,A.费用和
+		,decode(D.出院情况,'治愈',1,0) AS 治愈,decode(D.出院情况,'好转',1,0) AS 好转,decode(D.出院情况,'未愈',1,0) AS 未愈
+		,decode(D.出院情况,'死亡',1,0) AS 死亡,decode(D.出院情况,'治愈',A.费用和,0) AS 治愈费
+		,decode(A.医疗付款方式,'社会基本医疗保险',1,0) AS 社保,decode(A.医疗付款方式,'公费医疗',1,0) AS 公疗
+		,decode(A.医疗付款方式,'大病统筹',1,0) AS 统筹,decode(A.医疗付款方式,'商业保险',1,0) AS 商保,decode(A.医疗付款方式,'自费医疗',1,0) AS 自费
+from 病案主页 A,临床部门 C,病人诊断记录 D,病人手麻记录 F,
+(
+              select ID,'18.1 甲状腺癌联合根治术' as 科目代码, 18.1 as 序号 from 疾病编码目录 A where  A.编码  like '06.2%'  Or A.编码  like '06.3%' Or A.编码  like '06.4%' Or  A.编码 like '06.5%' Or A.编码  = 'C73xx01'
+				) E,病人诊断记录 g
+where A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 and A.出院科室ID=C.部门ID AND A.病人ID=F.病人ID AND A.主页ID=F.主页ID AND F.记录来源 = 4
+     and A.病人ID=D.病人ID and A.主页ID=D.主页ID and D.记录来源=4  and D.诊断类型=3  and D.诊断次序=1 and D.编码序号=1 and F.手术操作ID=E.Id
+And a.病人id = g.病人id And a.主页id  = g.主页id And g.记录来源 = 4 And g.诊断类型 = 3 And
+			g.诊断次序 = 1 And g.编码序号 = 1 And g.疾病id = 133420
+/*B2*/ and a.出院科室id is not null/*E2*/
+
+) A,
+(select  A.病人ID,A.主页ID
+              ,sum(decode(费用名,'床位费',B.金额,0)) as 床位费
+              ,sum(decode(费用名,'西药费',B.金额,'中成费',B.金额,'中草费',B.金额,0)) as 药费
+              ,sum(decode(费用名,'手术费',B.金额,0)) as 手术费
+              ,sum(decode(费用名,'放射费',B.金额,'化验费',B.金额,'输氧费',B.金额,
+                                 '输血费',B.金额,'接生费',B.金额,'麻醉费',B.金额,
+                                 '检查费',B.金额,'诊疗费',B.金额,0)) as 检查费
+        from 病案主页 A,病人费用 B
+        where A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 and A.病人ID=B.病人ID and A.主页ID=B.主页ID /*B2*/ and a.出院科室id is not null/*E2*/
+        group by A.病人ID,A.主页ID) B
+WHERE A.病人ID=B.病人ID(+) AND A.主页ID=B.主页ID(+)
+GROUP BY 序号,科目代码
+) p
+order by p.序号
+]]>
+</select>
+
+<!-- 重点疾病疗效及费用(ICD)18以上 卫生部 from:REPORT_ZY_575 -->
+<select id="queryZhongDianJiBingLiaoXiaoWeiShengBu" resultClass="com.zhl.business.dto.ZhongDianJiBingLiaoXiao18Dto" parameterClass="java.util.Map">
+<![CDATA[
+ SELECT p.序号 As xuHao, p.科目代码 As keMuDaiMa, P.病人数 As bingRenShu, P.床日数 As chuangRiShu, P.费用总计 As feiYongZongJi, P.床位费 As chuangWeiFei, P.药费 As yaoFei, P.手术费 As shouShuFei,P.检查费 As jianChaFei
+	  ,P.治愈 As zhiYu, P.好转 As haoZhuan, P.未愈 As weiYu, P.死亡 As siWang, P.治愈费 As zhiYuFei, P.社保 As sheBao, P.公疗 As gongLiao, P.统筹 As tongChou, P.商保 As shangBao, P.自费 As ziFei
+FROM
+(
+SELECT 序号,科目代码,count(A.病人ID) AS 病人数,sum(A.住院天数) AS 床日数
+	,sum(A.治愈) AS 治愈,sum(A.好转) AS 好转,sum(A.未愈) AS 未愈,sum(A.死亡) AS 死亡,sum(A.治愈费) AS 治愈费
+	,sum(A.社保) AS 社保,sum(A.公疗) AS 公疗,sum(A.统筹) AS 统筹,sum(A.商保) AS 商保,sum(A.自费) AS 自费
+	,Sum(A.费用和) as 费用总计,Sum(B.床位费) as 床位费,Sum(B.药费) as 药费,Sum(B.手术费) as 手术费,Sum(B.检查费) as 检查费 
+FROM 
+(select E.序号,科目代码,A.病人ID,A.主页ID,A.住院天数,A.费用和
+		,decode(D.出院情况,'治愈',1,0) AS 治愈,decode(D.出院情况,'好转',1,0) AS 好转,decode(D.出院情况,'未愈',1,0) AS 未愈
+		,decode(D.出院情况,'死亡',1,0) AS 死亡,decode(D.出院情况,'治愈',A.费用和,0) AS 治愈费
+		,decode(A.医疗付款方式,'社会基本医疗保险',1,0) AS 社保,decode(A.医疗付款方式,'公费医疗',1,0) AS 公疗
+		,decode(A.医疗付款方式,'大病统筹',1,0) AS 统筹,decode(A.医疗付款方式,'商业保险',1,0) AS 商保,decode(A.医疗付款方式,'自费医疗',1,0) AS 自费
+from 病案主页 A,临床部门 C,病人诊断记录 D,
+     (          select ID,'1. 急性心肌梗死' as 科目代码, 1 as 序号 from 疾病编码目录 A where  A.编码  like 'I21%' or A.编码  like 'I22%' and not A.编码 like '36.06003%'
+                union all
+                select ID,'2. 充血性心力衰竭' as 科目代码, 2 as 序号 from 疾病编码目录 A where  A.编码  like 'I50%'  and A.编码 <> 'I50.907'
+                union all
+                select ID,'3. 脑出血和脑梗死' as 科目代码, 3 as 序号 from 疾病编码目录 A where  A.编码  like 'I60%'  or A.编码  like 'I61%' or A.编码  like 'I62%' or A.编码  like 'I63%'
+                union all
+                select ID,'4. 创伤性颅脑损伤' as 科目代码, 4 as 序号 from 疾病编码目录 A where  A.编码  like 'S06%' 
+                union all
+                select ID,'5. 消化道出血' as 科目代码, 5 as 序号 from 疾病编码目录 A where  A.编码  like 'K25%' or A.编码  like 'K26%'  or A.编码  like 'K27%' or A.编码  like 'K28%' 
+                union all
+                select ID,'6. 累及身体多个部位的损伤' as 科目代码, 6 as 序号 from 疾病编码目录 A where  A.编码  like 'T00%' Or A.编码  like 'T01%' Or A.编码  like 'T02%' Or A.编码  like 'T03%' Or A.编码  like 'T04%' Or A.编码  like 'T05%' Or A.编码  like 'T06%' Or A.编码  like 'T07%'
+                union all
+                select ID,'7. 细菌性脑炎' as 科目代码, 7 as 序号 from 疾病编码目录 A where  A.编码 Like 'J10.0%' Or A.编码 Like 'J11.1%' Or A.编码 Like 'J12%' Or A.编码 Like 'J13%' Or A.编码 Like 'J14%' Or A.编码 Like 'J15%' Or A.编码 Like 'J16%' Or A.编码 Like 'J18%'
+                union all
+                select ID,'8. 慢性阻塞性肺疾病' as 科目代码, 8 as 序号 from 疾病编码目录 A where  A.编码  like 'J44%' 
+                union all
+                select ID,'9. 糖尿病伴短期与长期并发症' as 科目代码, 9 as 序号 from 疾病编码目录 A where  A.编码  like 'E10%' Or A.编码 Like 'E11%' Or A.编码 Like 'E12%' Or A.编码 Like 'E13%' Or A.编码 Like 'E14%' 
+                union all
+                select ID,'10. 结节性甲状腺肿' as 科目代码, 10 as 序号 from 疾病编码目录 A where  A.编码  like 'E04%' 
+                union all
+                select ID,'11. 急性阑尾炎弥漫性腹膜炎及脓肿' as 科目代码, 11 as 序号 from 疾病编码目录 A where  A.编码  like 'K35.0%'  Or A.编码  like 'K35.1%' 
+                union all
+                select ID,'12. 前列腺增生' as 科目代码, 12 as 序号 from 疾病编码目录 A where  A.编码  like 'N40%' 
+                union all
+                select ID,'13. 肾衰竭' as 科目代码, 13 as 序号 from 疾病编码目录 A where  A.编码  like 'N17%' Or A.编码  like 'N18%' Or A.编码  like 'N19%'
+                union all
+                select ID,'14. 败血症(成人)' as 科目代码, 14 as 序号 from 疾病编码目录 A where  A.编码  like 'A40%' Or A.编码  like 'A41%'
+                union all
+                select ID,'15. 高血压病(成人)' as 科目代码, 15 as 序号 from 疾病编码目录 A where  A.编码  like 'I10%' Or A.编码  like 'I11%' Or A.编码  like 'I12%' Or A.编码  like 'I13%' Or A.编码  like 'I14%'  Or A.编码  like 'I15%'
+                union all
+                select ID,'16. 急性胰腺炎' as 科目代码, 16 as 序号 from 疾病编码目录 A where  A.编码  like 'K85%' 
+                union all
+                select ID,'17. 恶性肿瘤术后化疗' as 科目代码, 17 as 序号 from 疾病编码目录 A where  A.编码  like 'Z51.101%' 
+                union all
+                select ID,'18. 恶性肿瘤维持性化学治疗' as 科目代码, 18 as 序号 from 疾病编码目录 A where  A.编码  like 'Z51.201%'  Or A.编码  like 'Z51.103%' 
+      
+	  ) E,病人信息 G
+where A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 and A.出院科室ID=C.部门ID 
+     and A.病人ID=D.病人ID and A.主页ID=D.主页ID and D.记录来源=4 and D.诊断类型=3 and d.诊断次序=1 and D.疾病ID=E.ID AND A.编目日期 is not null
+     And A.病人id = G.病人id And to_char(a.入院日期,'yyyy')- to_char(G.出生日期,'yyyy') > 18 /*B2*/ and a.出院科室id is not null/*E2*/
+
+) A,
+(select  A.病人ID,A.主页ID
+              ,sum(decode(费用名,'床位费',B.金额,0)) as 床位费
+              ,sum(decode(费用名,'西药费',B.金额,'中成费',B.金额,'中草费',B.金额,0)) as 药费
+              ,sum(decode(费用名,'手术费',B.金额,0)) as 手术费
+              ,sum(decode(费用名,'放射费',B.金额,'化验费',B.金额,'输氧费',B.金额,
+                                 '输血费',B.金额,'接生费',B.金额,'麻醉费',B.金额,
+                                 '检查费',B.金额,'诊疗费',B.金额,0)) as 检查费
+        from 病案主页 A,病人费用 B
+        where A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 and A.病人ID=B.病人ID and A.主页ID=B.主页ID   /*B2*/ and a.出院科室id is not null/*E2*/
+        group by A.病人ID,A.主页ID) B
+WHERE A.病人ID=B.病人ID AND A.主页ID=B.主页ID
+GROUP BY A.序号,科目代码
+) P order by p.序号
+]]>
+</select>
+
+<!-- 重点疾病疗效及费用(ICD)18以上 from:REPORT_ZY_575 -->
+<select id="queryZhongDianJiBingLiaoXiao" resultClass="com.zhl.business.dto.ZhongDianJiBingLiaoXiao18Dto" parameterClass="java.util.Map">
+<![CDATA[
+ SELECT p.序号 As xuHao, p.科目代码 As keMuDaiMa, p.住院号 As zhuYuanHao, P.病人数 As bingRenShu, P.床日数 As chuangRiShu, P.费用总计 As feiYongZongJi, P.床位费 As chuangWeiFei, P.药费 As yaoFei, P.手术费 As shouShuFei, P.检查费 As jianChaFei
+	  ,P.治愈 As zhiYu, P.好转 As haoZhuan, P.未愈 As weiYu, P.死亡 As siWang, P.治愈费 As zhiYuFei, P.社保 As sheBao, P.公疗 As gongLiao, P.统筹 As tongChou, P.商保 As shangBao, P.自费 As ziFei
+FROM
+(
+SELECT 序号,科目代码,B.住院号,count(A.病人ID) AS 病人数,sum(A.住院天数) AS 床日数
+	,sum(A.治愈) AS 治愈,sum(A.好转) AS 好转,sum(A.未愈) AS 未愈,sum(A.死亡) AS 死亡,sum(A.治愈费) AS 治愈费
+	,sum(A.社保) AS 社保,sum(A.公疗) AS 公疗,sum(A.统筹) AS 统筹,sum(A.商保) AS 商保,sum(A.自费) AS 自费
+	,Sum(A.费用和) as 费用总计,Sum(B.床位费) as 床位费,Sum(B.药费) as 药费,Sum(B.手术费) as 手术费,Sum(B.检查费) as 检查费 
+FROM 
+(select E.序号,科目代码,A.病人ID,A.主页ID,A.住院天数,A.费用和
+		,decode(D.出院情况,'治愈',1,0) AS 治愈,decode(D.出院情况,'好转',1,0) AS 好转,decode(D.出院情况,'未愈',1,0) AS 未愈
+		,decode(D.出院情况,'死亡',1,0) AS 死亡,decode(D.出院情况,'治愈',A.费用和,0) AS 治愈费
+		,decode(A.医疗付款方式,'社会基本医疗保险',1,0) AS 社保,decode(A.医疗付款方式,'公费医疗',1,0) AS 公疗
+		,decode(A.医疗付款方式,'大病统筹',1,0) AS 统筹,decode(A.医疗付款方式,'商业保险',1,0) AS 商保,decode(A.医疗付款方式,'自费医疗',1,0) AS 自费
+from 病案主页 A,临床部门 C,病人诊断记录 D,
+     (          select ID,'急性心肌梗死' as 科目代码, 1 as 序号 from 疾病编码目录 A where  A.编码  like 'I21%' or A.编码  like 'I22%' 
+                union all
+                select ID,'充血性心力衰竭' as 科目代码, 2 as 序号 from 疾病编码目录 A where  A.编码  like 'I50%' 
+                union all
+                select ID,'脑出血和脑梗死' as 科目代码, 3 as 序号 from 疾病编码目录 A where  A.编码  like 'I60%'  or A.编码  like 'I61%' or A.编码  like 'I62%' or A.编码  like 'I63%'
+                union all
+                select ID,'创伤性颅脑损伤' as 科目代码, 4 as 序号 from 疾病编码目录 A where  A.编码  like 'S06%' 
+                union all
+                select ID,'消化道出血' as 科目代码, 5 as 序号 from 疾病编码目录 A where  A.编码  like 'K25%' or A.编码  like 'K26%'  or A.编码  like 'K27%' or A.编码  like 'K28%' 
+                union all
+                select ID,'累及身体多个部位的损伤' as 科目代码, 6 as 序号 from 疾病编码目录 A where  A.编码  like 'T00%' Or A.编码  like 'T01%' Or A.编码  like 'T02%' Or A.编码  like 'T03%' Or A.编码  like 'T04%' Or A.编码  like 'T05%' Or A.编码  like 'T06%' Or A.编码  like 'T07%'
+                union all
+                select ID,'细菌性脑炎' as 科目代码, 7 as 序号 from 疾病编码目录 A where  A.编码 Like 'J10.0%' Or A.编码 Like 'J11.1%' Or A.编码 Like 'J12%' Or A.编码 Like 'J13%' Or A.编码 Like 'J14%' Or A.编码 Like 'J15%' Or A.编码 Like 'J16%' Or A.编码 Like 'J18%'
+                union all
+                select ID,'慢性阻塞性肺疾病' as 科目代码, 8 as 序号 from 疾病编码目录 A where  A.编码  like 'J44%' 
+                union all
+                select ID,'糖尿病伴短期与长期并发症' as 科目代码, 9 as 序号 from 疾病编码目录 A where  A.编码  like 'E10%' Or A.编码 Like 'E11%' Or A.编码 Like 'E12%' Or A.编码 Like 'E13%' Or A.编码 Like 'E14%' 
+                union all
+                select ID,'结节性甲状腺肿' as 科目代码, 10 as 序号 from 疾病编码目录 A where  A.编码  like 'E04%' 
+                union all
+                select ID,'急性阑尾炎弥漫性腹膜炎及脓肿' as 科目代码, 11 as 序号 from 疾病编码目录 A where  A.编码  like 'K35.0%'  Or A.编码  like 'K35.1%' 
+                union all
+                select ID,'前列腺增生' as 科目代码, 12 as 序号 from 疾病编码目录 A where  A.编码  like 'N40%' 
+                union all
+                select ID,'肾衰竭' as 科目代码, 13 as 序号 from 疾病编码目录 A where  A.编码  like 'N017%' Or A.编码  like 'N018%' Or A.编码  like 'N019%'
+                union all
+                select ID,'败血症(成人)' as 科目代码, 14 as 序号 from 疾病编码目录 A where  A.编码  like 'A40%' Or A.编码  like 'A41%'
+                union all
+                select ID,'高血压病(成人)' as 科目代码, 15 as 序号 from 疾病编码目录 A where  A.编码  like 'I10%' Or A.编码  like 'I11%' Or A.编码  like 'I12%' Or A.编码  like 'I13%' Or A.编码  like 'I14%'  Or A.编码  like 'I15%'
+                union all
+                select ID,'急性胰腺炎' as 科目代码, 16 as 序号 from 疾病编码目录 A where  A.编码  like 'K85%' 
+                union all
+                select ID,'恶性肿瘤术后化疗' as 科目代码, 17 as 序号 from 疾病编码目录 A where  A.编码  like 'Z51.101%' 
+                union all
+                select ID,'恶性肿瘤维持性化学治疗' as 科目代码, 18 as 序号 from 疾病编码目录 A where  A.编码  like 'Z51.201%'  Or A.编码  like 'Z51.103%' 
+      
+	  ) E,病人信息 G
+where A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 and A.出院科室ID=C.部门ID 
+     and A.病人ID=D.病人ID and A.主页ID=D.主页ID and D.记录来源=4 and D.诊断类型=3 and d.诊断次序=1 and D.疾病ID=E.ID AND A.编目日期 is not null
+     And A.病人id = G.病人id And to_char(a.入院日期,'yyyy')- to_char(G.出生日期,'yyyy') > 18
+
+) A,
+(select  A.病人ID,A.主页ID,A.住院号
+              ,sum(decode(费用名,'床位费',B.金额,0)) as 床位费
+              ,sum(decode(费用名,'西药费',B.金额,'中成费',B.金额,'中草费',B.金额,0)) as 药费
+              ,sum(decode(费用名,'手术费',B.金额,0)) as 手术费
+              ,sum(decode(费用名,'放射费',B.金额,'化验费',B.金额,'输氧费',B.金额,
+                                 '输血费',B.金额,'接生费',B.金额,'麻醉费',B.金额,
+                                 '检查费',B.金额,'诊疗费',B.金额,0)) as 检查费
+        from 病案主页 A,病人费用 B
+        where A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 and A.病人ID=B.病人ID and A.主页ID=B.主页ID 
+        group by A.病人ID,A.主页ID,A.住院号) B ,病人信息 c
+WHERE A.病人ID=B.病人ID AND A.主页ID=B.主页ID And b.病人Id= c.病人id
+GROUP BY A.序号,科目代码,b.住院号
+) P order by p.序号
 ]]>
 </select>
 </sqlMap>

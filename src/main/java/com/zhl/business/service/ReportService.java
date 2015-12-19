@@ -13,6 +13,8 @@ import com.zhl.business.dto.OperationDiagnostic;
 import com.zhl.business.dto.PathologicalRateByDeptDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
+import com.zhl.business.dto.ZhongDianJiBingLiaoXiao18Dto;
+import com.zhl.business.dto.ZhongDianShouShuLiaoXiao18Dto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.model.ComputeRateModel;
 import com.zhl.business.model.EquipmentPositiveRate;
@@ -597,4 +599,28 @@ public interface ReportService {
 	 * @return
 	 */
 	public List<BingLiZhenDuanFuHeLvDto> queryBingLiZhenDuanFuHeLv(Map<String, String> dateMap);
+
+	/**
+	 * 重点手术疗效及费用(ICD)18以上
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<ZhongDianShouShuLiaoXiao18Dto> queryZhongDianShouShuLiaoXiao18(Map<String, String> dateMap);
+
+	/**
+	 * 重点疾病疗效及费用(ICD)18以上
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<ZhongDianJiBingLiaoXiao18Dto> queryZhongDianJiBingLiaoXiao(Map<String, String> dateMap);
+
+	/**
+	 * 重点疾病疗效及费用(ICD)18以上 卫生部
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<ZhongDianJiBingLiaoXiao18Dto> queryZhongDianJiBingLiaoXiaoWeiShengBu(Map<String, String> dateMap);
 }

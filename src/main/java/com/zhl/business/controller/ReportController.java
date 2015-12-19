@@ -24,6 +24,8 @@ import com.zhl.business.dto.OperationDiagnostic;
 import com.zhl.business.dto.PathologicalRateByDeptDto;
 import com.zhl.business.dto.RuChuYuanShuDto;
 import com.zhl.business.dto.ZaiYuanBingRenFenBuDto;
+import com.zhl.business.dto.ZhongDianJiBingLiaoXiao18Dto;
+import com.zhl.business.dto.ZhongDianShouShuLiaoXiao18Dto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.model.ComputeRateModel;
 import com.zhl.business.model.EquipmentPositiveRate;
@@ -281,6 +283,18 @@ public class ReportController {
 			break;
 		case 46: // 临床主要诊断与病理诊断符合率
 			url = "/report/bingLiZhenDuanRate/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 47: // 重点手术疗效及费用(ICD)18以上
+			url = "/report/zhongDianShouShuLiaoXiao/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 49: // 重点疾病疗效及费用(ICD)18以上
+			url = "/report/zhongDianJiBingLiaoXiao/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 50: // 重点疾病疗效及费用(ICD)18以上 卫生部
+			url = "/report/zhongDianJiBingLiaoXiaoWeiShengBu/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		}
@@ -1348,6 +1362,72 @@ public class ReportController {
 		model.addAttribute("dateEnd", dateEnd);
 		model.addAttribute("diagnosticList", diagnosticList);
 		return View.BingLiZhenDuanRateView;
+	}
+
+	/**
+	 * 重点手术疗效及费用(ICD)18以上
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.ZHONG_DIAN_SHOU_SHU_LIAO_XIAO)
+	public String queryZhongDianShouShuLiaoXiao18(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<ZhongDianShouShuLiaoXiao18Dto> zhongDianShouShuLiaoXiaoList = new LinkedList<ZhongDianShouShuLiaoXiao18Dto>();
+		zhongDianShouShuLiaoXiaoList = reportService.queryZhongDianShouShuLiaoXiao18(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("zhongDianShouShuLiaoXiaoList", zhongDianShouShuLiaoXiaoList);
+		return View.ZhongDianShouShuLiaoXiaoView;
+	}
+
+	/**
+	 * 重点疾病疗效及费用(ICD)18以上
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.ZHONG_DIAN_JI_BING_LIAO_XIAO)
+	public String queryZhongDianJiBingLiaoXiao18(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<ZhongDianJiBingLiaoXiao18Dto> zhongDianJiBingLiaoXiaoList = new LinkedList<ZhongDianJiBingLiaoXiao18Dto>();
+		zhongDianJiBingLiaoXiaoList = reportService.queryZhongDianJiBingLiaoXiao(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("zhongDianJiBingLiaoXiaoList", zhongDianJiBingLiaoXiaoList);
+		return View.ZhongDianJiBingLiaoXiaoView;
+	}
+
+	/**
+	 * 重点疾病疗效及费用(ICD)18以上 卫生部
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.ZHONG_DIAN_JI_BING_LIAO_XIAO_WEI_SHENG_BU)
+	public String queryZhongDianJiBingLiaoXiaoWeiShengBu18(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<ZhongDianJiBingLiaoXiao18Dto> zhongDianJiBingLiaoXiaoWeiShengBuList = new LinkedList<ZhongDianJiBingLiaoXiao18Dto>();
+		zhongDianJiBingLiaoXiaoWeiShengBuList = reportService.queryZhongDianJiBingLiaoXiaoWeiShengBu(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("zhongDianJiBingLiaoXiaoWeiShengBuList", zhongDianJiBingLiaoXiaoWeiShengBuList);
+		return View.ZhongDianJiBingLiaoXiaoWeiShengBuView;
 	}
 
 }
