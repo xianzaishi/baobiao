@@ -101,7 +101,7 @@ table
 		  </tr>
 		  <tr>
 		    <td>死亡率</td>
-		    <td>&nbsp;<fmt:formatNumber type="number" value="${xinShengErSiWangShu/xinShengErChuYuanShu * 100 }" maxFractionDigits="4"/>%</td>
+		    <td>&nbsp;<fmt:formatNumber type="number" value="${xinShengErSiWangShu/xinShengErChuYuanShu * 100 }" maxFractionDigits="2"/>%</td>
 		  </tr>
 		</table>
 		<br/>

@@ -6,10 +6,10 @@
 
 <!-- 住院收入 -->
 <select id="queryIpTotal" resultClass="java.lang.Double" parameterClass="java.util.Map">
-	Select Sum(实收金额) From 病人费用记录 
+	Select Sum(实收金额) From 住院费用记录 
 	<![CDATA[
 	Where 登记时间 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
-		And 记录状态 <> 0 And (门诊标志 = '2' Or 门诊标志 = '3')
+		And 记录状态 <> 0 And 门诊标志 = '2'
 	]]>
 </select>
 
@@ -302,8 +302,8 @@
 	From (Select 0 As 病人id, Sum(入院数) As 入院数, Sum(转入数) As 转入数, Sum(出院数) As 出院数, Sum(转出数) As 转出数,
 								Sum(陪伴) As 陪伴, Sum(危重) As 危重, Sum(开放床数) As 开放床数, Sum(其中死亡) As 其中死亡,
 								Sum(本日加床) As 本日加床,
-								Zl_Get床位占用数(0, '106', To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS')) As 床位占用数,
-								Zl_Get床位占用数(1, '106', To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS')) As 家庭病床
+								Zl_Get床位占用数(0, #id#, To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS')) As 床位占用数,
+								Zl_Get床位占用数(1, #id#, To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS')) As 家庭病床
 				 From (Select Distinct a.病人id, 1 As 入院数, 0 As 转入数, 0 As 出院数, 0 As 转出数, 0 As 陪伴, 0 As 危重,
 																0 As 开放床数, 0 As 其中死亡, 0 As 本日加床
 								From (Select Distinct a.病人id, a.主页id, b.住院号, Decode(Nvl(b.病人性质, 0), 2, '1', '0') As 附加信息
@@ -817,6 +817,12 @@ Where a.病人id = o.病人id
 Select id, 名称 as name from 部门表 Where 上级id = 62
 </select>
 
+<!-- 查询住院日报部门 -->
+<select id="queryZhuYuanRiBaoDept" resultClass="com.zhl.business.model.Department">
+Select id, 名称 as name from 部门表 
+Where id in (105, 111, 114, 115, 116, 118, 884, 117, 121, 122, 123, 131, 133, 544, 545, 1185, 1187, 1188, 1189, 1190, 1191, 1192, 1193, 1194, 1195, 1196, 1197, 1198, 1199, 1200, 1244, 1364, 1624)
+</select>
+
 <!-- 根据科室id查询科室抢救成功率 from:REPORT_ZYSH91 抢救病人登记簿1 -->
 <select id="queryQiangJiuChengGongLvByDeptId" resultClass="java.lang.Double" parameterClass="java.util.Map">
 	Select Count(*) As 抢救成功 From (
@@ -1162,7 +1168,7 @@ from (
 <select id="queryOperationDetailFirst" resultClass="com.zhl.business.model.OperationDetail" parameterClass="java.util.Map">
 	Select b.住院号 as zhuYuanHao, c.姓名 as xingMing, f.名称 As keShi, b.出院日期 as chuYuanRiQi, a.已行手术 as yiXingShouShu, Nvl(a.切口, '其他') As shouShuJiBie, a.愈合 as yuHe
 	From 病人手麻记录 a, 病案主页 b, 病人信息 c, 部门表 f, 手术类型 e
-	Where a.病人id = b.病人id And a.病人id = c.病人id And b.入院科室id = f.Id 
+	Where a.病人id = b.病人id And a.病人id = c.病人id And b.入院科室id = f.Id and a.记录来源 = 4
 	      And b.出院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD') And To_Date(#EndTime#, 'YYYY-MM-DD')
 				And a.愈合 In (e.名称) And e.编码 = '1'
 </select>
@@ -1171,7 +1177,7 @@ from (
 <select id="queryOperationDetailSecond" resultClass="com.zhl.business.model.OperationDetail" parameterClass="java.util.Map">
 	Select b.住院号 as zhuYuanHao, c.姓名 as xingMing, f.名称 As keShi, b.出院日期 as chuYuanRiQi, a.已行手术 as yiXingShouShu, Nvl(a.切口, '其他') As shouShuJiBie, a.愈合 as yuHe
 	From 病人手麻记录 a, 病案主页 b, 病人信息 c, 部门表 f, 手术类型 e
-	Where a.病人id = b.病人id And a.病人id = c.病人id And b.入院科室id = f.Id 
+	Where a.病人id = b.病人id And a.病人id = c.病人id And b.入院科室id = f.Id and a.记录来源 = 4
 	      And b.出院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD') And To_Date(#EndTime#, 'YYYY-MM-DD')
 				And a.愈合 In (e.名称) And e.编码 = '2'
 </select>
@@ -1180,7 +1186,7 @@ from (
 <select id="queryOperationDetailThird" resultClass="com.zhl.business.model.OperationDetail" parameterClass="java.util.Map">
 	Select b.住院号 as zhuYuanHao, c.姓名 as xingMing, f.名称 As keShi, b.出院日期 as chuYuanRiQi, a.已行手术 as yiXingShouShu, Nvl(a.切口, '其他') As shouShuJiBie, a.愈合 as yuHe
 	From 病人手麻记录 a, 病案主页 b, 病人信息 c, 部门表 f, 手术类型 e
-	Where a.病人id = b.病人id And a.病人id = c.病人id And b.入院科室id = f.Id 
+	Where a.病人id = b.病人id And a.病人id = c.病人id And b.入院科室id = f.Id and a.记录来源 = 4
 	      And b.出院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD') And To_Date(#EndTime#, 'YYYY-MM-DD')
 				And a.愈合 In (e.名称) And e.编码 = '3'
 </select>
@@ -1189,7 +1195,7 @@ from (
 <select id="queryOperationDetailForth" resultClass="com.zhl.business.model.OperationDetail" parameterClass="java.util.Map">
 	Select b.住院号 as zhuYuanHao, c.姓名 as xingMing, f.名称 As keShi, b.出院日期 as chuYuanRiQi, a.已行手术 as yiXingShouShu, Nvl(a.切口, '其他') As shouShuJiBie, a.愈合 as yuHe
 	From 病人手麻记录 a, 病案主页 b, 病人信息 c, 部门表 f, 手术类型 e
-	Where a.病人id = b.病人id And a.病人id = c.病人id And b.入院科室id = f.Id 
+	Where a.病人id = b.病人id And a.病人id = c.病人id And b.入院科室id = f.Id and a.记录来源 = 4
 	      And b.出院日期 Between To_Date(#StartTime#, 'YYYY-MM-DD') And To_Date(#EndTime#, 'YYYY-MM-DD')
 				And a.愈合 In (e.名称) And e.编码 = '4'
 </select>
@@ -1313,6 +1319,7 @@ from
   ]]>
 </select>
 
+<!-- 入出院手术诊断率 from:医疗质量月报表:ZL3_REPORT_234 -->
 <select id="queryDiagnosticRate" resultClass="com.zhl.business.dto.DiagnosticDto" parameterClass="java.util.Map">
 Select 符合 as fuHe, 不符 as buFu, 疑诊 as yiZhen From (
 select count(A.病人ID) as 病人数
@@ -1338,7 +1345,7 @@ where A.病人ID=B.病人ID and A.主页ID=B.主页ID and B.诊断次序=1 and B
 ]]>
 </select>
 
-<!-- 手术前后诊断符合率 -->
+<!-- 手术前后诊断符合率 from:医疗质量月报表:ZL3_REPORT_234-->
 <select id="queryOperationDiagnosticRate" resultClass="com.zhl.business.dto.OperationDiagnostic" parameterClass="java.util.Map">
 Select 符合 As fuHe, 不符 As buFu From (
 select sum(decode(B.符合情况,1,1,0)) as 符合,sum(decode(B.符合情况,2,1,0)) as 不符
@@ -1356,7 +1363,7 @@ where A.病人ID=B.病人ID and A.主页ID=B.主页ID and B.符合类型=6 and A
 ]]>
 </select>
 
-<!-- 临床主要诊断与病理诊断符合率 -->
+<!-- 临床主要诊断与病理诊断符合率 from:医疗质量月报表:ZL3_REPORT_234 -->
 <select id="queryBingLiZhenDuanFuHeLv" resultClass="com.zhl.business.dto.BingLiZhenDuanFuHeLvDto" parameterClass="java.util.Map">
 Select 符合 As fuHe, 不符 As buFu From (
 select sum(decode(B.符合情况,1,1,0)) as 符合,sum(decode(B.符合情况,2,1,0)) as 不符

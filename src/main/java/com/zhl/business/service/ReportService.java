@@ -17,6 +17,7 @@ import com.zhl.business.dto.ZhongDianJiBingLiaoXiao18Dto;
 import com.zhl.business.dto.ZhongDianShouShuLiaoXiao18Dto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.model.ComputeRateModel;
+import com.zhl.business.model.Department;
 import com.zhl.business.model.EquipmentPositiveRate;
 import com.zhl.business.model.OperationDetail;
 import com.zhl.business.model.OperationQuality;
@@ -382,9 +383,17 @@ public interface ReportService {
 	public List<DeptDateDto> queryYiLiaoDept();
 	
 	/**
+	 * 查询住院日报部门
+	 * 
+	 * @return
+	 */
+	public List<Department> queryZhuYuanRiBaoDept();
+
+	/**
 	 * 根据科室id查询科室抢救成功率
 	 * 
-	 * @param dateMap<StartTime, EndTime, id>
+	 * @param dateMap
+	 *            <StartTime, EndTime, id>
 	 * @return
 	 */
 	public List<Double> queryQiangJiuChengGongLvByDeptId(Map<String, String> dateMap);

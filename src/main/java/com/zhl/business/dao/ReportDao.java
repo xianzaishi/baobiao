@@ -19,6 +19,7 @@ import com.zhl.business.dto.ZhongDianJiBingLiaoXiao18Dto;
 import com.zhl.business.dto.ZhongDianShouShuLiaoXiao18Dto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.model.ComputeRateModel;
+import com.zhl.business.model.Department;
 import com.zhl.business.model.EquipmentPositiveRate;
 import com.zhl.business.model.OperationDetail;
 import com.zhl.business.model.OperationQuality;
@@ -485,6 +486,16 @@ public class ReportDao extends BaseDao {
 	@SuppressWarnings("unchecked")
 	public List<DeptDateDto> queryYiLiaoDept() {
 		return (List<DeptDateDto>) getSqlMapClientTemplate().queryForList("report.queryYiLiaoDept");
+	}
+
+	/**
+	 * 查询住院日报部门
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Department> queryZhuYuanRiBaoDept() {
+		return (List<Department>) getSqlMapClientTemplate().queryForList("report.queryZhuYuanRiBaoDept");
 	}
 
 	/**

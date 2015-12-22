@@ -28,9 +28,11 @@ import com.zhl.business.dto.ZhongDianJiBingLiaoXiao18Dto;
 import com.zhl.business.dto.ZhongDianShouShuLiaoXiao18Dto;
 import com.zhl.business.dto.ZhuYuanShouRuDto;
 import com.zhl.business.model.ComputeRateModel;
+import com.zhl.business.model.Department;
 import com.zhl.business.model.EquipmentPositiveRate;
 import com.zhl.business.model.OperationDetail;
 import com.zhl.business.model.OperationQuality;
+import com.zhl.business.model.ZhuYuanRiBao;
 import com.zhl.business.service.ReportService;
 
 @Controller
@@ -74,6 +76,9 @@ public class ReportController {
 		dateMap.put("StartTime", StartTime);
 		dateMap.put("EndTime", EndTime);
 
+		ZhuYuanRiBao zhuYuanRiBao = new ZhuYuanRiBao();
+		zhuYuanRiBao = queryZhuYuanRiBao(StartTime, EndTime);
+
 		// 门诊收入 = 挂号收入 + 门诊收费收入 + 体检收入
 		double guaHaoShouRu = reportService.queryGuaHaoShouRu(dateMap); // 门诊挂号收入
 		double menZhenShouFeiShouRu = reportService.queryMenZhenShouFeiShouRu(dateMap); // 门诊收费收入
@@ -89,18 +94,20 @@ public class ReportController {
 		double menJiZhenRenCiTotal = reportService.queryMenJiZhenRenCiTotal(dateMap);	// 门急诊人次
 		double jiZhenRenCiTotal = reportService.queryJiZhenRenCiTotal(dateMap);	// 急诊人次
 		double menZhenYiBaoTotal = reportService.queryMenZhenYiBaoTotal(dateMap);	// 门诊医保人次
-		double chuZhenYiShengTotal = reportService.queryChuZhenYiShengTotal(dateMap);	// 门诊出诊医生
+		double chuZhenYiShengTotal = 49; // 门诊出诊医生reportService.queryChuZhenYiShengTotal(dateMap);
 		double chuFangTotal = reportService.queryChuFangTotal(dateMap);	//门诊处方数
 		double menZhenTuiFeiTotal = reportService.queryMenZhenTuiFeiTotal(dateMap);	//门诊退费金额
 		double menZhenKangShengSuTotal = reportService.queryMenZhenKangShengSuTotal(dateMap);	//门诊使用抗生素数
 		double ruYuanAndYiBaoTotal = reportService.queryRuYuanAndYiBaoTotal(dateMap);	//入院人数 医保人数
-		double zaiYuanTotal = reportService.queryZaiYuanTotal(dateMap);	//在院人数
+		double zaiYuanTotal = reportService.queryZaiYuanTotal(dateMap); // 在院人数;
 		double zaiYuanAndYiBaoTotal = reportService.queryZaiYuanAndYiBaoTotal(dateMap);	//在院人数 医保人数
 		double zaiYuanAndXueTouTotal = reportService.queryZaiYuanAndXueTouTotal(dateMap);	//在院人数 血透人数
 		double chuYuanAndYiBaoTotal = reportService.queryChuYuanAndYiBaoTotal(dateMap);	//出院人数 医保人数
 		double queryXueTouShouRu = reportService.queryXueTouShouRu(dateMap);	// 血透收入
 		
-		RuChuYuanShuDto ruChuYuanShu = reportService.queryRuChuYuanShu(dateMap); // 入出院人数
+		RuChuYuanShuDto ruChuYuanShu = new RuChuYuanShuDto(); // 入出院人数 :reportService.queryRuChuYuanShu(dateMap);
+		ruChuYuanShu.setRuYuanShu(zhuYuanRiBao.getRuYuanShu());
+		ruChuYuanShu.setChuYuanShu(zhuYuanRiBao.getChuYuanShu());
 		double menZhenYaoPinShouRu = reportService.queryMenZhenYaoPinShouRu(dateMap); // 门诊药品收入
 
 		double sum = zhuYuanShouRuDto.getZongShouRu() + menZhenShouRu;
@@ -328,7 +335,11 @@ public class ReportController {
 		double menJiZhenRenCiTotal = reportService.queryMenJiZhenRenCiTotal(dateMap); // 门急诊人次
 		double menZhenRenCiTotal = menJiZhenRenCiTotal - jiZhenRenCiTotal; // 门诊人次
 		int tiJianRenCi = reportService.queryTiJianRenShu(dateMap); // 体检人次
-		RuChuYuanShuDto ruChuYuanShu = reportService.queryRuChuYuanShu(dateMap); // 入出院人数
+		RuChuYuanShuDto ruChuYuanShu = new RuChuYuanShuDto();// 入出院人数 reportService.queryRuChuYuanShu(dateMap);
+		ZhuYuanRiBao zhuYuanRiBao = new ZhuYuanRiBao();
+		zhuYuanRiBao = queryZhuYuanRiBao(StartTime, EndTime);
+		ruChuYuanShu.setChuYuanShu(zhuYuanRiBao.getChuYuanShu());
+		ruChuYuanShu.setRuYuanShu(zhuYuanRiBao.getRuYuanShu());
 		int chuYuanZongChuangRi = reportService.queryChuYuanZongChuangRi(dateMap); // 出院患者实际占用总床日
 		int zhuYuanShouShuLiShu = reportService.queryZhuYuanShouShuLiShu(dateMap); // 住院手术例数
 		int menZhenShouShuLiShu = reportService.queryMenZhenShouShuLiShu(dateMap); // 门诊手术例数
@@ -410,7 +421,11 @@ public class ReportController {
 		
 		double zaiYuanTotal = reportService.queryZaiYuanTotal(dateMap);	//使用床位数 等于 在院人数
 		int chuYuanZongChuangRi = reportService.queryChuYuanZongChuangRi(dateMap); // 出院患者实际占用总床日
-		RuChuYuanShuDto ruChuYuanShu = reportService.queryRuChuYuanShu(dateMap); // 入出院人数
+		RuChuYuanShuDto ruChuYuanShu = new RuChuYuanShuDto(); // 入出院人数reportService.queryRuChuYuanShu(dateMap);
+		ZhuYuanRiBao zhuYuanRiBao = new ZhuYuanRiBao();
+		zhuYuanRiBao = queryZhuYuanRiBao(StartTime, EndTime);
+		ruChuYuanShu.setChuYuanShu(zhuYuanRiBao.getChuYuanShu());
+		ruChuYuanShu.setRuYuanShu(zhuYuanRiBao.getRuYuanShu());
 		double chuYuanPingJunZhuYuanRi = chuYuanZongChuangRi / ruChuYuanShu.getChuYuanShu(); // 出院患者平均住院日
 		int huanChuangShu = reportService.queryHuanChuangShu(dateMap); // 换床总次数
 
@@ -447,7 +462,6 @@ public class ReportController {
 		double menZhenYaoPinShouRu = reportService.queryMenZhenYaoPinShouRu(dateMap); // 门诊药品收入
 
 		double menJiZhenRenCiTotal = reportService.queryMenJiZhenRenCiTotal(dateMap); // 门急诊人次
-		double ipTotal = reportService.queryIpTotal(dateMap); // 在院收入
 		double zaiYuanTotal = reportService.queryZaiYuanTotal(dateMap); // 在院人数
 		ZhuYuanShouRuDto zhuYuanShouRuDto = reportService.queryZhuYuanShouRu(dateMap); // 在院收入
 
@@ -456,7 +470,7 @@ public class ReportController {
 		model.addAttribute("opTotal", menZhenShouRu); // 门诊收入
 		model.addAttribute("menJiZhenRenCiTotal", menJiZhenRenCiTotal); // 门急诊人次
 		model.addAttribute("opDrugsTotal", menZhenYaoPinShouRu); // 门诊药品收入
-		model.addAttribute("ipTotal", ipTotal); // 在院收入
+		model.addAttribute("ipTotal", zhuYuanShouRuDto.getZongShouRu()); // 在院收入
 		model.addAttribute("zaiYuanTotal", zaiYuanTotal); // 在院人数
 		model.addAttribute("ipDrugsTotal", zhuYuanShouRuDto.getYaoPinShouRu()); // 在院药品收入
 		return View.ReportPatientCostView;
@@ -480,7 +494,6 @@ public class ReportController {
 
 		double menZhenYaoPinShouRu = reportService.queryMenZhenYaoPinShouRu(dateMap); // 门诊药品收入
 
-		double ipTotal = reportService.queryIpTotal(dateMap); // 在院收入
 		ZhuYuanShouRuDto zhuYuanShouRuDto = reportService.queryZhuYuanShouRu(dateMap); // 在院收入
 		double yiLiaoCaiLiaoShouRu = reportService.queryYiliaoCaiLiaoShouRu(dateMap); // 医疗材料收入
 
@@ -558,6 +571,72 @@ public class ReportController {
 	}
 
 	/**
+	 * 查询住院日报
+	 * 
+	 * @return
+	 */
+	private ZhuYuanRiBao queryZhuYuanRiBao(String dateStart, String dateEnd) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+
+		// 查询住院日报统计的医疗部门
+		List<Department> deptList = new LinkedList<Department>();
+		deptList = reportService.queryZhuYuanRiBaoDept();
+
+		// 住院日报List
+		List<ZhuYuanRiBao> zhuYuanRiBaoList = new LinkedList<ZhuYuanRiBao>();
+
+		for (int i = 0; i < deptList.size(); i++) {
+			dateMap.put("id", Integer.toString(deptList.get(i).getId()));
+			zhuYuanRiBaoList.add(reportService.queryZhuYuanRiBaoByDeptId(dateMap));
+			dateMap.remove("id");
+		}
+
+		// 求和
+		ZhuYuanRiBao zhuYuanRiBao = new ZhuYuanRiBao();
+		zhuYuanRiBao.setBingRenId(0);
+
+		int ruYuanShu = 0; // 入院数
+		int zhuanRuShu = 0; // 转入数
+		int chuYuanShu = 0; // 出院数
+		int zhuanChuShu = 0; // 转出数
+		int peiBan = 0; // 陪伴
+		int weiZhong = 0; // 危重
+		int kaiFangChuangShu = 0; // 开放床数
+		int qiZhongSiWang = 0; // 其中死亡
+		int benRiJiaChuang = 0; // 本日加床
+		int chuangWeiZhanYongShu = 0; // 床位占用数
+		int jiaTingBingChuang = 0; // 家庭病床
+		for (int i = 0; i < zhuYuanRiBaoList.size(); i++) {
+			ruYuanShu += zhuYuanRiBaoList.get(i).getRuYuanShu();
+			zhuanRuShu += zhuYuanRiBaoList.get(i).getZhuanRuShu();
+			chuYuanShu += zhuYuanRiBaoList.get(i).getChuYuanShu();
+			zhuanChuShu += zhuYuanRiBaoList.get(i).getZhuanChuShu();
+			peiBan += zhuYuanRiBaoList.get(i).getPeiBan();
+			weiZhong += zhuYuanRiBaoList.get(i).getWeiZhong();
+			kaiFangChuangShu += zhuYuanRiBaoList.get(i).getKaiFangChuangShu();
+			qiZhongSiWang += zhuYuanRiBaoList.get(i).getQiZhongSiWang();
+			benRiJiaChuang += zhuYuanRiBaoList.get(i).getBenRiJiaChuang();
+			chuangWeiZhanYongShu += zhuYuanRiBaoList.get(i).getChuangWeiZhanYongShu();
+			jiaTingBingChuang += zhuYuanRiBaoList.get(i).getJiaTingBingChuang();
+		}
+		zhuYuanRiBao.setRuYuanShu(ruYuanShu);
+		zhuYuanRiBao.setZhuanRuShu(zhuanRuShu);
+		zhuYuanRiBao.setChuYuanShu(chuYuanShu);
+		zhuYuanRiBao.setZhuanChuShu(zhuanChuShu);
+		zhuYuanRiBao.setPeiBan(peiBan);
+		zhuYuanRiBao.setWeiZhong(weiZhong);
+		zhuYuanRiBao.setKaiFangChuangShu(kaiFangChuangShu);
+		zhuYuanRiBao.setQiZhongSiWang(qiZhongSiWang);
+		zhuYuanRiBao.setBenRiJiaChuang(benRiJiaChuang);
+		zhuYuanRiBao.setChuangWeiZhanYongShu(chuangWeiZhanYongShu);
+		zhuYuanRiBao.setJiaTingBingChuang(jiaTingBingChuang);
+
+		return zhuYuanRiBao;
+	}
+
+	/**
 	 * 出院患者平均住院天数分析
 	 * 
 	 * @param dateStart
@@ -574,18 +653,18 @@ public class ReportController {
 		dateMap.put("EndTime", EndTime);
 
 		// 查询医疗部门
-		List<DeptDateDto> deptDateDtoList = new LinkedList<DeptDateDto>();
-		deptDateDtoList = reportService.queryYiLiaoDept();
+		List<Department> deptList = new LinkedList<Department>();
+		deptList = reportService.queryZhuYuanRiBaoDept();
 
 		List<DeptDateDto> deptDateDtoResultList = new LinkedList<DeptDateDto>();
 
 		String data = "";
-		for (int i = 0; i < deptDateDtoList.size(); i++) {
+		for (int i = 0; i < deptList.size(); i++) {
 			DeptDateDto deptDateDto = new DeptDateDto();
-			int id = deptDateDtoList.get(i).getId();
+			int id = deptList.get(i).getId();
 			deptDateDto.setId(id);
-			deptDateDto.setName(deptDateDtoList.get(i).getName());
-			dateMap.put("id", Integer.toString(deptDateDtoList.get(i).getId()));
+			deptDateDto.setName(deptList.get(i).getName());
+			dateMap.put("id", Integer.toString(deptList.get(i).getId()));
 			List<Double> dateList = new LinkedList<Double>();
 
 			int chuYuanZongChuangRi = reportService.queryChuYuanZongChuangRiByDeptId(dateMap); // 出院患者实际占用总床日
@@ -596,7 +675,7 @@ public class ReportController {
 			dateMap.remove("id");
 
 			if (chuYuanPingJunZhuYuanRi != 0) {
-				data += "['" + deptDateDtoList.get(i).getName() + "'," + chuYuanPingJunZhuYuanRi + "],";
+				data += "['" + deptList.get(i).getName() + "'," + chuYuanPingJunZhuYuanRi + "],";
 			}
 
 			deptDateDto.setDateList(dateList);

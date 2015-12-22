@@ -37,13 +37,13 @@ table
 		<table width="768" border="1" align="center" bordercolor="#000000">
 			<tr>
 				<td width="210">出院患者平均住院日</td>
-				<td width="210">&nbsp;<fmt:formatNumber type="number" value="${chuYuanPingJunZhuYuanRi }" maxFractionDigits="4"/></td>
+				<td width="210">&nbsp;<fmt:formatNumber type="number" value="${chuYuanPingJunZhuYuanRi }" maxFractionDigits="2"/></td>
 				<td width="160">平均每张床位工作日</td>
 				<td width="160">&nbsp;<fmt:formatNumber type="number" value="${chuYuanZongChuangRi / 1061 }" maxFractionDigits="0"/></td>
 			</tr>
 			<tr>
 				<td>床位使用率</td>
-				<td>&nbsp;<fmt:formatNumber type="number" value="${(shiYongChuangWeiTotal / 1061) * 100 }" maxFractionDigits="4"/>%</td>
+				<td>&nbsp;<fmt:formatNumber type="number" value="${(shiYongChuangWeiTotal / 1061) * 100 }" maxFractionDigits="2"/>%</td>
 				<td>床位周转次数</td>
 				<td>&nbsp;<fmt:formatNumber type="number" value="${chuangWeiZhouZhuanCiShu }" maxFractionDigits="0"/></td>
 			</tr>

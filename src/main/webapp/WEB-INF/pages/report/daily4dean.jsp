@@ -80,16 +80,16 @@ table
   <tr>
     <td height="28" colspan="2"><span class="STYLE5">出诊医生</span></td><td><span class="STYLE5"><fmt:formatNumber type="number" value="${chuZhenYiShengTotal }" maxFractionDigits="0"/></span></td>
     <td colspan="2"><span class="STYLE5"></span></td><td width="89"><span class="STYLE5"></span></td>
-    <td colspan="2"><span class="STYLE5">医保自费比例</span></td><td colspan="3"><span class="STYLE5"><fmt:formatNumber type="number" value="${(menZhenYiBaoTotal / menJiZhenRenCiTotal) * 100}" maxFractionDigits="4"/>%</span></td>
+    <td colspan="2"><span class="STYLE5">医保自费比例</span></td><td colspan="3"><span class="STYLE5"><fmt:formatNumber type="number" value="${(menZhenYiBaoTotal / menJiZhenRenCiTotal) * 100}" maxFractionDigits="2"/>%</span></td>
   </tr>
   <tr>
-    <td height="27" colspan="2"><span class="STYLE5">平均费用</span></td><td><span class="STYLE5">￥<fmt:formatNumber type="number" value="${opTotal / menJiZhenRenCiTotal }" maxFractionDigits="4"/></span></td>
+    <td height="27" colspan="2"><span class="STYLE5">平均费用</span></td><td><span class="STYLE5">￥<fmt:formatNumber type="number" value="${opTotal / menJiZhenRenCiTotal }" maxFractionDigits="2"/></span></td>
     <td colspan="2"><span class="STYLE5">处方数量</span></td><td><span class="STYLE5"><fmt:formatNumber type="number" value="${chuFangTotal }" maxFractionDigits="0"/></span></td>
     <td colspan="2"><span class="STYLE5">退费金额</span></td><td colspan="3"><span class="STYLE5">￥<fmt:formatNumber type="number" value="${menZhenTuiFeiTotal }" maxFractionDigits="2"/></span></td>
   </tr>
   <tr>
     <td height="28" colspan="2"><span class="STYLE5">人均药费</span></td><td><span class="STYLE5">￥<fmt:formatNumber type="number" value="${opDrugsTotal / menJiZhenRenCiTotal }" maxFractionDigits="2"/></span></td>
-    <td colspan="3"><span class="STYLE5">抗菌素人次比</span></td><td colspan="5"><span class="STYLE5"><fmt:formatNumber type="number" value="${menZhenKangShengSuTotal / menJiZhenRenCiTotal }" maxFractionDigits="4"/></span></td>
+    <td colspan="3"><span class="STYLE5">抗菌素人次比</span></td><td colspan="5"><span class="STYLE5"><fmt:formatNumber type="number" value="${menZhenKangShengSuTotal / menJiZhenRenCiTotal }" maxFractionDigits="2"/></span></td>
   </tr>
   <tr>
     <td height="29" colspan="11"><div align="center" class="STYLE6">住院部分</div></td>
@@ -119,7 +119,7 @@ table
   <tr>
     <td height="36" colspan="2"><span class="STYLE5">开放床位</span></td><td><span class="STYLE5">1061</span></td>
     <td colspan="2"><span class="STYLE5">使用床位</span></td><td><span class="STYLE5"><fmt:formatNumber type="number" value="${shiYongChuangWeiTotal }" maxFractionDigits="2"/></span></td>
-    <td colspan="2"><span class="STYLE5">床位使用率</span></td><td colspan="3"><span class="STYLE5"><fmt:formatNumber type="number" value="${(shiYongChuangWeiTotal / 1061) * 100 }" maxFractionDigits="4"/>%</span></td>
+    <td colspan="2"><span class="STYLE5">床位使用率</span></td><td colspan="3"><span class="STYLE5"><fmt:formatNumber type="number" value="${(shiYongChuangWeiTotal / 1061) * 100 }" maxFractionDigits="2"/>%</span></td>
   </tr>
   <tr>
     <td height="32" colspan="2"><span class="STYLE5">住院收入</span></td><td><span class="STYLE5">￥<fmt:formatNumber type="number" value="${ipTotal }" maxFractionDigits="2"/></span></td>
@@ -132,8 +132,8 @@ table
     <td colspan="2"><span class="STYLE5">现金收入</span></td><td colspan="3"><span class="STYLE5">￥<fmt:formatNumber type="number" value="${ipBaoXianXianJinTotal }" maxFractionDigits="2"/></span></td>
   </tr>
   <tr>
-    <td height="33" colspan="2"><span class="STYLE5">药品比例</span></td><td><span class="STYLE5"><fmt:formatNumber type="number" value="${(ipDrugsTotal / ipTotal) * 100 }" maxFractionDigits="4"/>%</span></td>
-    <td colspan="2"><span class="STYLE5">医保自费比例</span></td><td><span class="STYLE5"><fmt:formatNumber type="number" value="${(ipBaoXianXianJinTotal / ipBaoXianTotal) * 100 }" maxFractionDigits="4"/>%</span></td>
+    <td height="33" colspan="2"><span class="STYLE5">药品比例</span></td><td><span class="STYLE5"><fmt:formatNumber type="number" value="${(ipDrugsTotal / ipTotal) * 100 }" maxFractionDigits="2"/>%</span></td>
+    <td colspan="2"><span class="STYLE5">医保自费比例</span></td><td><span class="STYLE5"><fmt:formatNumber type="number" value="${(ipBaoXianXianJinTotal / ipBaoXianTotal) * 100 }" maxFractionDigits="2"/>%</span></td>
     <td colspan="2"><span class="STYLE5">血透收入</span></td><td colspan="3"><span class="STYLE5">￥<fmt:formatNumber type="number" value="${queryXueTouShouRu }" maxFractionDigits="2"/></span></td>
   </tr>
   <!-- 

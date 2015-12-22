@@ -58,7 +58,7 @@ public class ZhuYuanRiBao {
 	private int benRiJiaChuang;
 
 	/**
-	 * 床位占用数
+	 * 床位占用数 也是在院人数
 	 */
 	private int chuangWeiZhanYongShu;
 

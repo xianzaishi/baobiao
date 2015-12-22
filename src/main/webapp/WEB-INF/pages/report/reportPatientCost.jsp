@@ -37,7 +37,7 @@ table
 		<table width="768" border="1" align="center" bordercolor="#000000">
 			<tr>
 				<td width="210">每门诊人次费用（元）</td>
-				<td width="210">&nbsp;￥<fmt:formatNumber type="number" value="${opTotal / menJiZhenRenCiTotal }" maxFractionDigits="4"/></td>
+				<td width="210">&nbsp;￥<fmt:formatNumber type="number" value="${opTotal / menJiZhenRenCiTotal }" maxFractionDigits="2"/></td>
 				<td width="160">其中药费（元）</td>
 				<td width="160">&nbsp;￥<fmt:formatNumber type="number" value="${opDrugsTotal / menJiZhenRenCiTotal }" maxFractionDigits="2"/></td>
 			</tr>
