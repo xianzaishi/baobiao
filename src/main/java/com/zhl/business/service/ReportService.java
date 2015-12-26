@@ -221,7 +221,7 @@ public interface ReportService {
 	 * @param dateMap<StartTime, EndTime>
 	 * @return
 	 */
-	public int queryChuYuanZongChuangRiByDeptId(Map<String, String> dateMap);
+	public double queryChuYuanZongChuangRiByDeptId(Map<String, String> dateMap);
 
 	/**
 	 * 住院手术例数

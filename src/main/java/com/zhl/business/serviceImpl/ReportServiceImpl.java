@@ -264,7 +264,7 @@ public class ReportServiceImpl implements ReportService {
 	 * @param dateMap<StartTime, EndTime>
 	 * @return
 	 */
-	public int queryChuYuanZongChuangRiByDeptId(Map<String, String> dateMap) {
+	public double queryChuYuanZongChuangRiByDeptId(Map<String, String> dateMap) {
 		return reportDao.queryChuYuanZongChuangRiByDeptId(dateMap);
 	}
 

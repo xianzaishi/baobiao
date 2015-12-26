@@ -667,8 +667,8 @@ public class ReportController {
 			dateMap.put("id", Integer.toString(deptList.get(i).getId()));
 			List<Double> dateList = new LinkedList<Double>();
 
-			int chuYuanZongChuangRi = reportService.queryChuYuanZongChuangRiByDeptId(dateMap); // 出院患者实际占用总床日
-			int chuYuanShu = reportService.queryZhuYuanRiBaoByDeptId(dateMap).getChuYuanShu(); // 出院人数
+			double chuYuanZongChuangRi = reportService.queryChuYuanZongChuangRiByDeptId(dateMap); // 出院患者实际占用总床日
+			double chuYuanShu = (double) reportService.queryZhuYuanRiBaoByDeptId(dateMap).getChuYuanShu(); // 出院人数
 			double chuYuanPingJunZhuYuanRi = (chuYuanShu == 0 ? 0 : chuYuanZongChuangRi / chuYuanShu); // 出院患者平均住院日
 			dateList.add(chuYuanPingJunZhuYuanRi);
 

@@ -45,9 +45,9 @@ table
 		<c:forEach items="${deptDateDtoResultList }" var="deptDateDtoResultList">
 		<tr>
 			<td>&nbsp;${deptDateDtoResultList.name }</td>
-			<td>&nbsp;<fmt:formatNumber type="number" value="${deptDateDtoResultList.dateList[0] }" maxFractionDigits="0"/></td>
+			<td>&nbsp;<fmt:formatNumber type="number" value="${deptDateDtoResultList.dateList[0] }" maxFractionDigits="2"/></td>
 		</tr>
-		</c:forEach>
+		</c:forEach> 
 	</table>
 	
 	

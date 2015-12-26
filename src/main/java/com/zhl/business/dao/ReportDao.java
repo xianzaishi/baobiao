@@ -262,8 +262,8 @@ public class ReportDao extends BaseDao {
 	 * @param dateMap<StartTime, EndTime>
 	 * @return
 	 */
-	public int queryChuYuanZongChuangRiByDeptId(Map<String, String> dateMap) {
-		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryChuYuanZongChuangRiByDeptId", dateMap);
+	public double queryChuYuanZongChuangRiByDeptId(Map<String, String> dateMap) {
+		return (Double) getSqlMapClientTemplate().queryForObject("report.queryChuYuanZongChuangRiByDeptId", dateMap);
 	}
 
 	/**
