@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.zhl.business.dto.BingChuangGongZuoRiDto;
 import com.zhl.business.dto.BingLiZhenDuanFuHeLvDto;
+import com.zhl.business.dto.DanBingZhongShouShuJiBingLiaoXiaoDto;
 import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.DiagnosticDto;
@@ -818,5 +819,26 @@ public class ReportDao extends BaseDao {
 	@SuppressWarnings("unchecked")
 	public List<ZhongDianJiBingLiaoXiao18Dto> queryZhongDianJiBingLiaoXiaoWeiShengBu(Map<String, String> dateMap) {
 		return (List<ZhongDianJiBingLiaoXiao18Dto>) getSqlMapClientTemplate().queryForList("report.queryZhongDianJiBingLiaoXiaoWeiShengBu", dateMap);
+	}
+
+	/**
+	 * DR甲片率
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryDRJiaPianLv(Map<String, String> dateMap) {
+		return (Double) getSqlMapClientTemplate().queryForObject("report.queryDRJiaPianLv", dateMap);
+	}
+
+	/**
+	 * 单病种手术疾病疗效及费用
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<DanBingZhongShouShuJiBingLiaoXiaoDto> queryDanBingZhongShouShuJiBingLiaoXiao(Map<String, String> dateMap) {
+		return (List<DanBingZhongShouShuJiBingLiaoXiaoDto>) getSqlMapClientTemplate().queryForList("report.queryDanBingZhongShouShuJiBingLiaoXiao", dateMap);
 	}
 }

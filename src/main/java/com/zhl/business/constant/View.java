@@ -203,5 +203,15 @@ public class View {
 	 * 重点疾病疗效及费用(ICD)18以上 卫生部
 	 */
 	public static final String ZhongDianJiBingLiaoXiaoWeiShengBuView = "zhongDianJiBingLiaoXiaoWeiShengBuView";
+
+	/**
+	 * DR甲片率
+	 */
+	public static final String DRJiaPianLvView = "dRJiaPianLvView";
+
+	/**
+	 * 单病种手术疾病疗效及费用
+	 */
+	public static final String DanBingZhongShouShuJiBingLiaoXiaoView = "danBingZhongShouShuJiBingLiaoXiaoView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

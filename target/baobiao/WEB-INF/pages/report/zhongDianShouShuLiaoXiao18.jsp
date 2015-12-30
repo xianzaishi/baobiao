@@ -33,7 +33,7 @@ table
 <div align="center">选择查询日期：<input id="dateStart" value="${dateStart }"/>&nbsp;<input id="dateEnd" value="${dateEnd }"/>&nbsp;<button id="search" type="button">查询</button><input id="biuuu_button" type="button" value="打印"></input></div>
 <div id="myPrintArea">
 	<div align="center">
-	<h2>手术明细表 愈合 乙</h2>
+	<h2>重点手术疗效及费用(ICD)18以上</h2>
 	<table width="947" border="1">
   <tr>
     <td width="174" rowspan="2"><div align="center">疾病名称</div></td>
@@ -75,12 +75,12 @@ table
     <td>&nbsp;${zhongDianShouShuLiaoXiaoList.tongChou }</td>
     <td>&nbsp;${zhongDianShouShuLiaoXiaoList.shangBao }</td>
     <td>&nbsp;${zhongDianShouShuLiaoXiaoList.ziFei }</td>
-    <td>&nbsp;${zhongDianShouShuLiaoXiaoList.chuangRiShu / zhongDianShouShuLiaoXiaoList.bingRenShu }</td>
-    <td>&nbsp;${zhongDianShouShuLiaoXiaoList.feiYongZongJi / zhongDianShouShuLiaoXiaoList.bingRenShu }</td>
-    <td>&nbsp;${zhongDianShouShuLiaoXiaoList.chuangWeiFei / zhongDianShouShuLiaoXiaoList.bingRenShu }</td>
-    <td>&nbsp;${zhongDianShouShuLiaoXiaoList.yaoFei / zhongDianShouShuLiaoXiaoList.bingRenShu }</td>
-    <td>&nbsp;${zhongDianShouShuLiaoXiaoList.shouShuFei / zhongDianShouShuLiaoXiaoList.bingRenShu }</td>
-    <td>&nbsp;${zhongDianShouShuLiaoXiaoList.jianChaFei / zhongDianShouShuLiaoXiaoList.bingRenShu }</td>
+    <td>&nbsp;<fmt:formatNumber type="number" value="${zhongDianShouShuLiaoXiaoList.chuangRiShu / zhongDianShouShuLiaoXiaoList.bingRenShu }" maxFractionDigits="2"/></td>
+    <td>&nbsp;<fmt:formatNumber type="number" value="${zhongDianShouShuLiaoXiaoList.feiYongZongJi / zhongDianShouShuLiaoXiaoList.bingRenShu }" maxFractionDigits="2"/></td>
+    <td>&nbsp;<fmt:formatNumber type="number" value="${zhongDianShouShuLiaoXiaoList.chuangWeiFei / zhongDianShouShuLiaoXiaoList.bingRenShu }" maxFractionDigits="2"/></td>
+    <td>&nbsp;<fmt:formatNumber type="number" value="${zhongDianShouShuLiaoXiaoList.yaoFei / zhongDianShouShuLiaoXiaoList.bingRenShu }" maxFractionDigits="2"/></td>
+    <td>&nbsp;<fmt:formatNumber type="number" value="${zhongDianShouShuLiaoXiaoList.shouShuFei / zhongDianShouShuLiaoXiaoList.bingRenShu }" maxFractionDigits="2"/></td>
+    <td>&nbsp;<fmt:formatNumber type="number" value="${zhongDianShouShuLiaoXiaoList.jianChaFei / zhongDianShouShuLiaoXiaoList.bingRenShu }" maxFractionDigits="2"/></td>
     <td>&nbsp;${zhongDianShouShuLiaoXiaoList.zhiYuFei }</td>
   </tr>
   </c:forEach>

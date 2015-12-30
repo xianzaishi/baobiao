@@ -16,6 +16,7 @@ import com.zhl.business.constant.Url;
 import com.zhl.business.constant.View;
 import com.zhl.business.dto.BingChuangGongZuoRiDto;
 import com.zhl.business.dto.BingLiZhenDuanFuHeLvDto;
+import com.zhl.business.dto.DanBingZhongShouShuJiBingLiaoXiaoDto;
 import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.DiagnosticDto;
@@ -302,6 +303,14 @@ public class ReportController {
 			break;
 		case 50: // 重点疾病疗效及费用(ICD)18以上 卫生部
 			url = "/report/zhongDianJiBingLiaoXiaoWeiShengBu/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 52: // DR甲片率
+			url = "/report/DRJiaPianLv/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
+			model.addAttribute("url", url);
+			break;
+		case 53: // 单病种手术疾病疗效及费用
+			url = "/report/danBingZhongShouShuJiBingLiaoXiao/dateStart/" + dateStart + "/dateEnd/" + dateEnd;
 			model.addAttribute("url", url);
 			break;
 		}
@@ -734,10 +743,11 @@ public class ReportController {
 		String data = "";
 		List<DataDto> dataDtoList = new LinkedList<DataDto>();
 		// 病床工作日：实际占用总床日数÷平均开放病床数(1061)
+		int year = Integer.parseInt(dateStart.split("-")[0]);
 		for (int i = 1; i <= 12; i++) {
 			DataDto dataDto = new DataDto();
 			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01 00:00:00";
-			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i) + " 23:59:59";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(year, i) + " 23:59:59";
 			dateMap.put("StartTime", strStartTime);
 			dateMap.put("EndTime", strEndTime);
 			double avg = reportService.queryBingChuangGongZuoRiByMonth(dateMap) / 1061.00;
@@ -796,12 +806,29 @@ public class ReportController {
 	 * @param month
 	 * @return
 	 */
-	private static int getDayOfMonth(int month) {
-        Calendar cal = Calendar.getInstance();  
-        //下面可以设置月份，注：月份设置要减1，所以设置1月就是1-1，设置2月就是2-1，如此类推  
-		cal.set(Calendar.MONTH, month - 1);
-		int MaxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-		return MaxDay;
+	private static int getDayOfMonth(int year, int month) {
+		// Calendar cal = Calendar.getInstance(Locale.CHINA);
+		// //下面可以设置月份，注：月份设置要减1，所以设置1月就是1-1，设置2月就是2-1，如此类推
+		// cal.set(Calendar.MONTH, month - 1);
+		// int MaxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		//
+		int maxDay = 0;
+		int day = 1;
+		/**
+		 * 与其他语言环境敏感类一样，Calendar 提供了一个类方法 getInstance， 以获得此类型的一个通用的对象。Calendar 的
+		 * getInstance 方法返回一 个 Calendar 对象，其日历字段已由当前日期和时间初始化：
+		 */
+		Calendar calendar = Calendar.getInstance();
+		/**
+		 * 实例化日历各个字段,这里的day为实例化使用
+		 */
+		calendar.set(year, month - 1, day);
+		/**
+		 * Calendar.Date:表示一个月中的某天 calendar.getActualMaximum(int
+		 * field):返回指定日历字段可能拥有的最大值
+		 */
+		maxDay = calendar.getActualMaximum(Calendar.DATE);
+		return maxDay;
 	}
 
 	/**
@@ -818,10 +845,11 @@ public class ReportController {
 
 		String data = "";
 		List<DataDto> dataDtoList = new LinkedList<DataDto>();
+		int year = Integer.parseInt(dateStart.split("-")[0]);
 		for (int i = 1; i <= 12; i++) {
 			DataDto dataDto = new DataDto();
 			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
-			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(year, i);
 			dateMap.put("StartTime", strStartTime);
 			dateMap.put("EndTime", strEndTime);
 			double bedTurnoverTimes = reportService.queryBedTurnoverTimes(dateMap);
@@ -883,9 +911,10 @@ public class ReportController {
 
 		String data = "";
 		List<OpDiagnosticDto> dataDtoList = new LinkedList<OpDiagnosticDto>();
+		int year = Integer.parseInt(dateStart.split("-")[0]);
 		for (int i = 1; i <= 12; i++) {
 			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
-			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(year, i);
 			dateMap.put("StartTime", strStartTime);
 			dateMap.put("EndTime", strEndTime);
 			OpDiagnosticDto opDiagnosticDto = reportService.queryOpDiagnosticRate(dateMap);
@@ -921,9 +950,10 @@ public class ReportController {
 
 		String data = "";
 		List<OpDiagnosticDto> dataDtoList = new LinkedList<OpDiagnosticDto>();
+		int year = Integer.parseInt(dateStart.split("-")[0]);
 		for (int i = 1; i <= 12; i++) {
 			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
-			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(year, i);
 			dateMap.put("StartTime", strStartTime);
 			dateMap.put("EndTime", strEndTime);
 			OpDiagnosticDto opDiagnosticDto = reportService.queryPathologicalRate(dateMap);
@@ -997,10 +1027,13 @@ public class ReportController {
 		String data2 = ""; // ct
 		String data3 = ""; // mri
 		String data4 = ""; // dr
+		String avgDateStart = dateStart + " 00:00:00";
+		String avgDateEnd = dateEnd + " 23:59:59";
 
+		int year = Integer.parseInt(dateStart.split("-")[0]);
 		for (int i = 1; i <= 12; i++) {
 			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01 00:00:00";
-			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i) + " 23:59:59";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(year, i) + " 23:59:59";
 			dateMap.put("StartTime", strStartTime);
 			dateMap.put("EndTime", strEndTime);
 			equipmentPositiveRate = reportService.queryEquipmentPositiveRate(dateMap);
@@ -1022,11 +1055,19 @@ public class ReportController {
 			dateMap.remove("EndTime");
 		}
 
+		// 全年合计
+		Map<String, String> avgMap = new HashMap<String, String>();
+		avgMap.put("StartTime", avgDateStart);
+		avgMap.put("EndTime", avgDateEnd);
+		EquipmentPositiveRate avgEquipmentPositiveRate = new EquipmentPositiveRate();
+		avgEquipmentPositiveRate = reportService.queryEquipmentPositiveRate(avgMap);
+
 		data = "{name:'彩超',data:[" + data1 + "]},{name:'ct',data:[" + data2 + "]},{name:'mri',data:[" + data3 + "]},{name:'dr',data:[" + data4 + "]}";
 
-		model.addAttribute("dateStart", dateStart.split("-")[0]);
-		model.addAttribute("dateEnd", dateStart.split("-")[0]);
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
 		model.addAttribute("equipmentPositiveRateList", equipmentPositiveRateList);
+		model.addAttribute("avgEquipmentPositiveRate", avgEquipmentPositiveRate);
 		model.addAttribute("data", data);
 		return View.EquipmentPositiveRateView;
 	}
@@ -1046,9 +1087,10 @@ public class ReportController {
 		String data = "";
 		List<ComputeRateModel> computeRateModelList = new LinkedList<ComputeRateModel>();
 		ComputeRateModel computeRateModel = new ComputeRateModel();
+		int year = Integer.parseInt(dateStart.split("-")[0]);
 		for (int i = 1; i <= 12; i++) {
 			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
-			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(year, i);
 			dateMap.put("StartTime", strStartTime);
 			dateMap.put("EndTime", strEndTime);
 			computeRateModel = reportService.queryImprovementRateByMonth(dateMap);
@@ -1110,9 +1152,10 @@ public class ReportController {
 		String data = "";
 		List<ComputeRateModel> computeRateModelList = new LinkedList<ComputeRateModel>();
 		ComputeRateModel computeRateModel = new ComputeRateModel();
+		int year = Integer.parseInt(dateStart.split("-")[0]);
 		for (int i = 1; i <= 12; i++) {
 			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
-			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(year, i);
 			dateMap.put("StartTime", strStartTime);
 			dateMap.put("EndTime", strEndTime);
 			computeRateModel = reportService.queryCureRateByMonth(dateMap);
@@ -1174,9 +1217,10 @@ public class ReportController {
 		String data = "";
 		List<ComputeRateModel> computeRateModelList = new LinkedList<ComputeRateModel>();
 		ComputeRateModel computeRateModel = new ComputeRateModel();
+		int year = Integer.parseInt(dateStart.split("-")[0]);
 		for (int i = 1; i <= 12; i++) {
 			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01";
-			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(i);
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(year, i);
 			dateMap.put("StartTime", strStartTime);
 			dateMap.put("EndTime", strEndTime);
 			computeRateModel = reportService.queryDeathRateByMonth(dateMap);
@@ -1507,6 +1551,72 @@ public class ReportController {
 		model.addAttribute("dateEnd", dateEnd);
 		model.addAttribute("zhongDianJiBingLiaoXiaoWeiShengBuList", zhongDianJiBingLiaoXiaoWeiShengBuList);
 		return View.ZhongDianJiBingLiaoXiaoWeiShengBuView;
+	}
+
+	/**
+	 * DR甲片率
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.DR_JIA_PIAN_LV)
+	public String queryDRJiaPianLv(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		EquipmentPositiveRate equipmentPositiveRate = new EquipmentPositiveRate();
+		List<EquipmentPositiveRate> equipmentPositiveRateList = new LinkedList<EquipmentPositiveRate>();
+		String data = "";
+
+		int year = Integer.parseInt(dateStart.split("-")[0]);
+		for (int i = 1; i <= 12; i++) {
+			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01 00:00:00";
+			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(year, i) + " 23:59:59";
+			dateMap.put("StartTime", strStartTime);
+			dateMap.put("EndTime", strEndTime);
+			double jiaPianLv = reportService.queryDRJiaPianLv(dateMap);
+			equipmentPositiveRate.setDr(jiaPianLv);
+			equipmentPositiveRate.setMonth(i + "月");
+			equipmentPositiveRateList.add(equipmentPositiveRate);
+			if (i == 12) {
+				data += equipmentPositiveRate.getDr();
+			} else {
+				data += equipmentPositiveRate.getDr() + ",";
+			}
+
+			dateMap.remove("StartTime");
+			dateMap.remove("EndTime");
+		}
+
+		data = "{name:'DR甲片率',data:[" + data + "]}";
+
+		model.addAttribute("dateStart", dateStart.split("-")[0]);
+		model.addAttribute("dateEnd", dateStart.split("-")[0]);
+		model.addAttribute("equipmentPositiveRateList", equipmentPositiveRateList);
+		model.addAttribute("data", data);
+		return View.DRJiaPianLvView;
+	}
+
+	/**
+	 * 单病种手术疾病疗效及费用
+	 * 
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = Url.DAN_BING_ZHONG_SHOU_SHU_JI_BING_LIAO_XIAO)
+	public String danBingZhongShouShuJiBingLiaoXiao(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
+		Map<String, String> dateMap = new HashMap<String, String>();
+		dateMap.put("StartTime", dateStart);
+		dateMap.put("EndTime", dateEnd);
+		List<DanBingZhongShouShuJiBingLiaoXiaoDto> danBingZhongShouShuJiBingLiaoXiaoDtoList = new LinkedList<DanBingZhongShouShuJiBingLiaoXiaoDto>();
+		danBingZhongShouShuJiBingLiaoXiaoDtoList = reportService.queryDanBingZhongShouShuJiBingLiaoXiao(dateMap);
+
+		model.addAttribute("dateStart", dateStart);
+		model.addAttribute("dateEnd", dateEnd);
+		model.addAttribute("danBingZhongShouShuJiBingLiaoXiaoDtoList", danBingZhongShouShuJiBingLiaoXiaoDtoList);
+		return View.DanBingZhongShouShuJiBingLiaoXiaoView;
 	}
 
 }

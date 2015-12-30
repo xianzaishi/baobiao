@@ -1687,6 +1687,63 @@ GROUP BY A.序号,科目代码,b.住院号
 ) P order by p.序号
 ]]>
 </select>
+
+<!-- 单病种手术疾病疗效及费用 from:REPORT_ZYSI72 -->
+<select id="queryDanBingZhongShouShuJiBingLiaoXiao" resultClass="com.zhl.business.dto.DanBingZhongShouShuJiBingLiaoXiaoDto" parameterClass="java.util.Map">
+<![CDATA[
+SELECT S.编码 as bianMa, S.名称 as mingCheng, nvl(S.序号,0) as xuHao, P.病人数 as bingRenShu, P.床日数 as chuangRiShu, P.费用总计 as feiYongZongJi, P.床位费 as chuangWeiFei, P.药费 as yaoFei, P.手术费 as shouShuFei, P.检查费 as jianChaFei
+	  ,P.治愈 as zhiYu, P.好转 as haoZhuan, P.未愈 as weiYu, P.死亡 as siWang, P.治愈费 as zhiYuFei, P.社保 as sheBao, P.公疗 as gongLiao, P.统筹 as TongChou, P.商保 as shangBao, P.自费 as ziFei
+FROM
+(
+SELECT id,count(A.病人ID) AS 病人数,sum(A.住院天数) AS 床日数
+	,sum(A.治愈) AS 治愈,sum(A.好转) AS 好转,sum(A.未愈) AS 未愈,sum(A.死亡) AS 死亡,sum(A.治愈费) AS 治愈费
+	,sum(A.社保) AS 社保,sum(A.公疗) AS 公疗,sum(A.统筹) AS 统筹,sum(A.商保) AS 商保,sum(A.自费) AS 自费
+	,Sum(A.费用和) as 费用总计,Sum(B.床位费) as 床位费,Sum(B.药费) as 药费,Sum(B.手术费) as 手术费,Sum(B.检查费) as 检查费 
+FROM 
+(
+select E.id,A.病人ID,A.主页ID,A.住院天数,A.费用和
+		,decode(D.出院情况,'治愈',1,0) AS 治愈,decode(D.出院情况,'好转',1,0) AS 好转,decode(D.出院情况,'未愈',1,0) AS 未愈
+		,decode(D.出院情况,'死亡',1,0) AS 死亡,decode(D.出院情况,'治愈',A.费用和,0) AS 治愈费
+		,decode(A.医疗付款方式,'社会基本医疗保险',1,0) AS 社保,decode(A.医疗付款方式,'公费医疗',1,0) AS 公疗
+		,decode(A.医疗付款方式,'大病统筹',1,0) AS 统筹,decode(A.医疗付款方式,'商业保险',1,0) AS 商保,decode(A.医疗付款方式,'自费医疗',1,0) AS 自费
+from 病案主页 A,临床部门 C,病人诊断记录 D,病人手麻记录 F,
+    疾病编码目录 E
+where A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 and A.出院科室ID=C.部门ID AND A.病人ID=F.病人ID AND A.病人ID=F.病人ID AND F.记录来源 = 4
+     and A.病人ID=D.病人ID and A.主页ID=D.主页ID and A.主页ID=f.主页ID  and D.记录来源=4  and D.诊断类型=3  and D.诊断次序=1 and D.编码序号=1 and F.手术操作ID=E.ID
+   /*B2*/ and a.出院科室id is not null/*E2*/
+
+) A,
+(select  A.病人ID,A.主页ID
+              ,sum(decode(费用名,'床位费',B.金额,0)) as 床位费
+              ,sum(decode(费用名,'西药费',B.金额,'中成费',B.金额,'中草费',B.金额,0)) as 药费
+              ,sum(decode(费用名,'手术费',B.金额,0)) as 手术费
+              ,sum(decode(费用名,'放射费',B.金额,'化验费',B.金额,'输氧费',B.金额,
+                                 '输血费',B.金额,'接生费',B.金额,'麻醉费',B.金额,
+                                 '检查费',B.金额,'诊疗费',B.金额,0)) as 检查费
+        from 病案主页 A,病人费用 B
+        where A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 and A.病人ID=B.病人ID and A.主页ID=B.主页ID /*B2*/ and a.出院科室id is not null/*E2*/
+        group by A.病人ID,A.主页ID) B
+WHERE A.病人ID=B.病人ID(+) AND A.主页ID=B.主页ID(+) 
+GROUP BY A.id
+) P,
+疾病编码目录  S
+WHERE P.id=S.Id
+order by P.病人数 desc
+]]>
+</select>
+
+<!-- DR甲片率 -->
+<select id="queryDRJiaPianLv" resultClass="java.lang.Double" parameterClass="java.util.Map">
+<![CDATA[
+Select round(sum(甲片率)*100,2)||'%' As Dr甲片率
+From (Select Sum(甲片) As 甲片, Sum(乙片) As 乙片性, Sum(甲片) + Sum(乙片) As 总数,
+							Sum(甲片) / (Sum(甲片) + Sum(乙片)) As 甲片率
+			 From (Select Decode(a.影像质量, 1, 1, 0) As 甲片, Decode(a.影像质量, 1, 0, 1) As 乙片
+							From 影像检查记录 a
+							Where a.位置一 In (012, 044) And a.接收日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+							))
+]]>
+</select>
 </sqlMap>
 
 

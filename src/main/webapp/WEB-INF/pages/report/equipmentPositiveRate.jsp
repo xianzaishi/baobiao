@@ -54,6 +54,13 @@ table
 			<td>&nbsp;<fmt:formatNumber type="number" value="${equipmentPositiveRateList.dr }" maxFractionDigits="2"/></td>
 		</tr>
 		</c:forEach>
+		<tr>
+			<td>按过滤时间统计</td>
+			<td><fmt:formatNumber type="number" value="${avgEquipmentPositiveRate.caiChao }" maxFractionDigits="2"/></td>
+			<td><fmt:formatNumber type="number" value="${avgEquipmentPositiveRate.ct }" maxFractionDigits="2"/></td>
+			<td><fmt:formatNumber type="number" value="${avgEquipmentPositiveRate.mri }" maxFractionDigits="2"/></td>
+			<td><fmt:formatNumber type="number" value="${avgEquipmentPositiveRate.dr }" maxFractionDigits="2"/></td>
+		</tr>
 	</table>
 	
 	

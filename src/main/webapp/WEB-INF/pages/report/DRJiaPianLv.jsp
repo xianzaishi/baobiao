@@ -40,27 +40,14 @@ table
 	<table width="316" border="1" align="center" bordercolor="#000000">
 		<tr>
 			<td width="150">月份</td>
-			<td width="150">彩超(%)</td>
-			<td width="150">ct(%)</td>
-			<td width="150">mri(%)</td>
-			<td width="150">dr(%)</td>
+			<td width="150">dr甲片率(%)</td>
 		</tr>
 		<c:forEach items="${equipmentPositiveRateList }" var="equipmentPositiveRateList">
 		<tr>
 			<td>&nbsp;${equipmentPositiveRateList.month }</td>
-			<td>&nbsp;<fmt:formatNumber type="number" value="${equipmentPositiveRateList.caiChao }" maxFractionDigits="2"/></td>
-			<td>&nbsp;<fmt:formatNumber type="number" value="${equipmentPositiveRateList.ct }" maxFractionDigits="2"/></td>
-			<td>&nbsp;<fmt:formatNumber type="number" value="${equipmentPositiveRateList.mri }" maxFractionDigits="2"/></td>
 			<td>&nbsp;<fmt:formatNumber type="number" value="${equipmentPositiveRateList.dr }" maxFractionDigits="2"/></td>
 		</tr>
 		</c:forEach>
-		<tr>
-			<td>按过滤时间统计</td>
-			<td><fmt:formatNumber type="number" value="${avgEquipmentPositiveRate.caiChao }" maxFractionDigits="2"/></td>
-			<td><fmt:formatNumber type="number" value="${avgEquipmentPositiveRate.ct }" maxFractionDigits="2"/></td>
-			<td><fmt:formatNumber type="number" value="${avgEquipmentPositiveRate.mri }" maxFractionDigits="2"/></td>
-			<td><fmt:formatNumber type="number" value="${avgEquipmentPositiveRate.dr }" maxFractionDigits="2"/></td>
-		</tr>
 	</table>
 	
 	

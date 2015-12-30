@@ -164,4 +164,12 @@
     <definition name="zhongDianJiBingLiaoXiaoWeiShengBuView" template="/WEB-INF/pages/report/zhongDianJiBingLiaoXiaoWeiShengBu18.jsp">
     </definition>
     
+    <!-- DR甲片率 -->
+    <definition name="dRJiaPianLvView" template="/WEB-INF/pages/report/DRJiaPianLv.jsp">
+    </definition>
+    
+    <!-- 单病种手术疾病疗效及费用 -->
+    <definition name="danBingZhongShouShuJiBingLiaoXiaoView" template="/WEB-INF/pages/report/danBingZhongShouShuJiBingLiaoXiaoJiFeiYong.jsp">
+    </definition>
+    
 </tiles-definitions>

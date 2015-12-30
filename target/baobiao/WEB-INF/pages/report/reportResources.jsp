@@ -42,20 +42,20 @@ table
 	    </tr>
 	    <tr>
 	      <td>全院员工总数</td>
-	      <td colspan="5">&nbsp;</td>
+	      <td colspan="5">&nbsp;1059</td>
 	    </tr>
 	    <tr>
 	      <td rowspan="3">卫生技术人员数</td>
 	      <td>医师</td>
-	      <td colspan="4">&nbsp;</td>
+	      <td colspan="4">&nbsp;364</td>
 	    </tr>
 	    <tr>
 	      <td>护理</td>
-	      <td colspan="4">&nbsp;</td>
+	      <td colspan="4">&nbsp;499</td>
 	    </tr>
 	    <tr>
 	      <td>医技</td>
-	      <td colspan="4">&nbsp;</td>
+	      <td colspan="4">&nbsp;90</td>
 	    </tr>
 	    <tr>
 	      <td>医院医用建筑面积</td>

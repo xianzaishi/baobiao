@@ -212,5 +212,16 @@ public class Url {
 	 * 重点疾病疗效及费用(ICD)18以上 卫生部
 	 */
 	public static final String ZHONG_DIAN_JI_BING_LIAO_XIAO_WEI_SHENG_BU = "/report/zhongDianJiBingLiaoXiaoWeiShengBu/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * DR甲片率
+	 */
+	public static final String DR_JIA_PIAN_LV = "/report/DRJiaPianLv/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
+	/**
+	 * 单病种手术疾病疗效及费用
+	 */
+	public static final String DAN_BING_ZHONG_SHOU_SHU_JI_BING_LIAO_XIAO = "/report/danBingZhongShouShuJiBingLiaoXiao/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

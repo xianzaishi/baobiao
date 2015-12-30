@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.zhl.business.dto.BingChuangGongZuoRiDto;
 import com.zhl.business.dto.BingLiZhenDuanFuHeLvDto;
+import com.zhl.business.dto.DanBingZhongShouShuJiBingLiaoXiaoDto;
 import com.zhl.business.dto.DataDto;
 import com.zhl.business.dto.DeptDateDto;
 import com.zhl.business.dto.DiagnosticDto;
@@ -632,4 +633,20 @@ public interface ReportService {
 	 * @return
 	 */
 	public List<ZhongDianJiBingLiaoXiao18Dto> queryZhongDianJiBingLiaoXiaoWeiShengBu(Map<String, String> dateMap);
+
+	/**
+	 * DR甲片率
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public double queryDRJiaPianLv(Map<String, String> dateMap);
+
+	/**
+	 * 单病种手术疾病疗效及费用
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public List<DanBingZhongShouShuJiBingLiaoXiaoDto> queryDanBingZhongShouShuJiBingLiaoXiao(Map<String, String> dateMap);
 }
