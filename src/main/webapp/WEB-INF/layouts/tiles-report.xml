@@ -172,4 +172,8 @@
     <definition name="danBingZhongShouShuJiBingLiaoXiaoView" template="/WEB-INF/pages/report/danBingZhongShouShuJiBingLiaoXiaoJiFeiYong.jsp">
     </definition>
     
+    <!-- 各科室手消剂及洗手液消耗量统计表 -->
+    <definition name="xiaoDuJiTongJiBiaoView" template="/WEB-INF/pages/report/xiaoDuJiTongJiBiao.jsp">
+    </definition>
+    
 </tiles-definitions>

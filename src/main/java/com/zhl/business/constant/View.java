@@ -213,5 +213,10 @@ public class View {
 	 * 单病种手术疾病疗效及费用
 	 */
 	public static final String DanBingZhongShouShuJiBingLiaoXiaoView = "danBingZhongShouShuJiBingLiaoXiaoView";
+
+	/**
+	 * 各科室手消剂及洗手液消耗量统计表
+	 */
+	public static final String XiaoDuJiTongJiBiaoView = "xiaoDuJiTongJiBiaoView";
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

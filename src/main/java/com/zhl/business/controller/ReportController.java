@@ -353,6 +353,7 @@ public class ReportController {
 		int zhuYuanShouShuLiShu = reportService.queryZhuYuanShouShuLiShu(dateMap); // 住院手术例数
 		int menZhenShouShuLiShu = reportService.queryMenZhenShouShuLiShu(dateMap); // 门诊手术例数
 		int liuGuanRenCi = reportService.queryLiuGuanRenCi(dateMap); // 留观人次
+		int xinDianCaiChaoLiShu = reportService.queryXinDianCaiChaoLiShu(dateMap);// 心电彩超例数
 
 		model.addAttribute("dateStart", dateStart);
 		model.addAttribute("dateEnd", dateEnd);
@@ -365,6 +366,7 @@ public class ReportController {
 		model.addAttribute("zhuYuanShouShuLiShu", zhuYuanShouShuLiShu); // 住院手术例数
 		model.addAttribute("menZhenShouShuLiShu", menZhenShouShuLiShu); // 门诊手术例数
 		model.addAttribute("liuGuanRenCi", liuGuanRenCi); // 留观人次
+		model.addAttribute("xinDianCaiChaoLiShu", xinDianCaiChaoLiShu); // 心电彩超例数
 		return View.ReportWorkloadView;
 	}
 
@@ -1564,12 +1566,12 @@ public class ReportController {
 	@RequestMapping(value = Url.DR_JIA_PIAN_LV)
 	public String queryDRJiaPianLv(@PathVariable String dateStart, @PathVariable String dateEnd, ModelMap model) {
 		Map<String, String> dateMap = new HashMap<String, String>();
-		EquipmentPositiveRate equipmentPositiveRate = new EquipmentPositiveRate();
 		List<EquipmentPositiveRate> equipmentPositiveRateList = new LinkedList<EquipmentPositiveRate>();
 		String data = "";
 
 		int year = Integer.parseInt(dateStart.split("-")[0]);
 		for (int i = 1; i <= 12; i++) {
+			EquipmentPositiveRate equipmentPositiveRate = new EquipmentPositiveRate();
 			String strStartTime = dateStart.split("-")[0] + "-" + i + "-01 00:00:00";
 			String strEndTime = dateStart.split("-")[0] + "-" + i + "-" + getDayOfMonth(year, i) + " 23:59:59";
 			dateMap.put("StartTime", strStartTime);
@@ -1618,6 +1620,5 @@ public class ReportController {
 		model.addAttribute("danBingZhongShouShuJiBingLiaoXiaoDtoList", danBingZhongShouShuJiBingLiaoXiaoDtoList);
 		return View.DanBingZhongShouShuJiBingLiaoXiaoView;
 	}
-
 }
 

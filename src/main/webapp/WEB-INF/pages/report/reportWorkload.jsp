@@ -59,6 +59,14 @@ table
 		    <td>门诊手术例数</td>
 		    <td>&nbsp;<fmt:formatNumber type="number" value="${menZhenShouShuLiShu }" maxFractionDigits="0"/></td>
 		  </tr>
+		  <tr>
+		  	<td>心电彩超例数</td>
+		  	<td>${xinDianCaiChaoLiShu }</td>
+		  	<td></td>
+		  	<td></td>
+		  	<td></td>
+		  	<td></td>
+		  </tr>
 		</table>
 		<br/>
 		<div align="center"><c:out value="${dateStart }"/> &nbsp;to&nbsp;<c:out value="${dateEnd }"/></div>

@@ -61,7 +61,7 @@ table
 <br/>
 <div style="float:left; margin-left: 40px;">
 	<br/>
-	<p style="font-size:80%">大型设备检查阳性率=检查阳性人数÷检查人数。</p>
+	<p style="font-size:80%"></p>
 </div>
 <script type="text/javascript">
 $(function(){
@@ -76,7 +76,7 @@ $(function(){
 		if(dateStart == "" || dateEnd == ""){
 			alert("请输入正确的查询时间段");
 		}else{
-			var url = "${contextPath }/report/search/dateStart/" + $("#dateStart").val() + "/dateEnd/" + $("#dateEnd").val() + "/parm/15";
+			var url = "${contextPath }/report/search/dateStart/" + $("#dateStart").val() + "/dateEnd/" + $("#dateEnd").val() + "/parm/52";
 			window.location.href = url;
 		}
 	});
@@ -93,7 +93,7 @@ $(function () {
 			type: 'column' 
 		}, 
 		title: { 
-			text: '大型设备阳性率' 
+			text: 'dr甲片率(%)' 
 		}, 
 		subtitle: { 
 			text: '' 

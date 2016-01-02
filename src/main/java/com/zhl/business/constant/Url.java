@@ -223,5 +223,10 @@ public class Url {
 	 */
 	public static final String DAN_BING_ZHONG_SHOU_SHU_JI_BING_LIAO_XIAO = "/report/danBingZhongShouShuJiBingLiaoXiao/dateStart/{dateStart}/dateEnd/{dateEnd}";
 
+	/**
+	 * 各科室手消剂及洗手液消耗量统计表
+	 */
+	public static final String XIAO_DU_JI_TONG_JI_BIAO = "/report/xiaoDuJiTongJiBiao/dateStart/{dateStart}/dateEnd/{dateEnd}";
+
 	/*--------------------------------- 报表模块 结束 --------------------------------------*/
 }

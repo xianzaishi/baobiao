@@ -817,4 +817,14 @@ public class ReportServiceImpl implements ReportService {
 	public List<DanBingZhongShouShuJiBingLiaoXiaoDto> queryDanBingZhongShouShuJiBingLiaoXiao(Map<String, String> dateMap) {
 		return reportDao.queryDanBingZhongShouShuJiBingLiaoXiao(dateMap);
 	}
+
+	/**
+	 * 心电彩超例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryXinDianCaiChaoLiShu(Map<String, String> dateMap) {
+		return reportDao.queryXinDianCaiChaoLiShu(dateMap);
+	}
 }

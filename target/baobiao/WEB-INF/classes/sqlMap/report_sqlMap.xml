@@ -1734,14 +1734,19 @@ order by P.病人数 desc
 
 <!-- DR甲片率 -->
 <select id="queryDRJiaPianLv" resultClass="java.lang.Double" parameterClass="java.util.Map">
-<![CDATA[
-Select round(sum(甲片率)*100,2)||'%' As Dr甲片率
+Select round(sum(甲片率)*100,2)
 From (Select Sum(甲片) As 甲片, Sum(乙片) As 乙片性, Sum(甲片) + Sum(乙片) As 总数,
 							Sum(甲片) / (Sum(甲片) + Sum(乙片)) As 甲片率
-			 From (Select Decode(a.影像质量, 1, 1, 0) As 甲片, Decode(a.影像质量, 1, 0, 1) As 乙片
+			 From (Select Decode(a.影像质量,'甲',1,1, 1, 0) As 甲片, Decode(a.影像质量,'甲',0, 1, 0, 1) As 乙片
 							From 影像检查记录 a
-							Where a.位置一 In (012, 044) And a.接收日期 Between To_Date(#StartTime#, 'YYYY-MM-DD HH24:MI:SS') And To_Date(#EndTime#, 'YYYY-MM-DD HH24:MI:SS')
+							Where a.位置一 In (012, 044) And a.接收日期 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
 							))
+</select>
+
+<select id="queryXinDianCaiChaoLiShu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+<![CDATA[
+Select Count(*) as 例数 From 病人医嘱记录 Where 医嘱内容 Like  '%心脏彩超%' And 开始执行时间 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
+And 医嘱状态 <> 4
 ]]>
 </select>
 </sqlMap>

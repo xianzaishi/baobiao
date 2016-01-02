@@ -841,4 +841,14 @@ public class ReportDao extends BaseDao {
 	public List<DanBingZhongShouShuJiBingLiaoXiaoDto> queryDanBingZhongShouShuJiBingLiaoXiao(Map<String, String> dateMap) {
 		return (List<DanBingZhongShouShuJiBingLiaoXiaoDto>) getSqlMapClientTemplate().queryForList("report.queryDanBingZhongShouShuJiBingLiaoXiao", dateMap);
 	}
+
+	/**
+	 * 心电彩超例数
+	 * 
+	 * @param dateMap
+	 * @return
+	 */
+	public int queryXinDianCaiChaoLiShu(Map<String, String> dateMap) {
+		return (Integer) getSqlMapClientTemplate().queryForObject("report.queryXinDianCaiChaoLiShu", dateMap);
+	}
 }
