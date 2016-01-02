@@ -1365,7 +1365,7 @@ where A.病人ID=B.病人ID and A.主页ID=B.主页ID and B.符合类型=6 and A
 
 <!-- 临床主要诊断与病理诊断符合率 from:医疗质量月报表:ZL3_REPORT_234 -->
 <select id="queryBingLiZhenDuanFuHeLv" resultClass="com.zhl.business.dto.BingLiZhenDuanFuHeLvDto" parameterClass="java.util.Map">
-Select 符合 As fuHe, 不符 As buFu From (
+Select nvl(符合,0) As fuHe, nvl(不符,0) As buFu From (
 select sum(decode(B.符合情况,1,1,0)) as 符合,sum(decode(B.符合情况,2,1,0)) as 不符
 from 病案主页 A,诊断符合情况 B,病人诊断记录 C
 <![CDATA[
@@ -1734,7 +1734,7 @@ order by P.病人数 desc
 
 <!-- DR甲片率 -->
 <select id="queryDRJiaPianLv" resultClass="java.lang.Double" parameterClass="java.util.Map">
-Select round(sum(甲片率)*100,2)
+Select nvl(round(sum(甲片率)*100,2), 0)
 From (Select Sum(甲片) As 甲片, Sum(乙片) As 乙片性, Sum(甲片) + Sum(乙片) As 总数,
 							Sum(甲片) / (Sum(甲片) + Sum(乙片)) As 甲片率
 			 From (Select Decode(a.影像质量,'甲',1,1, 1, 0) As 甲片, Decode(a.影像质量,'甲',0, 1, 0, 1) As 乙片
