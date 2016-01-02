@@ -1556,8 +1556,6 @@ FROM
 from 病案主页 A,临床部门 C,病人诊断记录 D,
      (          select ID,'1. 急性心肌梗死' as 科目代码, 1 as 序号 from 疾病编码目录 A where  A.编码  like 'I21%' or A.编码  like 'I22%' and not A.编码 like '36.06003%'
                 union all
-                select ID,'2. 充血性心力衰竭' as 科目代码, 2 as 序号 from 疾病编码目录 A where  A.编码  like 'I50%'  and A.编码 <> 'I50.907'
-                union all
                 select ID,'3. 脑出血和脑梗死' as 科目代码, 3 as 序号 from 疾病编码目录 A where  A.编码  like 'I60%'  or A.编码  like 'I61%' or A.编码  like 'I62%' or A.编码  like 'I63%'
                 union all
                 select ID,'4. 创伤性颅脑损伤' as 科目代码, 4 as 序号 from 疾病编码目录 A where  A.编码  like 'S06%' 
@@ -1594,7 +1592,19 @@ from 病案主页 A,临床部门 C,病人诊断记录 D,
 where A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 and A.出院科室ID=C.部门ID 
      and A.病人ID=D.病人ID and A.主页ID=D.主页ID and D.记录来源=4 and D.诊断类型=3 and d.诊断次序=1 and D.疾病ID=E.ID AND A.编目日期 is not null
      And A.病人id = G.病人id And to_char(a.入院日期,'yyyy')- to_char(G.出生日期,'yyyy') > 18 /*B2*/ and a.出院科室id is not null/*E2*/
-
+union all
+select E.序号,科目代码,A.病人ID,A.主页ID,A.住院天数,A.费用和
+		,decode(D.出院情况,'治愈',1,0) AS 治愈,decode(D.出院情况,'好转',1,0) AS 好转,decode(D.出院情况,'未愈',1,0) AS 未愈
+		,decode(D.出院情况,'死亡',1,0) AS 死亡,decode(D.出院情况,'治愈',A.费用和,0) AS 治愈费
+		,decode(A.医疗付款方式,'社会基本医疗保险',1,0) AS 社保,decode(A.医疗付款方式,'公费医疗',1,0) AS 公疗
+		,decode(A.医疗付款方式,'大病统筹',1,0) AS 统筹,decode(A.医疗付款方式,'商业保险',1,0) AS 商保,decode(A.医疗付款方式,'自费医疗',1,0) AS 自费
+from 病案主页 A,临床部门 C,病人诊断记录 D,
+     (         
+                select ID,'2. 充血性心力衰竭' as 科目代码, 2 as 序号 from 疾病编码目录 A where  A.编码  like 'I50%'  and A.编码 <> 'I50.907'
+	  ) E,病人信息 G
+where A.出院日期>=To_Date(#StartTime#, 'YYYY-MM-DD') and A.出院日期<To_Date(#EndTime#, 'YYYY-MM-DD')+1 and A.出院科室ID=C.部门ID 
+     and A.病人ID=D.病人ID and A.主页ID=D.主页ID and D.记录来源=4 and /*D.诊断类型=3 and d.诊断次序=1 and*/ D.疾病ID=E.ID AND A.编目日期 is not null
+     And A.病人id = G.病人id And to_char(a.入院日期,'yyyy')- to_char(G.出生日期,'yyyy') > 18
 ) A,
 (select  A.病人ID,A.主页ID
               ,sum(decode(费用名,'床位费',B.金额,0)) as 床位费
