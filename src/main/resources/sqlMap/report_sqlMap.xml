@@ -472,7 +472,7 @@
 
 <!-- 出院患者实际占用总床日 -->
 <select id="queryChuYuanZongChuangRi" resultClass="java.lang.Integer" parameterClass="java.util.Map">
-	Select Sum(住院天数) From 病案主页
+	Select nvl(Sum(住院天数),0) From 病案主页
 	Where 出院日期 Between TO_DATE(#StartTime#,'YYYY-MM-DD HH24:MI:SS') And TO_DATE(#EndTime#,'YYYY-MM-DD HH24:MI:SS')
 </select>
 

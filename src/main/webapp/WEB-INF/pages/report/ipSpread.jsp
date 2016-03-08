@@ -50,6 +50,11 @@ table
 			    <td>&nbsp;<fmt:formatNumber type="number" value="${zaiYuanBingRenFenBuList.scale }" maxFractionDigits="2"/></td>
 			  </tr>
 		   </c:forEach>
+		   		<tr>
+			    <td>&nbsp;总计</td>
+			    <td>&nbsp;<fmt:formatNumber type="number" value="${sum }" maxFractionDigits="2"/></td>
+			    <td>&nbsp;</td>
+			  </tr>
 		</table>	
 			
 		<br/>

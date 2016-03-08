@@ -720,13 +720,16 @@ public class ReportController {
 		zaiYuanBingRenFenBuList = reportService.queryZaiYuanBingRenFenBu();
 
 		String data = "";
+		int sum = 0;
 		for (int i = 0; i < zaiYuanBingRenFenBuList.size(); i++) {
 			data += "['" + zaiYuanBingRenFenBuList.get(i).getName() + "'," + zaiYuanBingRenFenBuList.get(i).getCount() + "],";
+			sum += Integer.parseInt(zaiYuanBingRenFenBuList.get(i).getCount());
 		}
 
 		model.addAttribute("zaiYuanBingRenFenBuList", zaiYuanBingRenFenBuList);
 		model.addAttribute("dateStart", dateStart);
 		model.addAttribute("data", data);
+		model.addAttribute("sum", sum);
 		return View.IpSpreadView;
 	}
 
